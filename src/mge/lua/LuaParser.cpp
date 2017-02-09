@@ -2395,20 +2395,6 @@ int setUpdatingFunction (lua_State* pLua)
 	lua_settop(pLua, 0);
 	return 0;
 }
-//Load a scene from a lua file
-int loadExportedScene (lua_State* pLua)
-{
-	if (lua_isstring (pLua, -1))
-	{
-		LuaParser::singletonInstance->LoadScene ("scenes/"+(string)lua_tostring (pLua, -1));
-	}
-	else
-	{
-		throwError ("Function: loadScene\nParameter was incorrect!\nIt should be: (string) filename.");
-	}
-	lua_settop(pLua, 0);
-	return 0;
-}
 //Get the time since this program started (in seconds)
 int getTimeSinceProgramStart (lua_State* pLua)
 {
@@ -2635,9 +2621,12 @@ void LuaParser::SafeRefresh ()
 	Refresh ();
 }
 //Load a lua file containing an exported unity scene
-void LuaParser::LoadScene (string pFilename)
+GameObject* LuaParser::LoadScene (string pFilename)
 {
 	string filepath = "scenes/" + pFilename;
+	_curScene = new GameObject ("Scene", glm::vec3 (0, 0, 0));//All loaded objects will be a child of this one
+	_curScene->setParent (World::singletonInstance);//Scene should be a part of world
+
 	//Load the lua file, and run it once (if there are no errors)
 	luaL_loadfile (_lua, filepath.c_str ());
 	int result = lua_pcall (_lua, 0, 0, 0);
@@ -2654,6 +2643,9 @@ void LuaParser::LoadScene (string pFilename)
 			cout << "[REFRESH] [ERROR]: unknown; there was no error message available." << endl;
 		}
 	}
+	GameObject* temp = _curScene;
+	_curScene = nullptr;//Stop adding imported objects to this scene
+	return temp;
 }
 
 

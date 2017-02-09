@@ -1,8 +1,12 @@
 #include <mge/util/LevelImporter.hpp>
 
 
+//Static variables
+const int LevelImporter::TILED_TILESIZE = 64;
+
+
 //Read a tiled file and return the imported map
-LevelMap* LevelImporter::ReadFile (std::string pFilename)
+LevelMap* LevelImporter::ReadFile (std::string pFilename, bool pExtraLayer)
 {
 	std::ifstream file ("levels/" + pFilename, std::ios::in);
 	if (file.is_open ())
@@ -65,10 +69,63 @@ LevelMap* LevelImporter::ReadFile (std::string pFilename)
 						break;
 					default:
 						map->objectTiles = layer;
-						return map;
+						importedLayers ++;
+						break;
 				}
 			}
 		}
+
+		while (pExtraLayer)
+		{
+			//Read the next line in the file
+			getline (file, line);
+			if (line.find ("</objectgroup") != std::string::npos)//Check if we reached the end of the object layer
+			{
+				pExtraLayer = false;
+				break;
+			}
+			else if (line.find ("<object id") != std::string::npos)//Check if we're at an object
+			{
+				std::string temp;
+				//Get doorobject's x position
+				int strPos = (int)line.find ("x=");
+				strPos += 3;
+				while (line [strPos] != '"')
+				{
+					//If we haven't reached the end of the value, add the digit to the number.
+					temp += line [strPos];
+					strPos ++;
+				}
+				int x = std::stoi (temp) / TILED_TILESIZE;
+				//Get doorobject's z position
+				temp = "";
+				strPos = (int)line.find ("y=");
+				strPos += 3;
+				while (line [strPos] != '"')
+				{
+					//If we haven't reached the end of the value, add the digit to the number.
+					temp += line [strPos];
+					strPos ++;
+				}
+				int z = std::stoi (temp) / TILED_TILESIZE;
+				//Get doorobject's levelnumber
+				while (line.find ("<property") == std::string::npos)
+				{
+					getline (file, line);
+				}
+				temp = "";
+				strPos = (int)line.find ("value=");
+				strPos += 7;
+				while (line [strPos] != '"')
+				{
+					//If we haven't reached the end of the value, add the digit to the number.
+					temp += line [strPos];
+					strPos ++;
+				}
+				map->doorObjects.push_back (new DoorObject (x, z, std::stoi (temp)));
+			}
+		}
+		return map;
 	}
 	else
 	{

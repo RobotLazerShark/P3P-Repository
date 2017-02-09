@@ -47,7 +47,7 @@ class LuaParser : public JCPPEngine::AbstractListener
 		void Render ();
 		void Refresh ();
 		void SafeRefresh ();
-		void LoadScene (std::string pFilename);
+		GameObject* LoadScene (std::string pFilename);
 		static LuaParser* singletonInstance;
 		static sf::RenderWindow* _window;
 		std::string _luaFile = "main.lua";

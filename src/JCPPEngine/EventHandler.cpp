@@ -1,7 +1,7 @@
 #include "EventHandler.hpp"
 #include "AbstractListener.hpp"
 using namespace std;
-
+#include <iostream>
 
 namespace JCPPEngine
 {
@@ -30,11 +30,19 @@ namespace JCPPEngine
 	//Unregister to no longer receive the given sf::eventtype
 	void EventHandler::UnregisterForEvent (AbstractListener* pListener, sf::Event::EventType pEventType)
 	{
-		vector <AbstractListener*>::iterator itr;
-		vector <AbstractListener*>::iterator end;
-		for (itr = _sfListeners [pEventType].begin (), end = _sfListeners [pEventType].end (); itr != end; itr ++)
+		if (_sfListeners [pEventType].size () == 0)
 		{
-			_sfListeners [pEventType].erase (itr);
+			return;
+		}
+
+		vector <AbstractListener*>::iterator begin = _sfListeners [pEventType].begin ();
+		for (int i = 0, size = _sfListeners [pEventType].size (); i < size; i ++)
+		{
+			if (_sfListeners [pEventType] [i] == pListener)
+			{
+				_sfListeners [pEventType].erase (begin + i);
+				return;
+			}
 		}
 	}
 	//Register to receive the given JCPPEngine::eventtype
@@ -45,11 +53,19 @@ namespace JCPPEngine
 	//Unregister to no longer receive the given JCPPEngine::eventtype
 	void EventHandler::UnregisterForEvent (AbstractListener* pListener, JCPPEngine::Event::EventType pEventType)
 	{
-		vector <AbstractListener*>::iterator itr;
-		vector <AbstractListener*>::iterator end;
-		for (itr = _JCPPEListeners [pEventType].begin (), end = _JCPPEListeners [pEventType].end (); itr != end; itr ++)
+		if (_JCPPEListeners [pEventType].size () == 0)
 		{
-			_JCPPEListeners [pEventType].erase (itr);
+			return;
+		}
+
+		vector <AbstractListener*>::iterator begin = _JCPPEListeners [pEventType].begin ();
+		for (int i = 0, size = _JCPPEListeners [pEventType].size (); i < size; i ++)
+		{
+			if (_JCPPEListeners [pEventType] [i] == pListener)
+			{
+				_JCPPEListeners [pEventType].erase (begin + i);
+				return;
+			}
 		}
 	}
 
@@ -71,17 +87,23 @@ namespace JCPPEngine
 				_sfListeners [tempEvent.type] [i]->ProcessEvent (tempEvent);
 			}
 		}
-		JCPPEngine::Event::EventType tempType;
-		vector <JCPPEngine::Event*>::iterator begin = _eventQueue.begin ();
-		for (int j = 0, size = _eventQueue.size (); j < size; j ++)//Loop through events in chronological order
+		if (_eventQueue.size () > 0)
 		{
-			tempType = _eventQueue [0]->eventType ();//Since we remove every event we processed, we're always at index zero.
-			for (int i = 0, size = _JCPPEListeners [tempType].size (); i < size; i ++)
+			JCPPEngine::Event::EventType tempType;
+			vector <JCPPEngine::Event*>::iterator begin = _eventQueue.begin ();
+			for (int j = 0, size = _eventQueue.size (); j < size; j ++)//Loop through events in chronological order
 			{
-				_JCPPEListeners [tempType] [i]->ProcessEvent (_eventQueue [0]);
+				tempType = _eventQueue [0]->eventType ();//Since we remove every event we processed, we're always at index zero.
+				if (_JCPPEListeners [tempType].size () > 0)
+				{
+					for (int i = 0, size = _JCPPEListeners [tempType].size (); i < size; i ++)
+					{
+						_JCPPEListeners [tempType] [i]->ProcessEvent (_eventQueue [0]);
+					}
+				}
+				delete _eventQueue [0];
+				_eventQueue.erase (begin);//Remove processed events from the list
 			}
-			delete _eventQueue [0];
-			_eventQueue.erase (begin);//Remove processed events from the list
 		}
 	}
 

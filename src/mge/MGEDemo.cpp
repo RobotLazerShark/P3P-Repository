@@ -33,9 +33,7 @@ void MGEDemo::_initializeScene()
 	ShaderDataUtil::SetAmbientLight (glm::vec3 (1, 1, 1), 0.2f);
 	camera->setBehaviour (new CameraOrbitBehaviour (10.0f, glm::radians (-60.0f), glm::radians (60.0f), 0.01f, plane));
 
-	Level* level = new Level (1);
-//	LevelMap* map = LevelImporter::ReadFile ("Level.tmx");
-//	map->loadLevel ();
+	Hub* hub = new Hub ();
 }
 
 MGEDemo::~MGEDemo()

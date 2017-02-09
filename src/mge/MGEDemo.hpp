@@ -8,7 +8,7 @@
 #include "mge/core/Renderer.hpp"
 #include "mge/core/World.hpp"
 #include "mge/objects/Camera.hpp"
-#include <P3P/Level.hpp>
+#include <P3P/Hub.hpp>
 #include <mge/core/AbstractGame.hpp>
 
 class MGEDemo: public AbstractGame
