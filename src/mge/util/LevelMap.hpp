@@ -15,4 +15,5 @@ class LevelMap
 		std::vector <std::vector <int>> baseTiles;
 		std::vector <std::vector <int>> objectTiles;
 };
+
 #endif
