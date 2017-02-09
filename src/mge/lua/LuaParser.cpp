@@ -2628,15 +2628,15 @@ GameObject* LuaParser::LoadScene (string pFilename)
 	_curScene->setParent (World::singletonInstance);//Scene should be a part of world
 
 	//Load the lua file, and run it once (if there are no errors)
-	luaL_loadfile (pLua, filepath.c_str ());
-	int result = lua_pcall (pLua, 0, 0, 0);
+	luaL_loadfile (_lua, filepath.c_str ());
+	int result = lua_pcall (_lua, 0, 0, 0);
 
 	//Check for errors
 	if (result != LUA_OK)
 	{
-		if (lua_isstring (pLua, -1))//Write error to command prompt
+		if (lua_isstring (_lua, -1))//Write error to command prompt
 		{
-			cout << "[REFRESH] [ERROR]: " << lua_tostring (pLua, -1) << endl;
+			cout << "[REFRESH] [ERROR]: " << lua_tostring (_lua, -1) << endl;
 		}
 		else//If there is no error message, say so
 		{

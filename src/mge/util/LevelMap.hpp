@@ -4,6 +4,7 @@
 
 //Includes
 #include <vector>
+#include <P3P/DoorObject.hpp>
 
 
 class LevelMap
@@ -14,6 +15,7 @@ class LevelMap
 		const int height = 0;
 		std::vector <std::vector <int>> baseTiles;
 		std::vector <std::vector <int>> objectTiles;
+		std::vector <DoorObject*> doorObjects;
 };
 
 #endif

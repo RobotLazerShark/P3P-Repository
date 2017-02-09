@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 #include "P3P/objects/Player.hpp"
 #include <P3P/Level.hpp>
 
@@ -16,8 +15,17 @@ Player::Player (int pX, int pZ, ProgressTracker* pProgressTracker) : GameObject 
 	_model->setParent (this);//By making the model a child object, we can rotate it without it affecting translation directions.
 
 	translate (glm::vec3 (pX * Level::TILESIZE, 0, pZ * Level::TILESIZE));
-	_currentTile = glm::vec2 (pX, pZ);
-	_oldTile = glm::vec2 (_currentTile);
+	_currentTile [0] = pX;
+	_currentTile [1] = pZ;
+	_oldTile [0] = _currentTile [0];
+	_oldTile [1] = _currentTile [1];
+}
+//Destructor
+Player::~Player ()
+{
+	unregisterForEvent (JCPPEngine::Event::EventType::KeyDown);
+	delete _progressTracker;
+	GameObject::~GameObject ();
 }
 
 
@@ -25,26 +33,37 @@ Player::Player (int pX, int pZ, ProgressTracker* pProgressTracker) : GameObject 
 void Player::movePlayer (int pX, int pZ)
 {
     //update position
-    _oldTile.x = _currentTile.x;
-    _oldTile.y = _currentTile.y;
-    _currentTile.x += pX;
-    _currentTile.y += pZ;
+    _oldTile [0] = _currentTile [0];
+    _oldTile [1] = _currentTile [1];
+    _currentTile [0] += pX;
+    _currentTile [1] += pZ;
 
     //Check if the new position contains a box or a door
-    Box* box = (Box*)Level::map->objectTiles [_currentTile.x] [_currentTile.y];
-    Door* door = (Door*)Level::map->objectTiles [_currentTile.x] [_currentTile.y];
-    if (box != nullptr)//The new position contains a box
+    Box* box = dynamic_cast <Box*> ((GameObject*)Level::map->objectTiles [_currentTile [0]] [_currentTile [1]]);
+    Door* door = dynamic_cast <Door*> ((GameObject*)Level::map->objectTiles [_currentTile [0]] [_currentTile [1]]);
+    if (door != nullptr)//The new position contains a door
     {
-	glm::vec2 newBoxTile = glm::vec2 (_currentTile);
-	newBoxTile.x += pX;
-	newBoxTile.y += pZ;
+	if (!door->enter ())
+	{
+		//we cannot enter the door
+		_currentTile [0] = _oldTile [0];
+		_currentTile [1] = _oldTile [1];
+		return;
+	}
+	return;
+    }
+    else if (box != nullptr)//The new position contains a box
+    {
+	int newBoxTile [2] = { _currentTile [0], _currentTile [1] };
+	newBoxTile [0] += pX;
+	newBoxTile [1] += pZ;
 	//Check if we can move the box
 	if
 	(
-		newBoxTile.x >= 0 && newBoxTile.x < Level::map->width &&
-		newBoxTile.y >= 0 && newBoxTile.y < Level::map->height &&
-		Level::map->baseTiles [newBoxTile.x] [newBoxTile.y] != (int)nullptr &&
-		Level::map->objectTiles [newBoxTile.x] [newBoxTile.y] == (int)nullptr
+		newBoxTile [0] >= 0 && newBoxTile [0] < Level::map->width &&
+		newBoxTile [1] >= 0 && newBoxTile [1] < Level::map->height &&
+		Level::map->baseTiles [newBoxTile [0]] [newBoxTile [1]] != (int)nullptr &&
+		Level::map->objectTiles [newBoxTile [0]] [newBoxTile [1]] == (int)nullptr
 	)
 	{
 		//we can move the box
@@ -53,25 +72,28 @@ void Player::movePlayer (int pX, int pZ)
 	else
 	{
 		//we cannot move the box
-		_currentTile.x = _oldTile.x;
-		_currentTile.y = _oldTile.y;
+		_currentTile [0] = _oldTile [0];
+		_currentTile [1] = _oldTile [1];
 		return;
 	}
     }
-    else if (door != nullptr)//The new position contains a door
-    {
-	door->enter ();
-    }
 
     //update the object array
-    Level::map->objectTiles [_currentTile.x] [_currentTile.y] = (int)this;
-    Level::map->objectTiles [_oldTile.x] [_oldTile.y] = (int)nullptr;
+    Level::map->objectTiles [_currentTile [0]] [_currentTile [1]] = (int)this;
+    Level::map->objectTiles [_oldTile [0]] [_oldTile [1]] = (int)nullptr;
 
     //move
     translate (glm::vec3 (pX * Level::TILESIZE, 0, pZ * Level::TILESIZE));
 
     //check for win
-    _progressTracker->checkWin ();
+    if (_progressTracker->checkWin () && !Level::singletonInstance->levelCompleted)
+    {
+        Level::singletonInstance->levelCompleted = true;
+        if (_progressTracker->boxSpots.size () > 0)
+        {
+            Level::singletonInstance->increaseLevelKey ();
+        }
+    }
 }
 
 
@@ -91,162 +113,34 @@ void Player::ProcessEvent (JCPPEngine::Event* pEvent)
 		return;
 	}
 
-	glm::vec2 movement = glm::vec2 (0, 0);
+	int movement [2] = { 0, 0 };
 	switch (keyDownEvent->key ())
 	{
 		case sf::Keyboard::Key::Up:
-			movement.y --;
+			movement [1] --;
 			break;
 		case sf::Keyboard::Key::Down:
-			movement.y ++;
+			movement [1] ++;
 			break;
 		case sf::Keyboard::Key::Left:
-			movement.x --;
+			movement [0] --;
 			break;
 		case sf::Keyboard::Key::Right:
-			movement.x ++;
+			movement [0] ++;
 			break;
 		default:
 			break;
 	}
-	glm::vec2 newTile = glm::vec2 (_currentTile);
-	newTile += movement;
+	int newTile [2] = { _currentTile [0] + movement [0], _currentTile [1] + movement [1] };
 	//Check if new position is valid
 	if
 	(
-		glm::length (movement) > 0 &&
-		newTile.x >= 0 && newTile.x < Level::map->width &&
-		newTile.y >= 0 && newTile.y < Level::map->height &&
-		Level::map->baseTiles [newTile.x] [newTile.y] != (int)nullptr
+		(movement [0] != 0 || movement [1] != 0) &&
+		newTile [0] >= 0 && newTile [0] < Level::map->width &&
+		newTile [1] >= 0 && newTile [1] < Level::map->height &&
+		Level::map->baseTiles [newTile [0]] [newTile [1]] != (int)nullptr
 	)
 	{
-		movePlayer (movement.x, movement.y);
+		movePlayer (movement [0], movement [1]);
 	}
-	//Process key/mouse events
-=======
-#include "P3P/objects/Player.hpp"
-#include <P3P/Level.hpp>
-
-
-//Constructor
-Player::Player (int pX, int pZ, ProgressTracker* pProgressTracker) : GameObject ()
-{
-        _progressTracker = pProgressTracker;
-	registerForEvent (JCPPEngine::Event::EventType::KeyDown);
-
-	//set up model
-	_model = new GameObject ("cube_flat.obj");
-	_model->setMaterial (new LitMaterial (glm::vec3 (1, 1, 1)));
-	_model->translate (glm::vec3 (0, 0.5f, 0));
-	_model->setParent (this);//By making the model a child object, we can rotate it without it affecting translation directions.
-
-	translate (glm::vec3 (pX * Level::TILESIZE, 0, pZ * Level::TILESIZE));
-	_currentTile = glm::vec2 (pX, pZ);
-	_oldTile = glm::vec2 (_currentTile);
-}
-
-
-//Move the player by a given amount of tiles
-void Player::movePlayer (int pX, int pZ)
-{
-    //update position
-    _oldTile.x = _currentTile.x;
-    _oldTile.y = _currentTile.y;
-    _currentTile.x += pX;
-    _currentTile.y += pZ;
-
-    //Check if the new position contains a box or a door
-    Box* box = (Box*)Level::map->objectTiles [_currentTile.x] [_currentTile.y];
-    Door* door = (Door*)Level::map->objectTiles [_currentTile.x] [_currentTile.y];
-    if (box != nullptr)//The new position contains a box
-    {
-	glm::vec2 newBoxTile = glm::vec2 (_currentTile);
-	newBoxTile.x += pX;
-	newBoxTile.y += pZ;
-	//Check if we can move the box
-	if
-	(
-		newBoxTile.x >= 0 && newBoxTile.x < Level::map->width &&
-		newBoxTile.y >= 0 && newBoxTile.y < Level::map->height &&
-		Level::map->baseTiles [newBoxTile.x] [newBoxTile.y] != (int)nullptr &&
-		Level::map->objectTiles [newBoxTile.x] [newBoxTile.y] == (int)nullptr
-	)
-	{
-		//we can move the box
-		box->moveBox (pX, pZ);
-	}
-	else
-	{
-		//we cannot move the box
-		_currentTile.x = _oldTile.x;
-		_currentTile.y = _oldTile.y;
-		return;
-	}
-    }
-    else if (door != nullptr)//The new position contains a door
-    {
-	door->enter ();
-    }
-
-    //update the object array
-    Level::map->objectTiles [_currentTile.x] [_currentTile.y] = (int)this;
-    Level::map->objectTiles [_oldTile.x] [_oldTile.y] = (int)nullptr;
-
-    //move
-    translate (glm::vec3 (pX * Level::TILESIZE, 0, pZ * Level::TILESIZE));
-
-    //check for win
-    _progressTracker->checkWin ();
-}
-
-
-//Update player animation//[TODO]
-void Player::update (float pStep, bool pUpdateWorldTransform)
-{
-	GameObject::update (pStep, pUpdateWorldTransform);
-}
-
-
-//Process input events
-void Player::ProcessEvent (JCPPEngine::Event* pEvent)
-{
-	JCPPEngine::KeyEvent* keyDownEvent = (JCPPEngine::KeyEvent*)pEvent;
-	if (keyDownEvent == nullptr || keyDownEvent->keyState () != JCPPEngine::InputManager::KEY_DOWN)
-	{
-		return;
-	}
-
-	glm::vec2 movement = glm::vec2 (0, 0);
-	switch (keyDownEvent->key ())
-	{
-		case sf::Keyboard::Key::Up:
-			movement.y --;
-			break;
-		case sf::Keyboard::Key::Down:
-			movement.y ++;
-			break;
-		case sf::Keyboard::Key::Left:
-			movement.x --;
-			break;
-		case sf::Keyboard::Key::Right:
-			movement.x ++;
-			break;
-		default:
-			break;
-	}
-	glm::vec2 newTile = glm::vec2 (_currentTile);
-	newTile += movement;
-	//Check if new position is valid
-	if
-	(
-		glm::length (movement) > 0 &&
-		newTile.x >= 0 && newTile.x < Level::map->width &&
-		newTile.y >= 0 && newTile.y < Level::map->height &&
-		Level::map->baseTiles [newTile.x] [newTile.y] != (int)nullptr
-	)
-	{
-		movePlayer (movement.x, movement.y);
-	}
-	//Process key/mouse events
->>>>>>> 05a65edaed0d726361052543950587d121f9c233
 }
