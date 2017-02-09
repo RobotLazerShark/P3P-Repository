@@ -46,11 +46,11 @@ void CameraOrbitBehaviour::update (float pStep)
 		}
 	}
 
-	if (JCPPEngine::InputManager::GetKey (sf::Keyboard::Up))
+	if (JCPPEngine::InputManager::GetKey (sf::Keyboard::W))
 	{
 		_distanceFromTarget -= 1;
 	}
-	else if (JCPPEngine::InputManager::GetKey (sf::Keyboard::Down))
+	else if (JCPPEngine::InputManager::GetKey (sf::Keyboard::S))
 	{
 		_distanceFromTarget += 1;
 	}
