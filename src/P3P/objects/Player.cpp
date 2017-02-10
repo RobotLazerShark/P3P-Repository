@@ -128,6 +128,9 @@ void Player::ProcessEvent (JCPPEngine::Event* pEvent)
 		case sf::Keyboard::Key::Right:
 			movement [0] ++;
 			break;
+		case sf::Keyboard::Key::R:
+			Level::singletonInstance->reloadLevel ();
+			return;
 		default:
 			break;
 	}

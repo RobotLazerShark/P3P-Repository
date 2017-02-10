@@ -41,7 +41,7 @@ void Level::setMap (int pLevelNumber)
 	_levelNumber = pLevelNumber;
 	if (_levelNumber == 0)
 	{
-		map = LevelImporter::ReadFile ("Hub.tmx", true);
+		map = LevelImporter::ReadFile ("Hub.tmx");
 	}//else if (_levelNumber == bossLevel) { ReadFile ("HubLevel.tmx"); }
 	else
 	{
@@ -75,14 +75,14 @@ void Level::loadMap ()
 			switch (map->baseTiles [x] [y])
 			{
 				case 1:
-					//Floor tile
-					temp = new Floor (x, y);
+					//Floor tile type 1
+					temp = new Floor (x, y, 1);
 					temp->setParent (this);
 					map->baseTiles [x] [y] = (int)temp;
 					break;
 				case 2:
-					//Floor tile 2
-					temp = new Floor (x, y);
+					//Floor tile type 2
+					temp = new Floor (x, y, 2);
 					temp->setParent (this);
 					map->baseTiles [x] [y] = (int)temp;
 					break;
@@ -117,37 +117,23 @@ void Level::loadMap ()
 					temp->setParent (this);
 					map->objectTiles [x] [y] = (int)temp;
 					break;
-				case 6:
-					//Door
-					if (_isHub)
-					{
-						//In the hub, doors need to be objects.
-						break;
-					}
-					temp = new Door (x, y, 0);
-					temp->setParent (this);
-					map->objectTiles [x] [y] = (int)temp;
-					break;
 				default:
 					break;
 			}
 		}
 	}
-
-	if (_isHub)//In the hub, doors need to be objects, so they can have a property indicating what level they should load
+	//Doors need to be objects, so they can have a property indicating what level they should load
+	DoorObject* doorObject;
+	for (int i = 0, size = map->doorObjects.size (); i < size; i ++)
 	{
-		DoorObject* doorObject;
-		for (int i = 0, size = map->doorObjects.size (); i < size; i ++)
+		doorObject = map->doorObjects [i];
+		temp = new Door (doorObject->x (), doorObject->z (), doorObject->nextLevelNumber ());
+		temp->setParent (this);
+		if (map->objectTiles [doorObject->x ()] [doorObject->z ()] != (int)nullptr)//If there is already an object in this space, delete it. Doors should have priority.
 		{
-			doorObject = map->doorObjects [i];
-			temp = new Door (doorObject->x (), doorObject->z (), doorObject->nextLevelNumber ());
-			temp->setParent (this);
-			if (map->objectTiles [doorObject->x ()] [doorObject->z ()] != (int)nullptr)//If there is already an object in this space, delete it. Doors should have priority.
-			{
-				delete (GameObject*)map->objectTiles [doorObject->x ()] [doorObject->z ()];
-			}
-			map->objectTiles [doorObject->x ()] [doorObject->z ()] = (int)temp;
+			delete (GameObject*)map->objectTiles [doorObject->x ()] [doorObject->z ()];
 		}
+		map->objectTiles [doorObject->x ()] [doorObject->z ()] = (int)temp;
 	}
 }
 
@@ -189,5 +175,13 @@ void Level::loadLevel (int pLevelNumber)
 {
 	clear ();
 	setMap (pLevelNumber);
+	loadMap ();
+}
+
+//Reload the current level
+void Level::reloadLevel ()
+{
+	clear ();
+	setMap (_levelNumber);
 	loadMap ();
 }

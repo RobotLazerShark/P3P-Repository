@@ -9,7 +9,7 @@ Door::Door (int pX, int pZ, int pNextLevelNumber) : GameObject ()
 
 	//Set up model
 	_model = new GameObject ("cube_flat.obj");
-	_model->setMaterial (new LitMaterial (glm::vec3 (0.5f, 0.5f, 0)));
+	_model->setMaterial (new LitMaterial ("Door.jpg"));
 	_model->translate (glm::vec3 (0, 0.5f, 0));
 	_model->setParent (this);
 

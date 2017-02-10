@@ -16,6 +16,6 @@ class LevelImporter
 	private:
 		static const int TILED_TILESIZE;
 	public:
-		static LevelMap* ReadFile (std::string pFilename, bool pExtraLayer = false);
+		static LevelMap* ReadFile (std::string pFilename);
 };
 #endif

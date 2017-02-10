@@ -6,7 +6,7 @@ const int LevelImporter::TILED_TILESIZE = 64;
 
 
 //Read a tiled file and return the imported map
-LevelMap* LevelImporter::ReadFile (std::string pFilename, bool pExtraLayer)
+LevelMap* LevelImporter::ReadFile (std::string pFilename)
 {
 	std::ifstream file ("levels/" + pFilename, std::ios::in);
 	if (file.is_open ())
@@ -75,13 +75,14 @@ LevelMap* LevelImporter::ReadFile (std::string pFilename, bool pExtraLayer)
 			}
 		}
 
-		while (pExtraLayer)
+		bool readingObjects = true;
+		while (readingObjects)
 		{
 			//Read the next line in the file
 			getline (file, line);
 			if (line.find ("</objectgroup") != std::string::npos)//Check if we reached the end of the object layer
 			{
-				pExtraLayer = false;
+				readingObjects = false;
 				break;
 			}
 			else if (line.find ("<object id") != std::string::npos)//Check if we're at an object
@@ -107,7 +108,7 @@ LevelMap* LevelImporter::ReadFile (std::string pFilename, bool pExtraLayer)
 					temp += line [strPos];
 					strPos ++;
 				}
-				int z = std::stoi (temp) / TILED_TILESIZE;
+				int z = std::stoi (temp) / TILED_TILESIZE - 1;
 				//Get doorobject's levelnumber
 				while (line.find ("<property") == std::string::npos)
 				{

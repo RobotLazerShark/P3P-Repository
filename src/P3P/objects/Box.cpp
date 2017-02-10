@@ -7,7 +7,9 @@ Box::Box (int pX, int pZ) : GameObject ()
 {
 	//Set up model
 	_model = new GameObject ("cube_flat.obj");
-	_model->setMaterial (new LitMaterial (glm::vec3 (0, 0, 1)));
+	LitMaterial* mat = new LitMaterial ("Box.jpg");
+	mat->SetTextureScale (0.15f);
+	_model->setMaterial (mat);
 	_model->translate (glm::vec3 (0, 0.5f, 0));
 	_model->setParent (this);
 

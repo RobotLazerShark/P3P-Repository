@@ -10,7 +10,7 @@
 class Floor : public GameObject
 {
 	public:
-		Floor (int pX, int pZ);
+		Floor (int pX, int pZ, int pType);
 	private:
 		GameObject* _model;
 };
