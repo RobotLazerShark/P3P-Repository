@@ -53,8 +53,7 @@ void AbstractGame::initialize() {
 ///SETUP
 
 void AbstractGame::_initializeWindow() {
-	_window = new sf::RenderWindow( sf::VideoMode::getFullscreenModes () [0]/*(windowWidth, windowHeight)*/, "My Game!", sf::Style::Default, sf::ContextSettings(24,8,0,3,3));
-	_window->setPosition (sf::Vector2i (-8, -31));
+	_window = new sf::RenderWindow( sf::VideoMode::getFullscreenModes () [0]/*(windowWidth, windowHeight)*/, "My Game!", sf::Style::Fullscreen, sf::ContextSettings(24,8,0,3,3));
 //	_window->setMouseCursorVisible (false);
 //	_cursor = new sf::Sprite (*JCPPEngine::TextureManager::GetTexture ("images/Crosshair.png"));
 //	_cursor->setOrigin (12, 12);
