@@ -54,7 +54,7 @@ void AbstractGame::initialize() {
 
 void AbstractGame::_initializeWindow() {
 	_window = new sf::RenderWindow( sf::VideoMode::getFullscreenModes () [0]/*(windowWidth, windowHeight)*/, "My Game!", sf::Style::Fullscreen, sf::ContextSettings(24,8,0,3,3));
-//	_window->setMouseCursorVisible (false);
+	_window->setMouseCursorVisible (false);
 //	_cursor = new sf::Sprite (*JCPPEngine::TextureManager::GetTexture ("images/Crosshair.png"));
 //	_cursor->setOrigin (12, 12);
 	_luaParser = new LuaParser (_window);
