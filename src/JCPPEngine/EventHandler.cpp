@@ -93,17 +93,17 @@ namespace JCPPEngine
 			vector <JCPPEngine::Event*>::iterator begin = _eventQueue.begin ();
 			for (int j = 0, size = _eventQueue.size (); j < size; j ++)//Loop through events in chronological order
 			{
-				tempType = _eventQueue [0]->eventType ();//Since we remove every event we processed, we're always at index zero.
+				tempType = _eventQueue [j]->eventType ();//Since we remove every event we processed, we're always at index zero.
 				if (_JCPPEListeners [tempType].size () > 0)
 				{
 					for (int i = 0, size = _JCPPEListeners [tempType].size (); i < size; i ++)
 					{
-						_JCPPEListeners [tempType] [i]->ProcessEvent (_eventQueue [0]);
+						_JCPPEListeners [tempType] [i]->ProcessEvent (_eventQueue [j]);
 					}
 				}
-				delete _eventQueue [0];
-				_eventQueue.erase (begin);//Remove processed events from the list
+				delete _eventQueue [j];
 			}
+			_eventQueue.clear ();
 		}
 	}
 

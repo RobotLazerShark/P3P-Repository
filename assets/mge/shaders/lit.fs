@@ -20,7 +20,7 @@ uniform vec4 spotPositions [50];
 uniform vec4 spotNormals [50];
 uniform float spotAngledots [50];
 uniform vec2 spotFalloffs [50];
-vec4 baseColor;
+vec3 baseColor;
 vec4 frag2CameraNormal;
 in vec4 fragWorldPosition;
 in vec4 fragWorldNormal;
@@ -78,11 +78,11 @@ void main (void)
 {
 	if (useTexture)
 	{
-		baseColor = texture (texture, fragUV);
+		baseColor = vec3 (texture (texture, fragUV));
 	}
 	else
 	{
-		baseColor = vec4 (color, 1);
+		baseColor = color;
 	}
 	frag2CameraNormal = normalize (cameraPosition - fragWorldPosition);//Both have a W of 1, so it will become 0
 

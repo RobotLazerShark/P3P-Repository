@@ -19,20 +19,20 @@ void MGEDemo::_initializeScene()
 
 	//add camera first (it will be updated last)
 	Camera* camera = new Camera ();
+	camera->rotate (glm::radians (-30.0f), glm::vec3 (1, 0, 0));
+	camera->translate (glm::vec3 (10, 0, 15));
 	_world->add (camera);
 	_world->setMainCamera (camera);
 
 	//[TESTING]
-	GameObject* plane = new GameObject ("plane.obj");
-	plane->setMaterial (new LitMaterial ("Default.png"));
-	plane->setParent (_world);
-	Light* dirLight = new Light (glm::vec3 (1, 1, 1), 0.6f);
-	dirLight->rotate (glm::radians (45.0f), glm::vec3 (0, 1, 0));
+	Light* dirLight = new Light (glm::vec3 (1, 1, 1), 0.4f);
+	dirLight->rotate (glm::radians (25.0f), glm::vec3 (0, 1, 0));
 	dirLight->rotate (glm::radians (45.0f), glm::vec3 (1, 0, 0));
 	dirLight->setParent (_world);
-	ShaderDataUtil::SetAmbientLight (glm::vec3 (1, 1, 1), 0.2f);
-	camera->setBehaviour (new CameraOrbitBehaviour (10.0f, glm::radians (-60.0f), glm::radians (60.0f), 0.01f, plane));
+	ShaderDataUtil::SetAmbientLight (glm::vec3 (1, 1, 1), 0.15f);
+	//camera->setBehaviour (new CameraOrbitBehaviour (10.0f, glm::radians (-60.0f), glm::radians (60.0f), 0.01f, _world));
 
+	//Set up P3P hub (starts the game)
 	Hub* hub = new Hub ();
 }
 

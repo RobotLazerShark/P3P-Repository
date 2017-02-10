@@ -35,7 +35,7 @@ in vec4 fragWorldNormal;
 in vec2 splatUV;
 in float uvWaterScale;
 in float waterAmount;
-vec4 baseColor;
+vec3 baseColor;
 vec4 frag2CameraNormal;
 out vec4 fragment_color;
 
@@ -102,18 +102,18 @@ void main (void)
 	{
 		case 2:
 			contributions = texture (splatMap, splatUV);
-			baseColor = contributions.r * texture (splatTexR, texUV * uvScaleR) + contributions.g * texture (splatTexG, texUV * uvScaleG);
+			baseColor = contributions.r * vec3 (texture (splatTexR, texUV * uvScaleR)) + contributions.g * vec3 (texture (splatTexG, texUV * uvScaleG));
 			break;
 		case 3:
 			contributions = texture (splatMap, splatUV);
-			baseColor = contributions.r * texture (splatTexR, texUV * uvScaleR) + contributions.g * texture (splatTexG, texUV * uvScaleG) + contributions.b * texture (splatTexB, texUV * uvScaleB);
+			baseColor = contributions.r * vec3 (texture (splatTexR, texUV * uvScaleR)) + contributions.g * vec3 (texture (splatTexG, texUV * uvScaleG)) + contributions.b * vec3 (texture (splatTexB, texUV * uvScaleB));
 			break;
 		case 4:
 			contributions = texture (splatMap, splatUV);
-			baseColor = contributions.r * texture (splatTexR, texUV * uvScaleR) + contributions.g * texture (splatTexG, texUV * uvScaleG) + contributions.b * texture (splatTexB, texUV * uvScaleB) + contributions.a * texture (splatTexA, texUV * uvScaleA);
+			baseColor = contributions.r * vec3 (texture (splatTexR, texUV * uvScaleR)) + contributions.g * vec3 (texture (splatTexG, texUV * uvScaleG)) + contributions.b * vec3 (texture (splatTexB, texUV * uvScaleB)) + contributions.a * vec3 (texture (splatTexA, texUV * uvScaleA));
 			break;
 		default:
-			baseColor = vec4 (1, 0, 1, 1);
+			baseColor = vec3 (1, 0, 1);
 			break;
 	}
 

@@ -30,6 +30,7 @@ class Level : public GameObject
 		void loadMap ();
 		void clear ();
 		void loadLevel (int pLevelNumber);
+		void reloadLevel ();
 		static const float TILESIZE;
 		static LevelMap* map;
 		static Level* singletonInstance;
