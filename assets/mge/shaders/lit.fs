@@ -78,7 +78,7 @@ void main (void)
 {
 	if (useTexture)
 	{
-		baseColor = texture (texture, fragUV).rgb;
+		baseColor = texture2D (texture, fragUV).rgb;
 	}
 	else
 	{

@@ -6,5 +6,5 @@ out vec4 fragment_color;
 
 void main (void)
 {
-	fragment_color = texture (texture, fragUV);
+	fragment_color = texture2D (texture, fragUV);
 }

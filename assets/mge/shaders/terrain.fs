@@ -101,16 +101,16 @@ void main (void)
 	switch (splatTexCount)
 	{
 		case 2:
-			contributions = texture (splatMap, splatUV);
-			baseColor = contributions.r * texture (splatTexR, texUV * uvScaleR).rgb + contributions.g * texture (splatTexG, texUV * uvScaleG).rgb;
+			contributions = texture2D (splatMap, splatUV);
+			baseColor = contributions.r * texture2D (splatTexR, texUV * uvScaleR).rgb + contributions.g * texture2D (splatTexG, texUV * uvScaleG).rgb;
 			break;
 		case 3:
-			contributions = texture (splatMap, splatUV);
-			baseColor = contributions.r * texture (splatTexR, texUV * uvScaleR).rgb + contributions.g * texture (splatTexG, texUV * uvScaleG).rgb + contributions.b * texture (splatTexB, texUV * uvScaleB).rgb;
+			contributions = texture2D (splatMap, splatUV);
+			baseColor = contributions.r * texture2D (splatTexR, texUV * uvScaleR).rgb + contributions.g * texture2D (splatTexG, texUV * uvScaleG).rgb + contributions.b * texture2D (splatTexB, texUV * uvScaleB).rgb;
 			break;
 		case 4:
-			contributions = texture (splatMap, splatUV);
-			baseColor = contributions.r * texture (splatTexR, texUV * uvScaleR).rgb + contributions.g * texture (splatTexG, texUV * uvScaleG).rgb + contributions.b * texture (splatTexB, texUV * uvScaleB).rgb + contributions.a * texture (splatTexA, texUV * uvScaleA).rgb;
+			contributions = texture2D (splatMap, splatUV);
+			baseColor = contributions.r * texture2D (splatTexR, texUV * uvScaleR).rgb + contributions.g * texture2D (splatTexG, texUV * uvScaleG).rgb + contributions.b * texture2D (splatTexB, texUV * uvScaleB).rgb + contributions.a * texture2D (splatTexA, texUV * uvScaleA).rgb;
 			break;
 		default:
 			baseColor = vec3 (1, 0, 1);
