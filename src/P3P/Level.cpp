@@ -99,6 +99,12 @@ void Level::loadMap ()
 					map->baseTiles [x] [y] = (int)temp;
 					progressTracker->boxSpots.push_back ((BoxSpot*)temp);
 					break;
+				case 9:
+					//Spikes
+					temp = new Spikes(x, y);
+					temp->setParent(this);
+					map->baseTiles[x][y] = (int)temp;
+					break;
 				default:
 					break;
 			}

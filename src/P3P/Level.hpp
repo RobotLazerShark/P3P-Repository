@@ -11,6 +11,7 @@
 #include <P3P/objects/base objects/Floor.hpp>
 #include <P3P/objects/base objects/BoxSpot.hpp>
 #include <P3P/objects/base objects/BreakingBlock.hpp>
+#include <P3P/objects/base objects/Spikes.hpp>
 
 #include <P3P/objects/Player.hpp>
 #include <P3P/objects/Box.hpp>
