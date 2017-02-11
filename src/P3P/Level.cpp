@@ -86,6 +86,12 @@ void Level::loadMap ()
 					temp->setParent (this);
 					map->baseTiles [x] [y] = (int)temp;
 					break;
+				case 3:
+					//Breaking block
+					temp = new BreakingBlock(x, y);
+					temp->setParent(this);
+					map->baseTiles[x][y] = (int)temp;
+					break;
 				case 5:
 					//Box spot
 					temp = new BoxSpot (x, y);

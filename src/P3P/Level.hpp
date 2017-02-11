@@ -10,10 +10,11 @@
 #include <P3P/ProgressTracker.hpp>
 #include <P3P/objects/base objects/Floor.hpp>
 #include <P3P/objects/base objects/BoxSpot.hpp>
+#include <P3P/objects/base objects/BreakingBlock.hpp>
+
 #include <P3P/objects/Player.hpp>
 #include <P3P/objects/Box.hpp>
 #include <P3P/objects/Door.hpp>
-
 
 class Level : public GameObject
 {

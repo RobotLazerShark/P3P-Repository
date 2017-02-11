@@ -12,7 +12,7 @@ Floor::Floor (int pX, int pZ, int pType) : GameObject ()
 		case 1:
 			mat = new LitMaterial ("Floor1.jpg");
 			_model = new GameObject ("Floor1.obj");
-		//	_model->translate (glm::vec3 (0, -0.5f, 0));
+			_model->translate (glm::vec3 (0, -0.5f, 0));
 			mat->SetTextureScale (0.75f);
 			break;
 		case 2:
