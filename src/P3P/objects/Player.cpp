@@ -48,10 +48,12 @@ void Player::movePlayer (int pX, int pZ)
 		breakingBlock->breakBlock(_oldTile[0], _oldTile[1]);
 	}
 
-    //Check if the new position contains a box/door/collectible
-	    Box* box = dynamic_cast <Box*> ((GameObject*)Level::map->objectTiles [_currentTile [0]] [_currentTile [1]]);
+    //Check if the new position contains a box/door/collectible/npc
+	Box* box = dynamic_cast <Box*> ((GameObject*)Level::map->objectTiles [_currentTile [0]] [_currentTile [1]]);
     Door* door = dynamic_cast <Door*> ((GameObject*)Level::map->objectTiles [_currentTile [0]] [_currentTile [1]]);
 	Collectible* collectible = dynamic_cast <Collectible*> ((GameObject*)Level::map->objectTiles[_currentTile[0]][_currentTile[1]]);
+	Npc* npc = dynamic_cast <Npc*> ((GameObject*)Level::map->objectTiles[_currentTile[0]][_currentTile[1]]);
+
     if (door != nullptr)//The new position contains a door
     {
 		if (!door->enter ())
@@ -91,6 +93,14 @@ void Player::movePlayer (int pX, int pZ)
 	else if (collectible != nullptr)//The new position contains a collectible
 	{
 		collectible->collect(_currentTile[0], _currentTile[1]);
+	}
+	else if (npc != nullptr)//The new position contains a npc
+	{
+		npc->talk();
+		//dont move
+		_currentTile[0] = _oldTile[0];
+		_currentTile[1] = _oldTile[1];
+		return;
 	}
 
     //update the object array

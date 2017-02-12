@@ -19,6 +19,7 @@
 #include <P3P/objects/Box.hpp>
 #include <P3P/objects/Door.hpp>
 #include <P3P/objects/Collectible.hpp>
+#include <P3P/objects/Npc.hpp>
 
 class Level : public GameObject
 {

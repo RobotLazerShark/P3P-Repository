@@ -8,8 +8,8 @@ BreakingBlock::BreakingBlock(int pX, int pZ) : GameObject()
 	//Set up model
 	_model = new GameObject("cube_flat.obj");
 	_model->translate(glm::vec3(0, -0.5f, 0));
-
-	_model->setMaterial(new ColorMaterial(glm::vec3(0,0,1)));
+	LitMaterial* mat = new LitMaterial("BreakingBlock.jpg");
+	_model->setMaterial(mat);
 	_model->setParent(this);
 
 	translate(glm::vec3(pX * Level::TILESIZE, 0, pZ * Level::TILESIZE));

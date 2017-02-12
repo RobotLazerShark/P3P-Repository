@@ -129,6 +129,12 @@ void Level::loadMap ()
 					temp->setParent (this);
 					map->objectTiles [x] [y] = (int)temp;
 					break;
+				case 6:
+					//Npc
+					temp = new Npc(x, y);
+					temp->setParent(this);
+					map->objectTiles[x][y] = (int)temp;
+					break;
 				case 8:
 					//Collectible A
 					temp = new Collectible(x, y, "itemA");

@@ -27,7 +27,7 @@ void Collectible::collect(int pX, int pZ)
 	}
 	if (!itemAlreadyCollected)
 	{
-		std::cout << "adding item" << endl;
+		std::cout << _name <<" collected" << endl;
 		Player::collectedItems.push_back(_name);
 	}
 	
