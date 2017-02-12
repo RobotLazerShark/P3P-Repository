@@ -105,6 +105,15 @@ void Level::loadMap ()
 					temp->setParent(this);
 					map->baseTiles[x][y] = (int)temp;
 					break;
+				case 8:
+					//Platform
+					temp = new KeyPlatform(x, y);
+					temp->setParent(this);
+					map->baseTiles[x][y] = (int)temp;
+
+					//testing gates and platform(remove after testing)
+					keyPlat = (KeyPlatform*)temp;
+					break;
 				default:
 					break;
 			}
@@ -147,6 +156,14 @@ void Level::loadMap ()
 					temp->setParent(this);
 					map->objectTiles[x][y] = (int)temp;
 					break;
+				case 1:
+					//Gate
+					temp = new Gate(x, y);
+					temp->setParent(this);
+					map->objectTiles[x][y] = (int)temp;
+
+					//testing gates and platform(remove after testing)
+					keyPlat->setGate((Gate*)temp);
 				default:
 					break;
 			}

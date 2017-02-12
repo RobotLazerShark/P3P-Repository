@@ -14,12 +14,14 @@
 #include <P3P/objects/base objects/BoxSpot.hpp>
 #include <P3P/objects/base objects/BreakingBlock.hpp>
 #include <P3P/objects/base objects/Spikes.hpp>
+#include <P3P/objects/base objects/KeyPlatform.hpp>
 
 #include <P3P/objects/Player.hpp>
 #include <P3P/objects/Box.hpp>
 #include <P3P/objects/Door.hpp>
 #include <P3P/objects/Collectible.hpp>
 #include <P3P/objects/Npc.hpp>
+#include <P3P/objects/Gate.hpp>
 
 class Level : public GameObject
 {
@@ -40,6 +42,9 @@ class Level : public GameObject
 		static const float TILESIZE;
 		static LevelMap* map;
 		static Level* singletonInstance;
+
+		//testing gates and platform(remove after testing)
+		KeyPlatform * keyPlat; 
 };
 
 #endif
