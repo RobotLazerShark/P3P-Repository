@@ -11,23 +11,24 @@
 #include <JCPPEngine/InputManager.hpp>
 #include <P3P/ProgressTracker.hpp>
 
-
 class Player : public GameObject, public JCPPEngine::AbstractListener
 {
     public:
         Player (int pX, int pZ, ProgressTracker* pProgressTracker);
-	~Player () override;
+		~Player () override;
         int _currentTile [2];//Arrays, because glm::vec uses floats
-	int _oldTile [2];
+		int _oldTile [2];
         void movePlayer (int pX, int pZ);
-	void update (float pStep, bool pUpdateWorldTransform = false) override;
-	void ProcessEvent (JCPPEngine::Event* pEvent) override;
+		void update (float pStep, bool pUpdateWorldTransform = false) override;
+		void ProcessEvent (JCPPEngine::Event* pEvent) override;
 
+		static std::vector <std::string> collectedItems;
     protected:
 
     private:
         ProgressTracker* _progressTracker;
-	GameObject* _model;
+		GameObject* _model;
+		
 
 };
 

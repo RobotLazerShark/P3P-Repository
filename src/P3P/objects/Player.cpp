@@ -1,6 +1,8 @@
 #include "P3P/objects/Player.hpp"
 #include <P3P/Level.hpp>
 
+//static
+std::vector <std::string> Player::collectedItems;
 
 //Constructor
 Player::Player (int pX, int pZ, ProgressTracker* pProgressTracker) : GameObject ()
@@ -46,9 +48,10 @@ void Player::movePlayer (int pX, int pZ)
 		breakingBlock->breakBlock(_oldTile[0], _oldTile[1]);
 	}
 
-    //Check if the new position contains a box or a door
-    Box* box = dynamic_cast <Box*> ((GameObject*)Level::map->objectTiles [_currentTile [0]] [_currentTile [1]]);
+    //Check if the new position contains a box/door/collectible
+	    Box* box = dynamic_cast <Box*> ((GameObject*)Level::map->objectTiles [_currentTile [0]] [_currentTile [1]]);
     Door* door = dynamic_cast <Door*> ((GameObject*)Level::map->objectTiles [_currentTile [0]] [_currentTile [1]]);
+	Collectible* collectible = dynamic_cast <Collectible*> ((GameObject*)Level::map->objectTiles[_currentTile[0]][_currentTile[1]]);
     if (door != nullptr)//The new position contains a door
     {
 		if (!door->enter ())
@@ -85,6 +88,10 @@ void Player::movePlayer (int pX, int pZ)
 			return;
 		}
     }
+	else if (collectible != nullptr)//The new position contains a collectible
+	{
+		collectible->collect(_currentTile[0], _currentTile[1]);
+	}
 
     //update the object array
     Level::map->objectTiles [_currentTile [0]] [_currentTile [1]] = (int)this;
@@ -103,7 +110,6 @@ void Player::movePlayer (int pX, int pZ)
         }
     }
 }
-
 
 //Update player animation//[TODO]
 void Player::update (float pStep, bool pUpdateWorldTransform)

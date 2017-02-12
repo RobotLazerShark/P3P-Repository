@@ -12,13 +12,13 @@ Spikes::Spikes(int pX, int pZ) : GameObject()
 	_model->setParent(this);
 	translate(glm::vec3(pX * Level::TILESIZE, 0, pZ * Level::TILESIZE));
 
-	//set time
+	//set starting time
 	time = clock.getElapsedTime();
 	oldTime = time.asSeconds();
 
 	//save position
 	arrayPosition.x = pX;
-	arrayPosition.y = pZ;
+	arrayPosition.y = pZ; 
 }
 
 void Spikes::update(float pStep, bool pUpdateWorldTransform)

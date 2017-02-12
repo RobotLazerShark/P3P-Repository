@@ -129,6 +129,18 @@ void Level::loadMap ()
 					temp->setParent (this);
 					map->objectTiles [x] [y] = (int)temp;
 					break;
+				case 8:
+					//Collectible A
+					temp = new Collectible(x, y, "itemA");
+					temp->setParent(this);
+					map->objectTiles[x][y] = (int)temp;
+					break;
+				case 7:
+					//Collectible B
+					temp = new Collectible(x, y, "itemB");
+					temp->setParent(this);
+					map->objectTiles[x][y] = (int)temp;
+					break;
 				default:
 					break;
 			}
