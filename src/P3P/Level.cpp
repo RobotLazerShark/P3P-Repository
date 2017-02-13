@@ -97,39 +97,30 @@ void Level::loadMap ()
 			switch (map->baseTiles [x] [y])
 			{
 				case 1:
-					//Floor tile type 1
-					temp = new Floor (x, y, 1);
-					temp->setParent (this);
-					map->baseTiles [x] [y] = (int)temp;
-					break;
 				case 2:
-					//Floor tile type 2
-					temp = new Floor (x, y, 2);
-					temp->setParent (this);
-					map->baseTiles [x] [y] = (int)temp;
+				case 3:
+				case 4:
+					//Floor tiles (same functionality, different looks)
+					temp = new Floor (x, y, map->baseTiles [x] [y]);
 					break;
-			//	case ?:
-			//		//Breaking floortile
-			//		temp = new BreakingBlock (x, y);
-			//		temp->setParent (this);
-			//		map->baseTiles [x] [y] = (int) temp;
-			//		break;
-			//	case ?:
-			//		//Floortile with spikes
-			//		temp = new Spikes (x, y);
-			//		temp->setParent (this);
-			//		map->baseTiles [x] [y] = (int)temp;
-			//		break;
-				case 5:
+				case 17:
+					//Breaking floortile
+					temp = new BreakingBlock (x, y);
+					break;
+				case 18:
 					//Box spot
 					temp = new BoxSpot (x, y);
-					temp->setParent (this);
-					map->baseTiles [x] [y] = (int)temp;
 					progressTracker->boxSpots.push_back ((BoxSpot*)temp);
+					break;
+				case 19:
+					//Floortile with spikes
+					temp = new Spikes (x, y);
 					break;
 				default:
 					break;
 			}
+			temp->setParent (this);
+			map->baseTiles [x] [y] = (int)temp;
 		}
 	}
 	//Build all object tiles
@@ -139,34 +130,38 @@ void Level::loadMap ()
 		{
 			switch (map->objectTiles [x] [y])
 			{
-				case 3:
+				case 33:
 					//Player
 					temp = new Player (x, y, progressTracker);
-					temp->setParent (this);
-					map->objectTiles [x] [y] = (int)temp;
 					break;
-				case 4:
+				case 34:
 					//Box
 					temp = new Box (x, y);
-					temp->setParent (this);
-					map->objectTiles [x] [y] = (int)temp;
 					break;
-			//	case ?:
-			//		//Collectable
-			//		temp = new Collectable (x, y);
-			//		temp->setParent (this);
-			//		map->objectTiles [x] [y] = (int)temp;
-			//		break;
-			//	case ?:
-			//		//Gate
-			//		temp = new Gate (x, y);
-			//		temp->setParent (this);
-			//		map->objectTiles [x] [y] = (int)temp;
-			//		_gates.push_back (temp);//Track all gates to make sure open gates are deleted as well
+				case 35:
+					//Npc
+					temp = new Npc (x, y);
+				case 36:
+					//Collectable
+					temp = new Collectable (x, y);
+					break;
+				case 37:
+					//Gate
+					temp = new Gate (x, y);
+					_gates.push_back (temp);//Track all gates to make sure open gates are deleted as well
+					break;
+			//	case 39:
+			//	case 40:
+			//	case 41:
+			//	case 42:
+			//		//Fan
+			//		temp = new Fan (x, y, (map->objectTiles [x] [y] - 38));
 			//		break;
 				default:
 					break;
 			}
+			temp->setParent (this);
+			map->objectTiles [x] [y] = (int)temp;
 		}
 	}
 	//Doors and buttons need to be objects, so they can have properties
@@ -176,14 +171,14 @@ void Level::loadMap ()
 		object = map->xmlObjects [i];
 		switch (object->type)
 		{
-			case 6:
+			case 38:
 				//Door: property = number of level to load
 				temp = new Door (object->x, object->z, object->properties [0]);
 				break;
-		//	case ?:
-		//		//Button: property = x & y of the object it (de)activates
-		//		temp = new Button (object->x, object->z, (ButtonObject*)map->objectTiles [object->properties [0]] [object->properties [1]]);
-		//		break;
+			case 20:
+				//Button: property = x & y of the object it (de)activates
+				temp = new Button (object->x, object->z, (ButtonObject*)map->objectTiles [object->properties [0]] [object->properties [1]]);
+				break;
 			default:
 				break;
 		}
