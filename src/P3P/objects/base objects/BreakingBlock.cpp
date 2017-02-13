@@ -9,7 +9,7 @@ BreakingBlock::BreakingBlock(int pX, int pZ) : GameObject()
 	_model = new GameObject("cube_flat.obj");
 	_model->translate(glm::vec3(0, -0.5f, 0));
 
-	_model->setMaterial(new LitMaterial(glm::vec3(0.3f,0.3f,0.3f)));
+	_model->setMaterial(new LitMaterial(glm::vec3(0.6f,0.3f,0.3f)));
 	_model->setParent(this);
 
 	translate(glm::vec3(pX * Level::TILESIZE, 0, pZ * Level::TILESIZE));
