@@ -54,12 +54,24 @@ LevelMap* LevelImporter::ReadFile (std::string pFilename)
 			{
 				//By swapping row/column, we can use actual tile coördinates to index the vector.
 				std::vector <std::vector <int>> layer (map->width, std::vector <int> (map->height));//I'd be preferable to use an array, but C++ doesn't allow 2D arrays with variable sizes, so we just use a vector as if it were an array.
+				int strPtr = 0;
+				int strSize;
+				std::string readString = "";
 				for (int y = 0; y < map->height; y ++)
 				{
 					getline (file, line);//Read the next row
+					strSize = line.length ();
+					strPtr = 0;//Start at beginning of line
 					for (int x = 0; x < map->width; x ++)
 					{
-						layer [x] [y] = (line [x * 2] - '0');//x is multiplied by 2 because each integer is accompanied by a comma.
+						while (line [strPtr] != ',' && strPtr < strSize)
+						{
+							readString += line [strPtr];
+							strPtr ++;
+						}
+						layer [x] [y] = std::stoi (readString);
+						readString = "";
+						strPtr ++;//Skip the comma
 					}
 				}
 				switch (importedLayers)

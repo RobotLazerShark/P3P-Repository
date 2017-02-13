@@ -11,6 +11,7 @@
 #include <JCPPEngine/KeyEvent.hpp>
 #include <JCPPEngine/InputManager.hpp>
 #include <P3P/ProgressTracker.hpp>
+#include <P3P/objects/base objects/BreakingBlock.hpp>
 
 
 class Player : public GameObject, public JCPPEngine::AbstractListener
