@@ -4,7 +4,7 @@
 
 //Include files
 #include <mge/core/GameObject.hpp>
-#include <mge/materials/ColorMaterial.hpp>
+#include <mge/materials/LitMaterial.hpp>
 #include <SFML/Graphics.hpp>
 
 class Spikes : public GameObject
@@ -15,15 +15,11 @@ public:
 private:
 	GameObject* _model;
 
-	glm::vec2 arrayPosition;
-	sf::Clock clock;
-	sf::Time time;
+	int _position [2] = { 0, 0 };
+	float _timer;
 
-	bool isOn = false;
-	float timeSinceLastChange = 0;
+	bool _spikesUp = false;
 	const float SWITCH_TIME = 2;
-
-	float oldTime = 0;
 };
 
 #endif

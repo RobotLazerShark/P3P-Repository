@@ -67,12 +67,6 @@ bool Player::movePlayer (int pX, int pZ, bool pTranslate)
     _currentTile [0] += pX;
     _currentTile [1] += pZ;
 
-    //Check if the old position contains a breaking block
-    BreakingBlock* block = dynamic_cast <BreakingBlock*> ((GameObject*)Level::map->objectTiles [_oldTile [0]] [_oldTile [1]]);
-    if (block != nullptr)
-    {
-	block->breakBlock ();
-    }
     //Check if the new position contains a box or a door
     Box* box = dynamic_cast <Box*> ((GameObject*)Level::map->objectTiles [_currentTile [0]] [_currentTile [1]]);
     Door* door = dynamic_cast <Door*> ((GameObject*)Level::map->objectTiles [_currentTile [0]] [_currentTile [1]]);
@@ -149,6 +143,13 @@ void stopFunction (int pAnimIndex)
 		default:
 			break;
 	}
+}
+
+//Cause the player to die, and reload the level
+void Player::die ()
+{
+	//Play death animation/sound
+	Level::singletonInstance->reloadLevel ();
 }
 
 //Process input events

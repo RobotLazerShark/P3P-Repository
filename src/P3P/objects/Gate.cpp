@@ -1,6 +1,8 @@
 #include <P3P/objects/Gate.hpp>
 #include <P3P/Level.hpp>
 
+
+//Constructor
 Gate::Gate(int pX, int pZ) : GameObject()
 {
 	//Set up model
@@ -12,33 +14,34 @@ Gate::Gate(int pX, int pZ) : GameObject()
 	translate(glm::vec3(pX * Level::TILESIZE, 0, pZ * Level::TILESIZE));
 
 	//save position
-	arrayPosition.x = pX;
-	arrayPosition.y = pZ;
+	_position [0] = pX;
+	_position [1] = pZ;
 }
 
-void Gate::open()
-{
-	//make gate position in array empty
-	Level::map->objectTiles[arrayPosition.x][arrayPosition.y] = (int)nullptr;
-}
 
-bool Gate::close()
+//Based on whether or not the connect button is pressed, open and close the gate
+bool Gate::setActive (bool pActive)
 {
-	//if gate tile is taken by door or its empty
-	if (Level::map->objectTiles[arrayPosition.x][arrayPosition.y] == (int)this || Level::map->objectTiles[arrayPosition.x][arrayPosition.y] == (int)nullptr)
+	if (pActive)
 	{
-		//put gat back to array
-		Level::map->objectTiles[arrayPosition.x][arrayPosition.y] = (int)this;
-		
-		return true; //return true to let platofrm know that door succesfully closed
+		//make gate position in array empty
+		Level::map->objectTiles[_position [0]][_position [1]] = (int)nullptr;
 	}
-	//if gate tile is take by a box
-	else if(dynamic_cast <Player*> ((GameObject*)Level::map->objectTiles[arrayPosition.x][arrayPosition.y]) != nullptr)
+	else
 	{
-		std::cout << "player was killed by a closing gate" << std::endl;
-		//reload level
-		Level::singletonInstance->reloadLevel(); 
+		//if gate tile is empty
+		if (Level::map->objectTiles[_position [0]][_position [1]] == (int)nullptr)
+		{
+			//put gate back into array
+			Level::map->objectTiles[_position [0]][_position [1]] = (int)this;
+			return false; //return false so the button will keep calling this function until the gate can close, or the box/player goes off the button
+		}
+		//if gate tile is taken by the player
+		else if(dynamic_cast <Player*> ((GameObject*)Level::map->objectTiles[_position [0]][_position [1]]) != nullptr)
+		{
+			//Kill the player
+			Player::singletonInstance->die ();
+		}
 	}
-	
-	return false; //return false to let platofrm know that door wasnt closed
+	return true;//return true to let the button know the switch succeeded
 }

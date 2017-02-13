@@ -11,6 +11,7 @@
 #include <JCPPEngine/KeyEvent.hpp>
 #include <JCPPEngine/InputManager.hpp>
 #include <P3P/ProgressTracker.hpp>
+#include <P3P/objects/Collectable.hpp>
 #include <P3P/objects/base objects/BreakingBlock.hpp>
 
 
@@ -21,11 +22,13 @@ class Player : public GameObject, public JCPPEngine::AbstractListener
 	~Player () override;
         bool movePlayer (int pX, int pZ, bool pTranslate = true);
 	void ProcessEvent (JCPPEngine::Event* pEvent) override;
+	void die ();
 	static Player* singletonInstance;
 	//Preferably these variables would be private, but they are needed in a globalspace function
 	bool _moving = false;
 	int _currentTile[2];//Arrays, because glm::vec uses floats
 	int _oldTile[2];
+	std::vector <Collectable*> inventory;
 
     protected:
 

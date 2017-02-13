@@ -4,17 +4,17 @@
 //Include files
 #include <mge/core/GameObject.hpp>
 #include <mge/materials/LitMaterial.hpp>
+#include <P3P/ButtonTarget.hpp>
 
-class Gate : public GameObject
+class Gate : public GameObject, public ButtonTarget
 {
 	public:
 		Gate(int pX, int pZ);
-		void open();
-		bool close();
+		bool setActive (bool pActive) override;
 
 	private:
 		GameObject* _model;
-		glm::vec2 arrayPosition;
+		int _position [2] = { 0, 0 };
 };
 
 #endif

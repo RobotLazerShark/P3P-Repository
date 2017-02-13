@@ -6,7 +6,7 @@
 class Quest
 {
 public:
-	Quest(std::string pInfo, std::string pGoalItem);
+	Quest (std::string pInfo, std::string pGoalItem);
 	std::string _info;
 	std::string _goalItem;
 };

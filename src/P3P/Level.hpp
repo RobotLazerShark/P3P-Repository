@@ -13,6 +13,7 @@
 #include <P3P/objects/Player.hpp>
 #include <P3P/objects/Box.hpp>
 #include <P3P/objects/Door.hpp>
+#include <P3P/objects/Gate.hpp>
 
 
 class Level : public GameObject
@@ -22,6 +23,7 @@ class Level : public GameObject
 		int _levelKey = 1;
 		bool _isHub = false;
 		int _nextLevel = -1;
+		std::vector <Gate*> _gates;
 	public:
 		Level (int pLevelNumber);
 		~Level ();

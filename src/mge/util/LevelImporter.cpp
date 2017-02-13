@@ -100,9 +100,21 @@ LevelMap* LevelImporter::ReadFile (std::string pFilename)
 			}
 			else if (line.find ("<object id") != std::string::npos)//Check if we're at an object
 			{
+				XmlObject* object = new XmlObject ();
 				std::string temp;
-				//Get doorobject's x position
-				int strPos = (int)line.find ("x=");
+				//Get object's gid/type
+				int strPos = (int)line.find ("gid=");
+				strPos += 5;
+				while (line [strPos] != '"')
+				{
+					//If we haven't reached the end of the value, add the digit to the number.
+					temp += line [strPos];
+					strPos ++;
+				}
+				object->type = std::stoi (temp);
+				//Get object's x position
+				temp = "";
+				strPos = (int)line.find ("x=");
 				strPos += 3;
 				while (line [strPos] != '"')
 				{
@@ -110,8 +122,8 @@ LevelMap* LevelImporter::ReadFile (std::string pFilename)
 					temp += line [strPos];
 					strPos ++;
 				}
-				int x = std::stoi (temp) / TILED_TILESIZE;
-				//Get doorobject's z position
+				object->x = std::stoi (temp) / TILED_TILESIZE;
+				//Get object's z position
 				temp = "";
 				strPos = (int)line.find ("y=");
 				strPos += 3;
@@ -121,22 +133,28 @@ LevelMap* LevelImporter::ReadFile (std::string pFilename)
 					temp += line [strPos];
 					strPos ++;
 				}
-				int z = std::stoi (temp) / TILED_TILESIZE - 1;
-				//Get doorobject's levelnumber
-				while (line.find ("<property") == std::string::npos)
+				object->z = std::stoi (temp) / TILED_TILESIZE - 1;
+				//Get object's properties
+				while (line.find ("</properties") == std::string::npos )//While we are still reading properties
 				{
+					while (line.find ("<property") == std::string::npos)//Skip through lines until a property is found
+					{
+						getline (file, line);
+					}
+					//Add the property value to the property list
+					temp = "";
+					strPos = (int)line.find ("value=");
+					strPos += 7;
+					while (line [strPos] != '"')
+					{
+						//If we haven't reached the end of the value, add the digit to the number.
+						temp += line [strPos];
+						strPos ++;
+					}
+					object->properties.push_back (std::stof (temp));
 					getline (file, line);
 				}
-				temp = "";
-				strPos = (int)line.find ("value=");
-				strPos += 7;
-				while (line [strPos] != '"')
-				{
-					//If we haven't reached the end of the value, add the digit to the number.
-					temp += line [strPos];
-					strPos ++;
-				}
-				map->doorObjects.push_back (new DoorObject (x, z, std::stoi (temp)));
+				map->xmlObjects.push_back (object);
 			}
 		}
 		return map;

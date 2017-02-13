@@ -31,7 +31,7 @@ void MGEDemo::_initializeScene()
 	dirLight->rotate (glm::radians (45.0f), glm::vec3 (1, 0, 0));
 	dirLight->setParent (_world);
 	ShaderDataUtil::SetAmbientLight (glm::vec3 (1, 1, 1), 0.15f);
-	camera->setBehaviour (new CameraOrbitBehaviour (10.0f, glm::radians (-60.0f), glm::radians (60.0f), 0.01f, _world));
+	//camera->setBehaviour (new CameraOrbitBehaviour (10.0f, glm::radians (-60.0f), glm::radians (60.0f), 0.01f, _world));
 
 	//Set up P3P hub (starts the game)
 	Hub* hub = new Hub ();

@@ -17,7 +17,22 @@ BreakingBlock::BreakingBlock(int pX, int pZ) : GameObject()
 	_position [1] = pZ;
 }
 
-void BreakingBlock::breakBlock()
+void BreakingBlock::update (float pStep, bool pUpdateWorldTransform)
+{
+	//If the player is on top of us, mark for destruction
+	if (!_breaking && Player::singletonInstance->_currentTile [0] == _position [0] && Player::singletonInstance->_currentTile [1] == _position [1])
+	{
+		_breaking = true;
+	}
+	//If the player was on us before, but not anymore, break
+	else if (_breaking && Player::singletonInstance->_currentTile[0] != _position[0] && Player::singletonInstance->_currentTile[1] != _position[1])
+	{
+		breakBlock ();
+	}
+	GameObject::update (pStep, pUpdateWorldTransform);
+}
+
+void BreakingBlock::breakBlock ()
 {
 	//remove from array
 	Level::map->baseTiles [_position [0]] [_position [1]] = (int)nullptr;
