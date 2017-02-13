@@ -48,6 +48,7 @@ class GameObject
 		glm::mat4 getWorldTransform () const;
 		void translate (glm::vec3 pTranslation);
 		void rotate (float pAngle, glm::vec3 pAxis);
+		void rotate (glm::vec3 pRotation);
 		void scale (float pScale);//Only allow uniform scaling (for normal calculations)
 		void badScale (glm::vec3 pScale);//Allow for non-uniform scaling. The naming should make clear it shouldn't be used carelessly.
 		glm::vec3 getScale ();//Tracking the actual scale value more easily

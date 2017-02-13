@@ -1,5 +1,6 @@
 #include "mge/MGEDemo.hpp"
-#include <mge/behaviours/CameraOrbitBehaviour.hpp>//[TESTING]
+//[TESTING]
+#include <mge/behaviours/CameraOrbitBehaviour.hpp>
 
 
 //construct the game class into _window and _renderer (other parts are initialized by build)

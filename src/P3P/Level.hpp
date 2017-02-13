@@ -10,11 +10,10 @@
 #include <P3P/ProgressTracker.hpp>
 #include <P3P/objects/base objects/Floor.hpp>
 #include <P3P/objects/base objects/BoxSpot.hpp>
-#include <P3P/objects/base objects/BreakingBlock.hpp>
-
 #include <P3P/objects/Player.hpp>
 #include <P3P/objects/Box.hpp>
 #include <P3P/objects/Door.hpp>
+
 
 class Level : public GameObject
 {
@@ -22,8 +21,10 @@ class Level : public GameObject
 		int _levelNumber = 0;
 		int _levelKey = 1;
 		bool _isHub = false;
+		int _nextLevel = -1;
 	public:
 		Level (int pLevelNumber);
+		~Level ();
 		void increaseLevelKey ();
 		int levelKey ();
 		bool levelCompleted = false;
@@ -35,6 +36,7 @@ class Level : public GameObject
 		static const float TILESIZE;
 		static LevelMap* map;
 		static Level* singletonInstance;
+		void update (float pStep, bool pUpdateWorldTransform = false) override;
 };
 
 #endif

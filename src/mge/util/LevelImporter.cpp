@@ -19,6 +19,7 @@ LevelMap* LevelImporter::ReadFile (std::string pFilename)
 		{
 			//Read the next line in the file
 			getline (file, line);
+			//Read map size
 			if (map == nullptr && line.find ("<map version=") != std::string::npos)//Check if we're at map
 			{
 				//Read map-width
@@ -48,8 +49,8 @@ LevelMap* LevelImporter::ReadFile (std::string pFilename)
 				//Create map
 				map = new LevelMap (mapWidth, mapHeight);
 			}
-
-			if (line.find ("<data") != std::string::npos)//Check if we're at a data
+			//Read map data
+			else if (line.find ("<data") != std::string::npos)//Check if we're at a data
 			{
 				//By swapping row/column, we can use actual tile coördinates to index the vector.
 				std::vector <std::vector <int>> layer (map->width, std::vector <int> (map->height));//I'd be preferable to use an array, but C++ doesn't allow 2D arrays with variable sizes, so we just use a vector as if it were an array.
@@ -130,7 +131,7 @@ LevelMap* LevelImporter::ReadFile (std::string pFilename)
 	}
 	else
 	{
-		std::cout << "[ERROR]: could not import level from file 'levels/" << pFilename << "' !" << std::endl;
+		std::cout << "[ERROR]: could not import level from file 'levels/" << pFilename << "'!" << std::endl;
 		return nullptr;
 	}
 }

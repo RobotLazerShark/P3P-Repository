@@ -1,4 +1,4 @@
-#include "AbstractGame.hpp"
+﻿#include "AbstractGame.hpp"
 
 #include <iostream>
 using namespace std;
@@ -7,8 +7,8 @@ using namespace std;
 #include "mge/core/World.hpp"
 
 static float timeSinceProgramStart;
-int AbstractGame::windowWidth=800;
-int AbstractGame::windowHeight=600;
+int AbstractGame::windowWidth;
+int AbstractGame::windowHeight;
 int AbstractGame::windowHalfWidth = AbstractGame::windowWidth * 0.5f;
 int AbstractGame::windowHalfHeight = AbstractGame::windowHeight * 0.5f;
 
@@ -20,6 +20,8 @@ float AbstractGame::Time ()
 AbstractGame::AbstractGame():_window(NULL),_renderer(NULL),_world(NULL), _fps(0)
 {
 	JCPPEngine::InputManager ();
+	windowHalfWidth = windowWidth * 0.5f;
+	windowHalfHeight = windowHeight * 0.5f;
     //ctor
 }
 
@@ -53,7 +55,12 @@ void AbstractGame::initialize() {
 ///SETUP
 
 void AbstractGame::_initializeWindow() {
-	_window = new sf::RenderWindow( sf::VideoMode::getFullscreenModes () [0]/*(windowWidth, windowHeight)*/, "My Game!", sf::Style::Fullscreen, sf::ContextSettings(24,8,0,3,3));
+	sf::VideoMode videoMode = //sf::VideoMode::getFullscreenModes () [0];
+		sf::VideoMode(1400,800);//[TESTING]
+//	_window = new sf::RenderWindow( videoMode, "G1¡t©h/Fï×", sf::Style::Fullscreen, sf::ContextSettings(24,8,0,3,3));
+	_window = new sf::RenderWindow( videoMode, "« G1¡t©h/Fï× »", sf::Style::Default, sf::ContextSettings(24,8,0,3,3));//[TESTING]
+	windowWidth = videoMode.width;
+	windowHeight = videoMode.height;
 	_window->setMouseCursorVisible (false);
 //	_cursor = new sf::Sprite (*JCPPEngine::TextureManager::GetTexture ("images/Crosshair.png"));
 //	_cursor->setOrigin (12, 12);

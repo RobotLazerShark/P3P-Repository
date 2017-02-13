@@ -443,6 +443,18 @@ void GameObject::rotate (float pAngle, glm::vec3 pAxis)
 	_dirtyCollider = true;
 }
 
+//Nicer version of rotate, using three angles (in degrees)
+void GameObject::rotate (glm::vec3 pRotation)
+{
+	glm::mat4 temp = glm::rotate (_transform, glm::radians (pRotation.y), glm::vec3 (0, 1, 0));
+	temp = glm::rotate (temp, glm::radians (pRotation.x), glm::vec3 (1, 0, 0));
+	temp = glm::rotate (temp, glm::radians (pRotation.z), glm::vec3 (0, 0, 1));
+	_transform = temp;
+	_dirtyWorldTransform = true;
+	_updateChildTransforms = true;
+	_dirtyCollider = true;
+}
+
 //all game objects are updated in a backward loop, first the behaviour is updated, then all children are updated
 void GameObject::update (float pStep, bool pUpdateWorldTransform)
 {

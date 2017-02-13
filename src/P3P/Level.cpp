@@ -19,6 +19,23 @@ Level::Level (int pLevelNumber)
 	setMap (pLevelNumber);
 	loadMap ();
 }
+//Destructor
+Level::~Level ()
+{
+	delete map;
+}
+
+void Level::update (float pStep, bool pUpdateWorldTransform)
+{
+	if (_nextLevel != -1)
+	{
+		clear ();
+		setMap (_nextLevel);
+		loadMap ();
+		_nextLevel = -1;
+	}
+	GameObject::update (pStep, pUpdateWorldTransform);
+}
 
 
 //////////////////////////////|	LEVEL ACCESS
@@ -39,6 +56,11 @@ int Level::levelKey ()
 void Level::setMap (int pLevelNumber)
 {
 	_levelNumber = pLevelNumber;
+	if (map != nullptr)
+	{
+		delete map;
+	}
+
 	if (_levelNumber == 0)
 	{
 		map = LevelImporter::ReadFile ("Hub.tmx");
@@ -85,12 +107,6 @@ void Level::loadMap ()
 					temp = new Floor (x, y, 2);
 					temp->setParent (this);
 					map->baseTiles [x] [y] = (int)temp;
-					break;
-				case 3:
-					//Breaking block
-					temp = new BreakingBlock(x, y);
-					temp->setParent(this);
-					map->baseTiles[x][y] = (int)temp;
 					break;
 				case 5:
 					//Box spot
@@ -179,15 +195,11 @@ void Level::clear ()
 //Clear everything in the level, and build a new level
 void Level::loadLevel (int pLevelNumber)
 {
-	clear ();
-	setMap (pLevelNumber);
-	loadMap ();
+	_nextLevel = pLevelNumber;
 }
 
 //Reload the current level
 void Level::reloadLevel ()
 {
-	clear ();
-	setMap (_levelNumber);
-	loadMap ();
+	_nextLevel = 0;
 }

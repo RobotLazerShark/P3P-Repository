@@ -1,0 +1,27 @@
+time = 0
+-
+time = 1
+position = 0.1, -0.1, 0
+rotation = 5, -15, 10
+scale = 1.5, 0.9, 1.1
+-
+time = 2
+position = 0, 0.1, -0.1
+rotation = 10, 15, 5
+scale = 0.5, 1.1, 0.9
+-
+time = 3
+position = 0, 0, 0
+rotation = 0, 0, 0
+scale = 1, 1, 1
+--
+
+time is the time for the keyframe values
+position is the position the object will have (relative to its parent)
+rotation is how the object will be rotated (relative to its parent)
+scale is how the object will be scaled (relative to its parent)
+
+time values are written seconds : milliseconds, for example 1:05
+fractions are also possible (1.5 instead of 1:30)
+
+if you leave a field empty, it will have the same value as the last keyframe

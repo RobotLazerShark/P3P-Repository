@@ -4,7 +4,6 @@
 
 ProgressTracker::ProgressTracker()
 {
-	boxSpots = std::vector <BoxSpot*> (0);
 }
 
 bool ProgressTracker::checkWin()
