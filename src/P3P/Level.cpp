@@ -148,7 +148,7 @@ void Level::loadMap ()
 				case 37:
 					//Gate
 					temp = new Gate (x, y);
-					_gates.push_back (temp);//Track all gates to make sure open gates are deleted as well
+					_gates.push_back ((Gate*)temp);//Track all gates to make sure open gates are deleted as well
 					break;
 			//	case 39:
 			//	case 40:
@@ -177,7 +177,7 @@ void Level::loadMap ()
 				break;
 			case 20:
 				//Button: property = x & y of the object it (de)activates
-				temp = new Button (object->x, object->z, (ButtonObject*)map->objectTiles [object->properties [0]] [object->properties [1]]);
+				temp = new Button (object->x, object->z, (ButtonTarget*)map->objectTiles [object->properties [0]] [object->properties [1]]);
 				break;
 			default:
 				break;
