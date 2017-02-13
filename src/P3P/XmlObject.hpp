@@ -13,7 +13,7 @@ class XmlObject
 		int type = 0;
 		int x = 0;
 		int z = 0;
-		std::vector <float> properties;
+		std::vector <std::string> properties;
 };
 
 #endif

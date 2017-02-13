@@ -151,7 +151,7 @@ LevelMap* LevelImporter::ReadFile (std::string pFilename)
 						temp += line [strPos];
 						strPos ++;
 					}
-					object->properties.push_back (std::stof (temp));
+					object->properties.push_back (temp);
 					getline (file, line);
 				}
 				map->xmlObjects.push_back (object);

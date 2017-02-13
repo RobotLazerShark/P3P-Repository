@@ -102,25 +102,32 @@ void Level::loadMap ()
 				case 4:
 					//Floor tiles (same functionality, different looks)
 					temp = new Floor (x, y, map->baseTiles [x] [y]);
+					temp->setParent (this);
+					map->baseTiles [x] [y] = (int)temp;
 					break;
 				case 17:
 					//Breaking floortile
 					temp = new BreakingBlock (x, y);
+					temp->setParent (this);
+					map->baseTiles [x] [y] = (int)temp;
 					break;
 				case 18:
 					//Box spot
 					temp = new BoxSpot (x, y);
 					progressTracker->boxSpots.push_back ((BoxSpot*)temp);
+					temp->setParent (this);
+					map->baseTiles [x] [y] = (int)temp;
 					break;
 				case 19:
 					//Floortile with spikes
 					temp = new Spikes (x, y);
+					temp->setParent (this);
+					map->baseTiles [x] [y] = (int)temp;
 					break;
 				default:
+					map->baseTiles [x] [y] = (int)nullptr;
 					break;
 			}
-			temp->setParent (this);
-			map->baseTiles [x] [y] = (int)temp;
 		}
 	}
 	//Build all object tiles
@@ -133,22 +140,26 @@ void Level::loadMap ()
 				case 33:
 					//Player
 					temp = new Player (x, y, progressTracker);
+					temp->setParent (this);
+					map->objectTiles [x] [y] = (int)temp;
 					break;
 				case 34:
 					//Box
 					temp = new Box (x, y);
+					temp->setParent (this);
+					map->objectTiles [x] [y] = (int)temp;
 					break;
 				case 35:
 					//Npc
 					temp = new Npc (x, y);
-				case 36:
-					//Collectable
-					temp = new Collectable (x, y);
-					break;
+					temp->setParent (this);
+					map->objectTiles [x] [y] = (int)temp;
 				case 37:
 					//Gate
 					temp = new Gate (x, y);
 					_gates.push_back ((Gate*)temp);//Track all gates to make sure open gates are deleted as well
+					temp->setParent (this);
+					map->objectTiles [x] [y] = (int)temp;
 					break;
 			//	case 39:
 			//	case 40:
@@ -156,12 +167,13 @@ void Level::loadMap ()
 			//	case 42:
 			//		//Fan
 			//		temp = new Fan (x, y, (map->objectTiles [x] [y] - 38));
+			//		temp->setParent (this);
+			//		map->objectTiles [x] [y] = (int)temp;
 			//		break;
 				default:
+					map->objectTiles [x] [y] = (int)nullptr;
 					break;
 			}
-			temp->setParent (this);
-			map->objectTiles [x] [y] = (int)temp;
 		}
 	}
 	//Doors and buttons need to be objects, so they can have properties
@@ -171,30 +183,60 @@ void Level::loadMap ()
 		object = map->xmlObjects [i];
 		switch (object->type)
 		{
-			case 38:
-				//Door: property = number of level to load
-				temp = new Door (object->x, object->z, object->properties [0]);
-				break;
 			case 20:
 				//Button: property = x & y of the object it (de)activates
-				temp = new Button (object->x, object->z, (ButtonTarget*)map->objectTiles [object->properties [0]] [object->properties [1]]);
+				temp = new Button (object->x, object->z, (ButtonTarget*)map->objectTiles [std::stoi (object->properties [0])] [std::stoi (object->properties [1])]);
+				temp->setParent (this);
+				//If there is an object already in this place, delete it.
+				if (map->objectTiles [object->x] [object->z] != (int)nullptr)
+				{
+					delete (GameObject*)map->objectTiles [object->x] [object->z];
+				}
+				map->objectTiles [object->x] [object->z] = (int)temp;
+				break;
+			case 36:
+				//Collectable
+				temp = new Collectable (object->x, object->z, object->properties [0]);
+				temp->setParent (this);
+				//If there is an object already in this place, delete it.
+				if (map->objectTiles [object->x] [object->z] != (int)nullptr)
+				{
+					delete (GameObject*)map->objectTiles [object->x] [object->z];
+				}
+				map->objectTiles [object->x] [object->z] = (int)temp;
+				break;
+			case 38:
+				//Door: property = number of level to load
+				temp = new Door (object->x, object->z, std::stoi (object->properties [0]));
+				temp->setParent (this);
+				//If there is an object already in this place, delete it.
+				if (map->objectTiles [object->x] [object->z] != (int)nullptr)
+				{
+					delete (GameObject*)map->objectTiles [object->x] [object->z];
+				}
+				map->objectTiles [object->x] [object->z] = (int)temp;
 				break;
 			default:
+				map->objectTiles [object->x] [object->z] = (int)nullptr;
 				break;
 		}
-		temp->setParent (this);
-		//If there is an object already in this place, delete it.
-		if (map->objectTiles [object->x] [object->z] != (int)nullptr)
-		{
-			delete (GameObject*)map->objectTiles [object->x] [object->z];
-		}
-		map->objectTiles [object->x] [object->z] = (int)temp;
 	}
 }
 
 //Delete all objects in the level
 void Level::clear ()
 {
+	//Delete gates
+	for (Gate* gate : _gates)
+	{
+		map->objectTiles [gate->x ()] [gate->z ()] = (int)nullptr;
+		gate->setParent (nullptr);
+		delete gate;
+	}
+	_gates.clear ();
+
+	//Delete platforms and objects
+	_gates.clear ();
 	GameObject* temp;
 	int ptr;
 	for (int x = 0; x < map->width; x ++)
@@ -207,6 +249,7 @@ void Level::clear ()
 				temp = (GameObject*)ptr;
 				temp->setParent (nullptr);
 				delete temp;
+				map->baseTiles [x] [y] = (int)nullptr;
 			}
 			ptr = map->objectTiles [x] [y];
 			if (ptr != (int)nullptr)
@@ -214,6 +257,7 @@ void Level::clear ()
 				temp = (GameObject*)ptr;
 				temp->setParent (nullptr);
 				delete temp;
+				map->objectTiles [x] [y] = (int)nullptr;
 			}
 		}
 		map->baseTiles [x].clear ();
@@ -221,16 +265,13 @@ void Level::clear ()
 	}
 	map->baseTiles.clear ();
 	map->objectTiles.clear ();
+
+	//Delete xmlobjects
 	for (int i = 0, size = map->xmlObjects.size (); i < size; i ++)
 	{
 		delete map->xmlObjects [i];
 	}
 	map->xmlObjects.clear ();
-	for (int i = 0, size = _gates.size (); i < size; i ++)
-	{
-		delete _gates [i];
-	}
-	_gates.clear ();
 }
 
 //Clear everything in the level, and build a new level

@@ -7,7 +7,7 @@ Gate::Gate(int pX, int pZ) : GameObject()
 {
 	//Set up model
 	_model = new GameObject("cube_flat.obj");
-	_model->translate(glm::vec3(0, -0.5f, 0));
+	_model->translate(glm::vec3(0, 0.5f, 0));
 	_model->setMaterial(new LitMaterial("Gate.jpg"));
 	_model->setParent(this);
 
@@ -16,6 +16,19 @@ Gate::Gate(int pX, int pZ) : GameObject()
 	//save position
 	_position [0] = pX;
 	_position [1] = pZ;
+}
+
+
+//Get x position
+int Gate::x ()
+{
+	return _position [0];
+}
+
+//Get z position
+int Gate::z ()
+{
+	return _position [1];
 }
 
 

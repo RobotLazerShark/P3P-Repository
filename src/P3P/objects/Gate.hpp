@@ -11,6 +11,8 @@ class Gate : public GameObject, public ButtonTarget
 	public:
 		Gate(int pX, int pZ);
 		bool setActive (bool pActive) override;
+		int x ();
+		int z ();
 
 	private:
 		GameObject* _model;

@@ -38,6 +38,6 @@ void BreakingBlock::breakBlock ()
 	Level::map->baseTiles [_position [0]] [_position [1]] = (int)nullptr;
 
 	//delete
-	setParent(nullptr);
+	setParent (nullptr);
 	delete this;
 }

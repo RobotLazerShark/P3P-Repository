@@ -51,6 +51,10 @@ Player::~Player ()
 	{
 		delete _progressTracker;
 	}
+	for (int i = 0, size = inventory.size (); i < size; i ++)
+	{
+		delete inventory [i];
+	}
 	_wheelAnimator = nullptr;
 	_baseAnimator = nullptr;
 	GameObject::~GameObject ();
@@ -65,45 +69,48 @@ bool Player::movePlayer (int pX, int pZ, bool pTranslate)
     _oldTile [0] = _currentTile [0];
     _oldTile [1] = _currentTile [1];
     _currentTile [0] += pX;
-    _currentTile [1] += pZ;
+    _currentTile [1] += pZ;std::cout<<_oldTile[0]<<", "<<_oldTile[1]<<"\t"<<_currentTile[0]<<", "<<_currentTile[1]<<std::endl;
 
-    //Check if the new position contains a box or a door
-    Box* box = dynamic_cast <Box*> ((GameObject*)Level::map->objectTiles [_currentTile [0]] [_currentTile [1]]);
-    Door* door = dynamic_cast <Door*> ((GameObject*)Level::map->objectTiles [_currentTile [0]] [_currentTile [1]]);
-    if (door != nullptr)//The new position contains a door
+    if (Level::map->objectTiles [_currentTile [0]] [_currentTile [1]] != (int)nullptr)
     {
-	if (!door->enter ())
-	{
-		//we cannot enter the door
-		_currentTile [0] = _oldTile [0];
-		_currentTile [1] = _oldTile [1];
+        //Check if the new position contains a box or a door
+        Box* box = dynamic_cast <Box*> ((GameObject*)Level::map->objectTiles [_currentTile [0]] [_currentTile [1]]);
+        Door* door = dynamic_cast <Door*> ((GameObject*)Level::map->objectTiles [_currentTile [0]] [_currentTile [1]]);
+        if (door != nullptr)//The new position contains a door
+        {
+		if (!door->enter ())
+		{
+			//we cannot enter the door
+			_currentTile [0] = _oldTile [0];
+			_currentTile [1] = _oldTile [1];
+			return false;
+		}
 		return false;
 	}
-	return false;
-    }
-    else if (box != nullptr)//The new position contains a box
-    {
-	int newBoxTile [2] = { _currentTile [0], _currentTile [1] };
-	newBoxTile [0] += pX;
-	newBoxTile [1] += pZ;
-	//Check if we can move the box
-	if
-	(
-		newBoxTile [0] >= 0 && newBoxTile [0] < Level::map->width &&
-		newBoxTile [1] >= 0 && newBoxTile [1] < Level::map->height &&
-		Level::map->baseTiles [newBoxTile [0]] [newBoxTile [1]] != (int)nullptr &&
-		Level::map->objectTiles [newBoxTile [0]] [newBoxTile [1]] == (int)nullptr
-	)
+	else if (box != nullptr)//The new position contains a box
 	{
-		//we can move the box
-		box->moveBox (pX, pZ);
-	}
-	else
-	{
-		//we cannot move the box
-		_currentTile [0] = _oldTile [0];
-		_currentTile [1] = _oldTile [1];
-		return false;
+		int newBoxTile [2] = { _currentTile [0], _currentTile [1] };
+		newBoxTile [0] += pX;
+		newBoxTile [1] += pZ;
+		//Check if we can move the box
+		if
+		(
+			newBoxTile [0] >= 0 && newBoxTile [0] < Level::map->width &&
+			newBoxTile [1] >= 0 && newBoxTile [1] < Level::map->height &&
+			Level::map->baseTiles [newBoxTile [0]] [newBoxTile [1]] != (int)nullptr &&
+			Level::map->objectTiles [newBoxTile [0]] [newBoxTile [1]] == (int)nullptr
+		)
+		{
+			//we can move the box
+			box->moveBox (pX, pZ);
+		}
+		else
+		{
+			//we cannot move the box
+			_currentTile [0] = _oldTile [0];
+			_currentTile [1] = _oldTile [1];
+			return false;
+		}
 	}
     }
 
