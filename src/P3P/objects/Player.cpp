@@ -81,7 +81,7 @@ bool Player::movePlayer (int pX, int pZ, bool pTranslate)
         Box* box = dynamic_cast <Box*> ((GameObject*)Level::map->objectTiles [_currentTile [0]] [_currentTile [1]]);
         Door* door = dynamic_cast <Door*> ((GameObject*)Level::map->objectTiles [_currentTile [0]] [_currentTile [1]]);
 	Collectable* collectable = dynamic_cast <Collectable*> ((GameObject*)Level::map->objectTiles [_currentTile [0]] [_currentTile [1]]);
-	if (_currentTile [0] == Npc::singletonInstance->position [0] && _currentTile [1] == Npc::singletonInstance->position [1])
+	if (Npc::singletonInstance != nullptr && _currentTile [0] == Npc::singletonInstance->position [0] && _currentTile [1] == Npc::singletonInstance->position [1])
 	{
 		//we cannot move into the Npc's space
 		_currentTile [0] = _oldTile [0];
@@ -137,31 +137,6 @@ bool Player::movePlayer (int pX, int pZ, bool pTranslate)
 		_currentTile [0] = _oldTile [0];
 		_currentTile [1] = _oldTile [1];
 		return false;
-	}
-	else if (fan != nullptr)//The new position contains a fan
-	{
-		int newFanTile[2] = { _currentTile[0], _currentTile[1] };
-		newFanTile[0] += pX;
-		newFanTile[1] += pZ;
-		//Check if we can move the box
-		if
-			(
-				newFanTile[0] >= 0 && newFanTile[0] < Level::map->width &&
-				newFanTile[1] >= 0 && newFanTile[1] < Level::map->height &&
-				Level::map->baseTiles[newFanTile[0]][newFanTile[1]] != (int)nullptr &&
-				Level::map->objectTiles[newFanTile[0]][newFanTile[1]] == (int)nullptr
-				)
-		{
-			//we can move the fan
-			fan->move(pX, pZ);
-		}
-		else
-		{
-			//we cannot the fan
-			_currentTile[0] = _oldTile[0];
-			_currentTile[1] = _oldTile[1];
-			return false;
-		}
 	}
     }
 

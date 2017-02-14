@@ -1,15 +1,19 @@
 #include <P3P/objects/Fan.hpp>
 #include <P3P/Level.hpp>
 
-Fan::Fan(int pX, int pZ, int pDirection[2], bool pReversed) : GameObject()
+Fan::Fan(int pX, int pZ, int pXDirection, int pYDirection, bool pReversed) : GameObject()
 {
 	//Set up model
 	_model = new GameObject("cube_flat.obj");
 	_model->translate(glm::vec3(0, 0.5f, 0));
 	if (!pReversed)
+	{
 		_model->setMaterial(new LitMaterial("Fan.jpg"));
+	}
 	else
+	{
 		_model->setMaterial(new LitMaterial("FanR.jpg"));
+	}
 	_model->setParent(this);
 	translate(glm::vec3(pX * Level::TILESIZE, 0, pZ * Level::TILESIZE));
 
@@ -18,19 +22,30 @@ Fan::Fan(int pX, int pZ, int pDirection[2], bool pReversed) : GameObject()
 	_position[1] = pZ;
 
 	//save direction
-	_direction[0] = pDirection[0];
-	_direction[1] = pDirection[1];
+	_direction[0] = pXDirection;
+	_direction[1] = pYDirection;
 
 	//set mode
 	_reversed = pReversed;
-	//save visible area
-	visibleAreaSize =  sizeof(_visibleArea) / sizeof(*_visibleArea);
-	saveVisibleArea();
-	//push/pull
-	if (!_reversed)
-		push();
-	else
-		pull();
+	//save items in visible area
+	for (int i = 0; i < _visibleAreaSize; i++)
+	{
+		int tempX = _position[0] + _direction[0] * (i + 1);
+		int tempY = _position[1] + _direction[1] * (i + 1);
+		//if position of element in visible area isn't out of bounds
+		if
+		(
+			tempX >= 0 && tempX < Level::map->width &&
+			tempY >= 0 && tempY < Level::map->height
+		)
+		{
+			_visibleArea [i] = Level::map->objectTiles [tempX] [tempY];
+		}
+		else 
+		{
+			_visibleArea [i] = 0;
+		}
+	}
 }
 
 void Fan::move(int pX, int pZ)
@@ -58,106 +73,94 @@ void Fan::update(float pStep, bool pUpdateWorldTransform)
 	if (checkForChanges())
 	{
 		if (!_reversed)
+		{
 			push();
+		}
 		else
+		{
 			pull();
+		}
 	}
 }
 
 bool Fan::checkForChanges() //return true if any changes found
 {
-	for (int i = 0; i < visibleAreaSize; i++)
+	bool changes = false;
+	for (int i = 0; i < _visibleAreaSize; i++)
 	{
+		int tempX = _position[0] + _direction[0] * (i + 1);
+		int tempY = _position[1] + _direction[1] * (i + 1);
 		//if position of element in visible area isn't out of bounds
-		if (_position[0] + _direction[0] * (i + 1) >= 0 && _position[0] + _direction[0] * (i + 1) < Level::map->width
-			&& _position[1] + _direction[1] * (i + 1) >= 0 && _position[1] + _direction[1] * (i + 1) < Level::map->height)
+		if
+		(
+			tempX >= 0 && tempX < Level::map->width &&
+			tempY >= 0 && tempY < Level::map->height
+		)
 		{
 			//check if element in visible area is equal to saved one
-			if (_visibleArea[i] != Level::map->objectTiles[_position[0] + _direction[0] * (i + 1)][_position[1] + _direction[1] * (i + 1)])
+			if (_visibleArea[i] != Level::map->objectTiles[tempX][tempY])
 			{
-				saveVisibleArea();
-				return true;
+				_visibleArea [i] = Level::map->objectTiles [tempX] [tempY];
+				_changeIndex = i;//Store the index of the changed item that is the furthest away
+				changes = true;
 			}
 		}
 		else 
 		{
-			if (_visibleArea[i] != 0)
+			if (_visibleArea [i] != 0)
 			{
-				saveVisibleArea();
-				return true;
+				_visibleArea [i] = 0;
+				changes = true;
 			}
 		}
 	}
-	return false;
-}
-
-void Fan::saveVisibleArea()
-{
-	for (int i = 0; i < visibleAreaSize; i++)
-	{
-		//if position of element in visible area isn't out of bounds
-		if (_position[0] + _direction[0] * (i + 1) >= 0 && _position[0] + _direction[0] * (i + 1) < Level::map->width
-			&& _position[1] + _direction[1] * (i + 1) >= 0 && _position[1] + _direction[1] * (i + 1) < Level::map->height)
-		{
-			//save it
-			_visibleArea[i] = Level::map->objectTiles[_position[0] + _direction[0] * (i + 1)][_position[1] + _direction[1] * (i + 1)];
-
-			distanceToArrayBound = i + 1;
-		}
-		else
-		{
-			//make it 0
-			_visibleArea[i] = 0;
-		}
-	}
+	return changes;
 }
 
 void Fan::push() //moves every box in vision by 1 tile if possible
 {
-	for (int i = visibleAreaSize - 2; i >= 0; i--)
+	Box* box;
+	Player* player;
+	if (_changeIndex == _visibleAreaSize)
 	{
-		Box* box = dynamic_cast <Box*> ((GameObject*)_visibleArea[i]);
-		Player* player = dynamic_cast <Player*> ((GameObject*)_visibleArea[i]);
-
-		//check if future box position is valid
-		if (box != nullptr && distanceToArrayBound > i+1 &&_visibleArea[i+1] == (int)nullptr)
-		{
-			box->moveBox(_direction[0], _direction[1]);
-		}
-		if (player != nullptr && distanceToArrayBound > i + 1 && _visibleArea[i + 1] == (int)nullptr)
-		{
-			player->movePlayer(_direction[0], _direction[1], true);
-		}
+		_changeIndex --;
 	}
-	//push again if needed
-	if (checkForChanges())
+	for (int i = _changeIndex; i >= 0; i --)//Go through all positions that are affected by the change
 	{
-		push();
+		if (_visibleArea [i+1] == (int)nullptr && _visibleArea [i] != (int)nullptr)
+		{
+			box = dynamic_cast <Box*> ((GameObject*)_visibleArea [i]);
+			player = dynamic_cast <Player*> ((GameObject*)_visibleArea [i]);
+			if (box != nullptr)
+			{
+				box->moveBox(_direction[0], _direction[1]);
+			}
+			else if (player != nullptr)
+			{
+				player->movePlayer(_direction[0], _direction[1], true);
+			}
+		}
 	}
 }
 
 void Fan::pull()
 {
-	for (int i = 1; i < visibleAreaSize-1; i++)
+	Box* box;
+	Player* player;
+	for (int i = 1; i <= _changeIndex; i ++)//Go through all positions that are affected by the change
 	{
-		Box* box = dynamic_cast <Box*> ((GameObject*)_visibleArea[i]);
-		Player* player = dynamic_cast <Player*> ((GameObject*)_visibleArea[i]);
-
-		//check if future position is valid
-		if (box != nullptr && _visibleArea[i - 1] == (int)nullptr)
+		if (_visibleArea[i - 1] == (int)nullptr)
 		{
-			box->moveBox(-_direction[0], -_direction[1]);
+			box = dynamic_cast <Box*> ((GameObject*)_visibleArea [i]);
+			player = dynamic_cast <Player*> ((GameObject*)_visibleArea [i]);
+			if (box != nullptr)
+			{
+				box->moveBox(-_direction[0], -_direction[1]);
+			}
+			else if (player != nullptr)
+			{
+				player->movePlayer(-_direction[0], -_direction[1], true);
+			}
 		}
-		if (player != nullptr && _visibleArea[i - 1] == (int)nullptr)
-		{
-			player->movePlayer(-_direction[0], -_direction[1], true);
-		}
-	}
-
-	//pull again if needed
-	if (checkForChanges())
-	{
-		pull();
 	}
 }
-

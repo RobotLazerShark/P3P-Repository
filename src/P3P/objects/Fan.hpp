@@ -8,7 +8,7 @@
 class Fan : public GameObject
 {
 	public:
-		Fan(int pX, int pZ, int pDirection[], bool pReversed);
+		Fan(int pX, int pZ, int pXDirection, int pYDirection, bool pReversed);
 		void update(float pStep, bool pUpdateWorldTransform = false) override;
 
 		void move(int pX, int pZ);
@@ -20,13 +20,12 @@ class Fan : public GameObject
 
 		//_visibleArea size is bigger than actual visile are is
 		//because we need to store first object outside visible area to check if we can move a box there
-		int _visibleArea[6];
-		int visibleAreaSize;
+		static const int _visibleAreaSize = 6;
+		int _visibleArea[_visibleAreaSize];
 
-		int distanceToArrayBound;
+		int _changeIndex;
 
 		bool checkForChanges();
-		void saveVisibleArea();
 		void push();
 		void pull();
 };
