@@ -6,38 +6,55 @@
 BreakingBlock::BreakingBlock(int pX, int pZ) : GameObject()
 {
 	//Set up model
-	_model = new GameObject("cube_flat.obj");
-	_model->setMaterial(new LitMaterial(glm::vec3(0.6f,0.3f,0.3f)));
+	_model = new GameObject();
 	_model->translate(glm::vec3(0, -0.5f, 0));
 	_model->setParent(this);
+	GameObject* submodel = new GameObject ("cube_flat.obj");
+	submodel->setMaterial(new LitMaterial(glm::vec3(0.6f,0.3f,0.3f)));
+	submodel->setParent (_model);
+	_animator = new AnimationBehaviour ({ "UnstableBlock.txt", "FallingBlock.txt" });
+	submodel->setBehaviour (_animator);
 
 	translate(glm::vec3(pX * Level::TILESIZE, 0, pZ * Level::TILESIZE));
 	_position [0] = pX;
 	_position [1] = pZ;
 }
 
+
+//Breaks this block (post-animation function)
+void breakBlock (int pAnimIndex, GameObject* pOwner)
+{
+	BreakingBlock* block = (BreakingBlock*)pOwner;
+
+	//mark for deletion
+	block->_delete = true;
+}
+
+//Update loop
 void BreakingBlock::update (float pStep, bool pUpdateWorldTransform)
 {
 	GameObject::update (pStep, pUpdateWorldTransform);
 
-	//If the player is on top of us, mark for destruction
-	if (!_breaking && Player::singletonInstance->_currentTile [0] == _position [0] && Player::singletonInstance->_currentTile [1] == _position [1])
+	if (_delete)
 	{
-		_breaking = true;
+		setParent (nullptr);
+		delete this;
 	}
-	//If the player was on us before, but not anymore, break
-	else if (_breaking && (Player::singletonInstance->_currentTile[0] != _position[0] || Player::singletonInstance->_currentTile[1] != _position[1]))
+	else
 	{
-		breakBlock ();
+		//If the player is on top of us, mark for destruction
+		if ((_breakLevel == 0) && Player::singletonInstance->_currentTile [0] == _position [0] && Player::singletonInstance->_currentTile [1] == _position [1])
+		{
+			_breakLevel = 1;
+			_animator->playAnimation (0, true);
+		}
+		//If the player was on us before, but not anymore, break
+		else if ((_breakLevel == 1) && (Player::singletonInstance->_currentTile[0] != _position[0] || Player::singletonInstance->_currentTile[1] != _position[1]))
+		{
+			_breakLevel = 2;
+			//remove the block from array
+			Level::map->baseTiles [_position [0]] [_position [1]] = (int)nullptr;
+			_animator->playAnimation (1, false, &breakBlock, this);
+		}
 	}
-}
-
-void BreakingBlock::breakBlock ()
-{
-	//remove from array
-	Level::map->baseTiles [_position [0]] [_position [1]] = (int)nullptr;
-
-	//delete
-	setParent (nullptr);
-	delete this;
 }

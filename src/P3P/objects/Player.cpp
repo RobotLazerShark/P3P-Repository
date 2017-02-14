@@ -165,13 +165,14 @@ bool Player::movePlayer (int pX, int pZ, bool pTranslate)
 
 //////////////////////////////|	EVENT-BASED FUNCTIONS
 //Function to be called when animations are stopped. It has to be in global space, or we have to pass our object type as well.
-void stopFunction (int pAnimIndex)
+void stopFunction (int pAnimIndex, GameObject* pOwner)
 {
+	Player* player = (Player*)pOwner;
 	switch (pAnimIndex)
 	{
 		case 0:
-			Player::singletonInstance->_moving = false;
-			Player::singletonInstance->setWorldPosition (glm::vec3 (Player::singletonInstance->_currentTile [0] * Level::TILESIZE, 0, Player::singletonInstance->_currentTile [1] * Level::TILESIZE));
+			player->_moving = false;
+			player->setWorldPosition (glm::vec3 (player->_currentTile [0] * Level::TILESIZE, 0, player->_currentTile [1] * Level::TILESIZE));
 			break;
 		default:
 			break;
@@ -241,7 +242,7 @@ void Player::ProcessEvent (JCPPEngine::Event* pEvent)
 		{
 			_moving = true;
 			_wheelAnimator->playAnimation (0);
-			_baseAnimator->playAnimation (0, false, &stopFunction);
+			_baseAnimator->playAnimation (0, false, &stopFunction, this);
 		}
 	}
 }

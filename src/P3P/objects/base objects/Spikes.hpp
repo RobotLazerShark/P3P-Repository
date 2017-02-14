@@ -5,7 +5,7 @@
 //Include files
 #include <mge/core/GameObject.hpp>
 #include <mge/materials/LitMaterial.hpp>
-#include <SFML/Graphics.hpp>
+#include <mge/behaviours/AnimationBehaviour.hpp>
 
 class Spikes : public GameObject
 {
@@ -14,7 +14,7 @@ public:
 	void update(float pStep, bool pUpdateWorldTransform = false) override;
 private:
 	GameObject* _model;
-
+	AnimationBehaviour* _animator;
 	int _position [2] = { 0, 0 };
 	float _timer = 0;
 

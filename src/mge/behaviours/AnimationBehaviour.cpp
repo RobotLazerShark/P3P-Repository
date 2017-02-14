@@ -3,8 +3,9 @@
 
 
 //Constructor that reads keyframe animations from the given files
-AnimationBehaviour::AnimationBehaviour (std::vector <std::string> pAnimFiles) : AbstractBehaviour ()
+AnimationBehaviour::AnimationBehaviour (std::vector <std::string> pAnimFiles, bool pResetTransform) : AbstractBehaviour ()
 {
+	_resetTransform = pResetTransform;
 	for (int i = 0, size = pAnimFiles.size (); i < size; i ++)
 	{
 		std::string filepath = "mge/animations/" + pAnimFiles [i];
@@ -196,13 +197,14 @@ void AnimationBehaviour::update (float pStep)
 
 //////////////////////////////|	SETTERS
 //Start playing an animation. If one is already playing, it will be stopped.
-void AnimationBehaviour::playAnimation (int pAnimIndex, bool pLoop, void(*pFuncPtr) (int))
+void AnimationBehaviour::playAnimation (int pAnimIndex, bool pLoop, void(*pFuncPtr) (int, GameObject*), GameObject* pFuncOwner)
 {
 	if (_playing)
 	{
 		stopAnimation ();
 	}
 	_stopFunction = pFuncPtr;
+	_stopFunctionOwner = pFuncOwner;
 	_normalTransform = _owner->getTransform ();
 	KeyFrame start = _animations [pAnimIndex] [0];
 	glm::mat4 newTransform = glm::translate (start.position);
@@ -219,16 +221,20 @@ void AnimationBehaviour::playAnimation (int pAnimIndex, bool pLoop, void(*pFuncP
 void AnimationBehaviour::stopAnimation ()
 {
 	_playing = false;
-	//Reset transform
-	_owner->setTransform (_normalTransform);
+	if (_resetTransform)
+	{
+		//Reset transform
+		_owner->setTransform (_normalTransform);
+	}
 	_normalTransform = glm::mat4 ();
 	//Call stopfunction
 	if (_stopFunction != nullptr)
 	{
-		_stopFunction (_currentAnimation);
+		_stopFunction (_currentAnimation, _stopFunctionOwner);
 	}
 	_currentAnimation = -1;
 	_stopFunction = nullptr;
+	_stopFunctionOwner = nullptr;
 }
 
 

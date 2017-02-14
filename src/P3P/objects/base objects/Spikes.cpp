@@ -10,6 +10,11 @@ Spikes::Spikes(int pX, int pZ) : GameObject()
 	_model->translate(glm::vec3(0, -0.5f, 0));
 	_model->setMaterial(new LitMaterial(glm::vec3(0.75f, 0.25f, 0)));
 	_model->setParent(this);
+	GameObject* submodel = new GameObject ("spikes.obj");
+	submodel->setMaterial (new LitMaterial (glm::vec3 (1, 0, 0.25f)));
+	submodel->setParent (_model);
+	_animator = new AnimationBehaviour ({ "SpikesUp.txt", "SpikesDown.txt" }, false);
+	submodel->setBehaviour (_animator);
 
 	translate(glm::vec3(pX * Level::TILESIZE, 0, pZ * Level::TILESIZE));
 
@@ -33,10 +38,12 @@ void Spikes::update(float pStep, bool pUpdateWorldTransform)
 
 		if (_spikesUp) //set color to red(danger)
 		{
+			_animator->playAnimation (0);
 			((LitMaterial*)_model->getMaterial ())->SetColor (glm::vec3 (1, 0, 0));
 		}
 		else //set color to green(safe)
 		{
+			_animator->playAnimation (1);
 			((LitMaterial*)_model->getMaterial ())->SetColor (glm::vec3 (0.75f, 0.25f, 0));
 		}
 	}

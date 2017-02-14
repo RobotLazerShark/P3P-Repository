@@ -26,6 +26,7 @@ class Player : public GameObject, public JCPPEngine::AbstractListener
 	void die ();
 	static Player* singletonInstance;
 	//Preferably these variables would be private, but they are needed in a globalspace function
+	//They use the private name conventions because they should be used as such
 	bool _moving = false;
 	int _currentTile[2];//Arrays, because glm::vec uses floats
 	int _oldTile[2];
