@@ -77,7 +77,8 @@ void Level::setMap (int pLevelNumber)
 
 	if (_levelNumber == 0)
 	{
-		map = LevelImporter::ReadFile ("Hub.tmx");
+		map = LevelImporter::ReadFile("PlayGround.tmx");
+		//map = LevelImporter::ReadFile ("Hub.tmx");
 	}//else if (_levelNumber == bossLevel) { ReadFile ("HubLevel.tmx"); }
 	else
 	{
@@ -144,6 +145,7 @@ void Level::loadMap ()
 			}
 		}
 	}
+	int dir[2] = { 0,0 };
 	//Build all object tiles
 	for (int x = 0; x < map->width; x++)
 	{
@@ -183,17 +185,65 @@ void Level::loadMap ()
 					temp->setParent (this);
 					map->objectTiles [x] [y] = (int)temp;
 					break;
-			//	case 39:
-			//	case 40:
-			//	case 41:
-			//	case 42:
-			//		//Fan
-			//		temp = new Fan (x, y, (map->objectTiles [x] [y] - 38));
-			//		temp->setParent (this);
-			//		map->objectTiles [x] [y] = (int)temp;
-			//		break;
+					//----------------//FAN//-----------------//
+				case 39: //Fan right
+					dir[0] = 1;
+					dir[1] = 0;
+					temp = new Fan(x, y, dir, false);
+					temp->setParent(this);
+					map->objectTiles[x][y] = (int)temp;
+					break;
+				case 40: //Fan down
+					dir[0] = 0;
+					dir[1] = 1;
+					temp = new Fan(x, y, dir, false);
+					temp->setParent(this);
+					map->objectTiles[x][y] = (int)temp;
+					break;
+				case 41: //Fan left
+					dir[0] = -1;
+					dir[1] = 0;
+					temp = new Fan(x, y, dir, false);
+					temp->setParent(this);
+					map->objectTiles[x][y] = (int)temp;
+					break;
+				case 42: //Fan up
+					dir[0] = 0;
+					dir[1] = -1;
+					temp = new Fan(x, y, dir, false);
+					temp->setParent(this);
+					map->objectTiles[x][y] = (int)temp;
+					break;
+				case 43: //Fan reversed right
+					dir[0] = 1;
+					dir[1] = 0;
+					temp = new Fan(x, y, dir, true);
+					temp->setParent(this);
+					map->objectTiles[x][y] = (int)temp;
+					break;
+				case 44: //Fan reversed down
+					dir[0] = 0;
+					dir[1] = 1;
+					temp = new Fan(x, y, dir, true);
+					temp->setParent(this);
+					map->objectTiles[x][y] = (int)temp;
+					break;
+				case 45: //Fan reversed left
+					dir[0] = -1;
+					dir[1] = 0;
+					temp = new Fan(x, y, dir, true);
+					temp->setParent(this);
+					map->objectTiles[x][y] = (int)temp;
+					break;
+				case 46: //Fan reversed up
+					dir[0] = 0;
+					dir[1] = -1;
+					temp = new Fan(x, y, dir, true);
+					temp->setParent(this);
+					map->objectTiles[x][y] = (int)temp;
+					break;
 				default:
-					map->objectTiles [x] [y] = (int)nullptr;
+					map->objectTiles[x][y] = (int)nullptr;
 					break;
 			}
 		}
