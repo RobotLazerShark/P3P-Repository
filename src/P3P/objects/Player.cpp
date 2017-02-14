@@ -76,6 +76,7 @@ bool Player::movePlayer (int pX, int pZ, bool pTranslate)
         //Check if the new position contains a box or a door
         Box* box = dynamic_cast <Box*> ((GameObject*)Level::map->objectTiles [_currentTile [0]] [_currentTile [1]]);
         Door* door = dynamic_cast <Door*> ((GameObject*)Level::map->objectTiles [_currentTile [0]] [_currentTile [1]]);
+		Npc* npc = dynamic_cast <Npc*> ((GameObject*)Level::map->objectTiles[_currentTile[0]][_currentTile[1]]);
         if (door != nullptr)//The new position contains a door
         {
 		if (!door->enter ())
