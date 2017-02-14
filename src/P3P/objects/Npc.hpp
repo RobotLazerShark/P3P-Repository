@@ -10,9 +10,11 @@ class Npc : public GameObject
 {
 public:
 	Npc(int pX, int pZ);
+	~Npc ();
 	void talk();
 	void addQuest (Quest * newQuest);
 	std::vector<Quest*> activeQuests;
+	static Npc* singletonInstance;
 
 private:
 	GameObject* _model;

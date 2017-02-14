@@ -27,11 +27,25 @@ Level::~Level ()
 
 void Level::update (float pStep, bool pUpdateWorldTransform)
 {
+	//If we have to load a different level, do that here.
+	//By having the reload function set a flag instead of directly reload the level,
+	//there won't be any issues with objects being deleted when the function returns.
 	if (_nextLevel != -1)
 	{
-		clear ();
-		setMap (_nextLevel);
-		loadMap ();
+	std::cout<<Player::singletonInstance->inventory.size ()<<std::endl;
+	std::cout<<"checkpoint"<<std::endl;
+		//Make sure the copies are not linked to the originals
+		if (Player::singletonInstance != nullptr && Player::singletonInstance->inventory.size () > 0)
+		{std::cout<<"\t1A";
+			_inventoryCopy = std::vector <Collectable*> (Player::singletonInstance->inventory);
+		}std::cout<<"\t1B";
+		if (Npc::singletonInstance != nullptr && Npc::singletonInstance->activeQuests.size () > 0)
+		{std::cout<<"\t2A";
+			_activeQuestsCopy = std::vector <Quest*> (Npc::singletonInstance->activeQuests);
+		}std::cout<<"\t2B";
+		clear ();std::cout<<"\t3";
+		setMap (_nextLevel);std::cout<<"\t4";
+		loadMap ();std::cout<<"\t5";
 		_nextLevel = -1;
 	}
 	GameObject::update (pStep, pUpdateWorldTransform);
@@ -140,6 +154,10 @@ void Level::loadMap ()
 				case 33:
 					//Player
 					temp = new Player (x, y, progressTracker);
+					if (_inventoryCopy.size () > 0)
+					{
+						((Player*)temp)->inventory = _inventoryCopy;
+					}
 					temp->setParent (this);
 					map->objectTiles [x] [y] = (int)temp;
 					break;
@@ -152,6 +170,10 @@ void Level::loadMap ()
 				case 35:
 					//Npc
 					temp = new Npc (x, y);
+					if (_activeQuestsCopy.size () > 0)
+					{
+						((Npc*)temp)->activeQuests = _activeQuestsCopy;
+					}
 					temp->setParent (this);
 					map->objectTiles [x] [y] = (int)temp;
 				case 37:

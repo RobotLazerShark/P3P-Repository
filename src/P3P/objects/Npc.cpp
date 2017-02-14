@@ -2,8 +2,19 @@
 #include <P3P/Level.hpp>
 
 
+//Static variables
+Npc* Npc::singletonInstance = nullptr;
+
+
+//Constructor
 Npc::Npc(int pX, int pZ) : GameObject()
 {
+	if (singletonInstance != nullptr)
+	{
+		return;
+	}
+	singletonInstance = this;
+
 	//Set up model
 	_model = new GameObject("cube_flat.obj");
 	_model->setMaterial(new LitMaterial("Npc.jpg"));
@@ -11,6 +22,11 @@ Npc::Npc(int pX, int pZ) : GameObject()
 	_model->setParent(this);
 
 	translate(glm::vec3(pX * Level::TILESIZE, 0, pZ * Level::TILESIZE));
+}
+//Destructor
+Npc::~Npc ()
+{
+	singletonInstance = nullptr;
 }
 
 void Npc::talk()

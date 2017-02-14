@@ -8,6 +8,7 @@
 #include <mge/core/GameObject.hpp>
 #include <mge/core/World.hpp>
 #include <P3P/ProgressTracker.hpp>
+#include <P3P/Quest.hpp>
 #include <P3P/objects/base objects/Floor.hpp>
 #include <P3P/objects/base objects/BoxSpot.hpp>
 #include <P3P/objects/Player.hpp>
@@ -29,6 +30,8 @@ class Level : public GameObject
 		bool _isHub = false;
 		int _nextLevel = -1;
 		std::vector <Gate*> _gates;
+		std::vector <Collectable*> _inventoryCopy;
+		std::vector<Quest*> _activeQuestsCopy;
 	public:
 		Level (int pLevelNumber);
 		~Level ();

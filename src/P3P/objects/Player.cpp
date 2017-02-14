@@ -69,7 +69,7 @@ bool Player::movePlayer (int pX, int pZ, bool pTranslate)
     _oldTile [0] = _currentTile [0];
     _oldTile [1] = _currentTile [1];
     _currentTile [0] += pX;
-    _currentTile [1] += pZ;std::cout<<_oldTile[0]<<", "<<_oldTile[1]<<"\t"<<_currentTile[0]<<", "<<_currentTile[1]<<std::endl;
+    _currentTile [1] += pZ;
 
     if (Level::map->objectTiles [_currentTile [0]] [_currentTile [1]] != (int)nullptr)
     {
