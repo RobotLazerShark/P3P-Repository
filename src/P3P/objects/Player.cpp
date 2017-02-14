@@ -138,6 +138,31 @@ bool Player::movePlayer (int pX, int pZ, bool pTranslate)
 		_currentTile [1] = _oldTile [1];
 		return false;
 	}
+	else if (fan != nullptr)//The new position contains a fan
+	{
+		int newFanTile[2] = { _currentTile[0], _currentTile[1] };
+		newFanTile[0] += pX;
+		newFanTile[1] += pZ;
+		//Check if we can move the box
+		if
+			(
+				newFanTile[0] >= 0 && newFanTile[0] < Level::map->width &&
+				newFanTile[1] >= 0 && newFanTile[1] < Level::map->height &&
+				Level::map->baseTiles[newFanTile[0]][newFanTile[1]] != (int)nullptr &&
+				Level::map->objectTiles[newFanTile[0]][newFanTile[1]] == (int)nullptr
+				)
+		{
+			//we can move the fan
+			fan->move(pX, pZ);
+		}
+		else
+		{
+			//we cannot the fan
+			_currentTile[0] = _oldTile[0];
+			_currentTile[1] = _oldTile[1];
+			return false;
+		}
+	}
     }
 
     //update the object array

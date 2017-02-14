@@ -16,6 +16,7 @@
 #include <P3P/objects/Door.hpp>
 #include <P3P/objects/Gate.hpp>
 #include <P3P/objects/Npc.hpp>
+#include <P3P/objects/Fan.hpp>
 #include <P3P/objects/Collectable.hpp>
 #include <P3P/objects/base objects/Button.hpp>
 #include <P3P/objects/base objects/Spikes.hpp>
