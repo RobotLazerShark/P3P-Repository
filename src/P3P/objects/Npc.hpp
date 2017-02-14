@@ -13,11 +13,15 @@ public:
 	~Npc ();
 	void talk();
 	void addQuest (Quest * newQuest);
+	void update (float pStep, bool pUpdateWorldTransform = false) override;
 	std::vector<Quest*> activeQuests;
 	static Npc* singletonInstance;
+	bool talking = false;
+	int position [2] = { 0, 0 };
 
 private:
 	GameObject* _model;
+	int _playerPosition [2] = { 0, 0 };
 	
 };
 

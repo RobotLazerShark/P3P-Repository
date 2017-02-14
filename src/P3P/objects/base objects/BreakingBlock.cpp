@@ -7,9 +7,8 @@ BreakingBlock::BreakingBlock(int pX, int pZ) : GameObject()
 {
 	//Set up model
 	_model = new GameObject("cube_flat.obj");
-	_model->translate(glm::vec3(0, -0.5f, 0));
-
 	_model->setMaterial(new LitMaterial(glm::vec3(0.6f,0.3f,0.3f)));
+	_model->translate(glm::vec3(0, -0.5f, 0));
 	_model->setParent(this);
 
 	translate(glm::vec3(pX * Level::TILESIZE, 0, pZ * Level::TILESIZE));
@@ -19,17 +18,18 @@ BreakingBlock::BreakingBlock(int pX, int pZ) : GameObject()
 
 void BreakingBlock::update (float pStep, bool pUpdateWorldTransform)
 {
+	GameObject::update (pStep, pUpdateWorldTransform);
+
 	//If the player is on top of us, mark for destruction
 	if (!_breaking && Player::singletonInstance->_currentTile [0] == _position [0] && Player::singletonInstance->_currentTile [1] == _position [1])
 	{
 		_breaking = true;
 	}
 	//If the player was on us before, but not anymore, break
-	else if (_breaking && Player::singletonInstance->_currentTile[0] != _position[0] && Player::singletonInstance->_currentTile[1] != _position[1])
+	else if (_breaking && (Player::singletonInstance->_currentTile[0] != _position[0] || Player::singletonInstance->_currentTile[1] != _position[1]))
 	{
 		breakBlock ();
 	}
-	GameObject::update (pStep, pUpdateWorldTransform);
 }
 
 void BreakingBlock::breakBlock ()

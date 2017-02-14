@@ -17,6 +17,7 @@ private:
 	GameObject* _model;
 	int _position [2] = { 0, 0 };
 	bool _breaking = false;
+	bool _updating = false;
 };
 
 #endif

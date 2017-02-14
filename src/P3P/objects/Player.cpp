@@ -1,7 +1,7 @@
 #include "P3P/objects/Player.hpp"
 #include <P3P/Level.hpp>
 
-
+#include <typeinfo>
 //Static variables
 Player* Player::singletonInstance = nullptr;
 
@@ -53,8 +53,12 @@ Player::~Player ()
 	}
 	for (int i = 0, size = inventory.size (); i < size; i ++)
 	{
-		delete inventory [i];
+		if (inventory [i] != nullptr)
+		{
+			delete inventory [i];
+		}
 	}
+	inventory.clear ();
 	_wheelAnimator = nullptr;
 	_baseAnimator = nullptr;
 	GameObject::~GameObject ();
@@ -73,12 +77,21 @@ bool Player::movePlayer (int pX, int pZ, bool pTranslate)
 
     if (Level::map->objectTiles [_currentTile [0]] [_currentTile [1]] != (int)nullptr)
     {
-        //Check if the new position contains a box or a door
+        //Check if the new position contains a special object
         Box* box = dynamic_cast <Box*> ((GameObject*)Level::map->objectTiles [_currentTile [0]] [_currentTile [1]]);
         Door* door = dynamic_cast <Door*> ((GameObject*)Level::map->objectTiles [_currentTile [0]] [_currentTile [1]]);
-        Npc* npc = dynamic_cast <Npc*> ((GameObject*)Level::map->objectTiles[_currentTile[0]][_currentTile[1]]);
-        if (door != nullptr)//The new position contains a door
-        {
+	Collectable* collectable = dynamic_cast <Collectable*> ((GameObject*)Level::map->objectTiles [_currentTile [0]] [_currentTile [1]]);
+	if (_currentTile [0] == Npc::singletonInstance->position [0] && _currentTile [1] == Npc::singletonInstance->position [1])
+	{
+		//we cannot move into the Npc's space
+		_currentTile [0] = _oldTile [0];
+		_currentTile [1] = _oldTile [1];
+		//Start talking to npc
+		Npc::singletonInstance->talk ();
+		return false;
+	}
+	else if (door != nullptr)//The new position contains a door
+	{
 		if (!door->enter ())
 		{
 			//we cannot enter the door
@@ -113,9 +126,17 @@ bool Player::movePlayer (int pX, int pZ, bool pTranslate)
 			return false;
 		}
 	}
-	else if (npc != nullptr)
+	else if (collectable != nullptr)//The new position contains a collectable
 	{
-		npc->talk ();
+		//Collect item and move into its space
+		collectable->collect ();
+	}
+	else
+	{
+		//we cannot move into the occupied space
+		_currentTile [0] = _oldTile [0];
+		_currentTile [1] = _oldTile [1];
+		return false;
 	}
     }
 

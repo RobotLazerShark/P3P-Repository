@@ -6,7 +6,7 @@
 #include <mge/materials/LitMaterial.hpp>
 #include <P3P/ButtonTarget.hpp>
 
-class Gate : public GameObject, public ButtonTarget
+class Gate : public ButtonTarget
 {
 	public:
 		Gate(int pX, int pZ);

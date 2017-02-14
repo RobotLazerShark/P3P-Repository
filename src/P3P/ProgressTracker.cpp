@@ -5,6 +5,10 @@
 ProgressTracker::ProgressTracker()
 {
 }
+ProgressTracker::~ProgressTracker()
+{
+	boxSpots.clear ();
+}
 
 bool ProgressTracker::checkWin()
 {

@@ -3,7 +3,7 @@
 
 
 //Constructor
-Gate::Gate(int pX, int pZ) : GameObject()
+Gate::Gate(int pX, int pZ) : ButtonTarget ()
 {
 	//Set up model
 	_model = new GameObject("cube_flat.obj");
@@ -39,6 +39,7 @@ bool Gate::setActive (bool pActive)
 	{
 		//make gate position in array empty
 		Level::map->objectTiles[_position [0]][_position [1]] = (int)nullptr;
+		translate (glm::vec3 (0, 1, 0));
 	}
 	else
 	{
@@ -47,13 +48,18 @@ bool Gate::setActive (bool pActive)
 		{
 			//put gate back into array
 			Level::map->objectTiles[_position [0]][_position [1]] = (int)this;
-			return false; //return false so the button will keep calling this function until the gate can close, or the box/player goes off the button
+			translate (glm::vec3 (0, -1, 0));
 		}
 		//if gate tile is taken by the player
 		else if(dynamic_cast <Player*> ((GameObject*)Level::map->objectTiles[_position [0]][_position [1]]) != nullptr)
 		{
 			//Kill the player
 			Player::singletonInstance->die ();
+			translate (glm::vec3 (0, -1, 0));
+		}
+		else
+		{
+			return false; //return false so the button will keep calling this function until the gate can close, or the box/player goes off the button
 		}
 	}
 	return true;//return true to let the button know the switch succeeded

@@ -13,6 +13,7 @@
 #include <P3P/ProgressTracker.hpp>
 #include <P3P/objects/Collectable.hpp>
 #include <P3P/objects/base objects/BreakingBlock.hpp>
+#include <P3P/objects/Npc.hpp>
 
 
 class Player : public GameObject, public JCPPEngine::AbstractListener

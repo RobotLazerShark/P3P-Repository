@@ -20,8 +20,10 @@ Spikes::Spikes(int pX, int pZ) : GameObject()
 
 void Spikes::update(float pStep, bool pUpdateWorldTransform)
 {
+	GameObject::update(pStep, pUpdateWorldTransform);
+
 	//update time
-	_timer += pStep;
+	_timer = _timer + pStep;
 
 	//switch on/off spikes if its time to
 	if (_timer >= SWITCH_TIME)
@@ -47,6 +49,4 @@ void Spikes::update(float pStep, bool pUpdateWorldTransform)
 			Player::singletonInstance->die ();
 		}
 	}
-
-	GameObject::update(pStep, pUpdateWorldTransform);
 }

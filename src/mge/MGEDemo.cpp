@@ -20,7 +20,7 @@ void MGEDemo::_initializeScene()
 
 	//add camera first (it will be updated last)
 	Camera* camera = new Camera ();
-	camera->rotate (glm::radians (-30.0f), glm::vec3 (1, 0, 0));
+	camera->rotate (glm::radians (-45.0f), glm::vec3 (1, 0, 0));
 	camera->translate (glm::vec3 (10, 0, 15));
 	_world->add (camera);
 	_world->setMainCamera (camera);
@@ -34,10 +34,11 @@ void MGEDemo::_initializeScene()
 	//camera->setBehaviour (new CameraOrbitBehaviour (10.0f, glm::radians (-60.0f), glm::radians (60.0f), 0.01f, _world));
 
 	//Set up P3P hub (starts the game)
-	Hub* hub = new Hub ();
+	_game = new Level (0);
 }
 
 MGEDemo::~MGEDemo()
 {
-	//dtor
+	_game->clear ();
+	delete _game;
 }

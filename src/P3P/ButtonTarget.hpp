@@ -2,7 +2,11 @@
 #define ButtonTarget_Def
 
 
-class ButtonTarget
+//Include files
+#include <mge/core/GameObject.hpp>
+
+
+class ButtonTarget : public GameObject
 {
 	public:
 		virtual bool setActive (bool pActive) = 0;

@@ -6,6 +6,7 @@ class ProgressTracker
 {
     public:
         ProgressTracker();
+	~ProgressTracker();
         std::vector <BoxSpot*> boxSpots;
 
         bool checkWin();

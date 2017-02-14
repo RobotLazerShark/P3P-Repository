@@ -10,14 +10,13 @@ class Collectable : public GameObject
 {
 public:
 	Collectable(int pX, int pZ, std::string pName);
-	void update (float pStep, bool pUpdateWorldTransform = false);
 	std::string getName ();
+	virtual void collect ();
 protected:
 	GameObject* _model;
 	std::string _name;
 	int _position [2] = { 0, 0 };
 	bool _collected = false;
-	virtual void collect ();
 };
 
 #endif

@@ -26,24 +26,11 @@ std::string Collectable::getName ()
 }
 
 
-//Update
-void Collectable::update (float pStep, bool pUpdateWorldTransform)
-{
-	//Check if player has picked us up
-	if (!_collected && Player::singletonInstance->_currentTile [0] == _position [0] && Player::singletonInstance->_currentTile [1] == _position [1])
-	{
-		_collected = true;
-		//Add this object to the player's inventory
-		Player::singletonInstance->inventory.push_back (this);
-		collect ();
-		//Remove us from level and make us invisible.
-		setParent (nullptr);
-		Level::map->objectTiles[_position[0]] [_position[1]] = (int)nullptr;
-	}
-}
-
-
-//Abstract function to override, for extra functionality
+//Add item to player inventory, and make it invisible
 void Collectable::collect ()
 {
+	_collected = true;
+	//Add this object to the player's inventory
+	Player::singletonInstance->inventory.push_back (this);
+	setParent (nullptr);
 }

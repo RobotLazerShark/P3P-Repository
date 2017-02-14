@@ -8,7 +8,7 @@ Button::Button (int pX, int pZ, ButtonTarget* pTarget) : GameObject()
 	//Set up model
 	_model = new GameObject("cube_flat.obj");
 	_model->translate(glm::vec3(0, -0.5f, 0));
-	_model->setMaterial(new LitMaterial("Platform.jpg"));
+	_model->setMaterial(new LitMaterial(glm::vec3 (0.5f,1,0.5f)));
 	_model->setParent(this);
 
 	translate(glm::vec3(pX * Level::TILESIZE, 0, pZ * Level::TILESIZE));

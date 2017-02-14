@@ -133,7 +133,7 @@ LevelMap* LevelImporter::ReadFile (std::string pFilename)
 					temp += line [strPos];
 					strPos ++;
 				}
-				object->z = std::stoi (temp) / TILED_TILESIZE - 1;
+				object->z = (std::stoi (temp) / TILED_TILESIZE - 1);
 				//Get object's properties
 				while (line.find ("</properties") == std::string::npos )//While we are still reading properties
 				{

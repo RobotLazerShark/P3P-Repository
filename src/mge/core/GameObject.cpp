@@ -111,6 +111,7 @@ GameObject::~GameObject()
 	while (_children.size () > 0)
 	{
 		GameObject* child = _children [0];
+		if (child == nullptr) continue;
 		remove (child);
 		delete child;
 	}
@@ -330,10 +331,6 @@ void GameObject::add (GameObject* pChild)
 
 void GameObject::remove (GameObject* pChild)
 {
-	if (pChild->getParent () != this)
-	{
-		return;
-	}
 	pChild->setParent (nullptr);
 }
 

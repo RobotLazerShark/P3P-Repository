@@ -23,32 +23,40 @@ Level::Level (int pLevelNumber)
 Level::~Level ()
 {
 	delete map;
+	_inventoryCopy.clear ();
+	for (int i = 0, size = _activeQuestsCopy.size (); i < size; i ++)
+	{
+		delete _activeQuestsCopy [i];
+	}
+	_activeQuestsCopy.clear ();
+	singletonInstance = nullptr;
+	setParent (nullptr);
+	GameObject::~GameObject ();
 }
 
 void Level::update (float pStep, bool pUpdateWorldTransform)
 {
+	GameObject::update(pStep, pUpdateWorldTransform);
+
 	//If we have to load a different level, do that here.
 	//By having the reload function set a flag instead of directly reload the level,
 	//there won't be any issues with objects being deleted when the function returns.
 	if (_nextLevel != -1)
 	{
-	std::cout<<Player::singletonInstance->inventory.size ()<<std::endl;
-	std::cout<<"checkpoint"<<std::endl;
 		//Make sure the copies are not linked to the originals
 		if (Player::singletonInstance != nullptr && Player::singletonInstance->inventory.size () > 0)
-		{std::cout<<"\t1A";
+		{
 			_inventoryCopy = std::vector <Collectable*> (Player::singletonInstance->inventory);
-		}std::cout<<"\t1B";
+		}
 		if (Npc::singletonInstance != nullptr && Npc::singletonInstance->activeQuests.size () > 0)
-		{std::cout<<"\t2A";
+		{
 			_activeQuestsCopy = std::vector <Quest*> (Npc::singletonInstance->activeQuests);
-		}std::cout<<"\t2B";
-		clear ();std::cout<<"\t3";
-		setMap (_nextLevel);std::cout<<"\t4";
-		loadMap ();std::cout<<"\t5";
+		}
+		clear ();
+		setMap (_nextLevel);
+		loadMap ();
 		_nextLevel = -1;
 	}
-	GameObject::update (pStep, pUpdateWorldTransform);
 }
 
 
@@ -154,12 +162,12 @@ void Level::loadMap ()
 				case 33:
 					//Player
 					temp = new Player (x, y, progressTracker);
-					if (_inventoryCopy.size () > 0)
-					{
-						((Player*)temp)->inventory = _inventoryCopy;
-					}
 					temp->setParent (this);
 					map->objectTiles [x] [y] = (int)temp;
+					if (_inventoryCopy.size () > 0)
+					{
+						((Player*)temp)->inventory = std::vector <Collectable*> (_inventoryCopy);
+					}
 					break;
 				case 34:
 					//Box
@@ -170,12 +178,12 @@ void Level::loadMap ()
 				case 35:
 					//Npc
 					temp = new Npc (x, y);
+					temp->setParent (this);
+					map->objectTiles [x] [y] = (int)Npc::singletonInstance;
 					if (_activeQuestsCopy.size () > 0)
 					{
-						((Npc*)temp)->activeQuests = _activeQuestsCopy;
+						((Npc*)temp)->activeQuests = std::vector <Quest*> (_activeQuestsCopy);
 					}
-					temp->setParent (this);
-					map->objectTiles [x] [y] = (int)temp;
 				case 37:
 					//Gate
 					temp = new Gate (x, y);
@@ -210,11 +218,13 @@ void Level::loadMap ()
 				temp = new Button (object->x, object->z, (ButtonTarget*)map->objectTiles [std::stoi (object->properties [0])] [std::stoi (object->properties [1])]);
 				temp->setParent (this);
 				//If there is an object already in this place, delete it.
-				if (map->objectTiles [object->x] [object->z] != (int)nullptr)
+				if (map->baseTiles [object->x] [object->z] != (int)nullptr)
 				{
-					delete (GameObject*)map->objectTiles [object->x] [object->z];
+					GameObject* block = (GameObject*)map->baseTiles [object->x] [object->z];
+					block->setParent (nullptr);
+					delete block;
 				}
-				map->objectTiles [object->x] [object->z] = (int)temp;
+				map->baseTiles [object->x] [object->z] = (int)temp;
 				break;
 			case 36:
 				//Collectable
@@ -223,7 +233,9 @@ void Level::loadMap ()
 				//If there is an object already in this place, delete it.
 				if (map->objectTiles [object->x] [object->z] != (int)nullptr)
 				{
-					delete (GameObject*)map->objectTiles [object->x] [object->z];
+					GameObject* block = (GameObject*)map->objectTiles [object->x] [object->z];
+					block->setParent (nullptr);
+					delete block;
 				}
 				map->objectTiles [object->x] [object->z] = (int)temp;
 				break;
@@ -234,12 +246,13 @@ void Level::loadMap ()
 				//If there is an object already in this place, delete it.
 				if (map->objectTiles [object->x] [object->z] != (int)nullptr)
 				{
-					delete (GameObject*)map->objectTiles [object->x] [object->z];
+					GameObject* block = (GameObject*)map->objectTiles [object->x] [object->z];
+					block->setParent (nullptr);
+					delete block;
 				}
 				map->objectTiles [object->x] [object->z] = (int)temp;
 				break;
 			default:
-				map->objectTiles [object->x] [object->z] = (int)nullptr;
 				break;
 		}
 	}
@@ -305,5 +318,5 @@ void Level::loadLevel (int pLevelNumber)
 //Reload the current level
 void Level::reloadLevel ()
 {
-	_nextLevel = 0;
+	_nextLevel = _levelNumber;
 }

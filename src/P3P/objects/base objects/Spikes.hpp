@@ -16,7 +16,7 @@ private:
 	GameObject* _model;
 
 	int _position [2] = { 0, 0 };
-	float _timer;
+	float _timer = 0;
 
 	bool _spikesUp = false;
 	const float SWITCH_TIME = 2;
