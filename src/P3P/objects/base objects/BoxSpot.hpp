@@ -14,7 +14,7 @@ class BoxSpot : public GameObject
         bool taken = false;
     protected:
     private:
-	    GameObject* _model;
+	    GameObject* _model = nullptr;
 };
 
 #endif // BOXSPOT_H

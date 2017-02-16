@@ -46,7 +46,7 @@ class AnimationBehaviour : public AbstractBehaviour
 		std::vector <std::vector <KeyFrame>> _animations;
 		glm::mat4 _normalTransform;
 		void (*_stopFunction) (int, GameObject*) = nullptr;
-		GameObject* _stopFunctionOwner;
+		GameObject* _stopFunctionOwner = nullptr;
 };
 
 #endif

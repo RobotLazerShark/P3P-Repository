@@ -20,7 +20,7 @@ class Box : public GameObject
     private:
 	int _currentTile [2] = { 0, 0 };
 	int _oldTile [2] = { 0, 0 };
-	GameObject* _model;
+	GameObject* _model = nullptr;
 };
 
 #endif // BOX_H

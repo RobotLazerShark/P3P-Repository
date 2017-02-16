@@ -1,4 +1,22 @@
 #include <P3P/Level.hpp>
+#include <mge/core/World.hpp>
+#include <P3P/objects/Player.hpp>
+#include <P3P/objects/Npc.hpp>
+#include <P3P/objects/Box.hpp>
+#include <P3P/objects/Door.hpp>
+#include <P3P/objects/Fan.hpp>
+#include <P3P/Quest.hpp>
+#include <P3P/objects/Gate.hpp>
+#include <P3P/objects/Collectable.hpp>
+#include <P3P/objects/base objects/Floor.hpp>
+#include <P3P/objects/base objects/BoxSpot.hpp>
+#include <P3P/objects/base objects/Button.hpp>
+#include <P3P/objects/base objects/Spikes.hpp>
+#include <P3P/objects/base objects/BreakingBlock.hpp>
+#include <mge/behaviours/FollowBehaviour.hpp>
+#include <mge/behaviours/ThirdPersonCameraBehaviour.hpp>
+#include <mge/objects/Camera.hpp>
+#include <P3P/ProgressTracker.hpp>
 
 
 //Static variables
@@ -36,6 +54,13 @@ Level::~Level ()
 
 void Level::update (float pStep, bool pUpdateWorldTransform)
 {
+	if (_stop)
+	{
+		return;
+	}
+
+	//Remove items from drawbuffer
+	drawBuffer.clear();
 	GameObject::update(pStep, pUpdateWorldTransform);
 
 	//If we have to load a different level, do that here.
@@ -46,19 +71,36 @@ void Level::update (float pStep, bool pUpdateWorldTransform)
 		//Make sure the copies are not linked to the originals
 		if (Player::singletonInstance != nullptr && Player::singletonInstance->inventory.size () > 0)
 		{
-			_inventoryCopy = std::vector <Collectable*> (Player::singletonInstance->inventory);
+			_inventoryCopy.clear ();
+			_inventoryCopy = std::vector <std::string> (Player::singletonInstance->inventory);
 		}
 		if (Npc::singletonInstance != nullptr && Npc::singletonInstance->activeQuests.size () > 0)
 		{
+			_activeQuestsCopy.clear ();
 			_activeQuestsCopy = std::vector <Quest*> (Npc::singletonInstance->activeQuests);
 		}
 		clear ();
-		setMap (_nextLevel);
+		if (!setMap (_nextLevel))
+		{
+			_stop = true;
+			return;
+		}
 		loadMap ();
 		_nextLevel = -1;
 	}
 }
 
+
+void Level::render (sf::RenderWindow* pWindow)
+{
+	for (int i = 0, size = Level::singletonInstance->drawBuffer.size(); i < size; i++)
+	{
+		//Draw item in drawbuffer
+		pWindow->pushGLStates ();
+		pWindow->draw (*Level::singletonInstance->drawBuffer [i]);
+		pWindow->popGLStates ();
+	}
+}
 
 //////////////////////////////|	LEVEL ACCESS
 //Increase the amount of levels the player has access to
@@ -75,7 +117,7 @@ int Level::levelKey ()
 
 //////////////////////////////|	LEVEL BUILDING
 //Load a map by the level number
-void Level::setMap (int pLevelNumber)
+bool Level::setMap (int pLevelNumber)
 {
 	_levelNumber = pLevelNumber;
 	if (map != nullptr)
@@ -91,6 +133,11 @@ void Level::setMap (int pLevelNumber)
 	{
 		map = LevelImporter::ReadFile ("Level" + std::to_string (pLevelNumber) + ".tmx");
 	}
+	if (map == nullptr)
+	{
+		return false;
+	}
+	return true;
 }
 
 //Build level as described in map
@@ -166,7 +213,7 @@ void Level::loadMap ()
 					map->objectTiles [x] [y] = (int)temp;
 					if (_inventoryCopy.size () > 0)
 					{
-						((Player*)temp)->inventory = std::vector <Collectable*> (_inventoryCopy);
+						((Player*)temp)->inventory = std::vector <std::string> (_inventoryCopy);
 					}
 					break;
 				case 34:
@@ -237,13 +284,27 @@ void Level::loadMap ()
 			}
 		}
 	}
-	//Doors and buttons need to be objects, so they can have properties
+	//XmlObjects are used to we can use properties
 	XmlObject* object;
 	for (int i = 0, size = map->xmlObjects.size (); i < size; i ++)
 	{
 		object = map->xmlObjects [i];
 		switch (object->type)
 		{
+			case 8:
+				//Camera: property = distance & height or height & intensity
+				switch (std::stoi (object->properties [0]))
+				{
+					case 1:
+						World::singletonInstance->getMainCamera ()->setBehaviour (new ThirdPersonCameraBehaviour (std::stof (object->properties [1]), std::stof (object->properties [2])));
+						break;
+					case 2:
+						World::singletonInstance->getMainCamera ()->setBehaviour (new PercentageFollowBehaviour (std::stof (object->properties [2]), (object->x * TILESIZE), std::stof (object->properties [1]), (object->z * TILESIZE)));
+						break;
+					default:
+						break;
+				}
+				break;
 			case 20:
 				//Button: property = x & y of the object it (de)activates
 				temp = new Button (object->x, object->z, (ButtonTarget*)map->objectTiles [std::stoi (object->properties [0])] [std::stoi (object->properties [1])]);
@@ -258,8 +319,15 @@ void Level::loadMap ()
 				map->baseTiles [object->x] [object->z] = (int)temp;
 				break;
 			case 36:
-				//Collectable
-				temp = new Collectable (object->x, object->z, object->properties [0]);
+				//Collectable: property = name & stay & dialog
+				if (object->properties.size () > 2)
+				{
+					temp = new Collectable (object->x, object->z, object->properties [0], object->properties [2], (std::stoi (object->properties [1]) > 0));
+				}
+				else
+				{
+					temp = new Collectable (object->x, object->z, object->properties [0], object->properties [1]);
+				}
 				temp->setParent (this);
 				//If there is an object already in this place, delete it.
 				if (map->objectTiles [object->x] [object->z] != (int)nullptr)
@@ -290,7 +358,7 @@ void Level::loadMap ()
 }
 
 //Delete all objects in the level
-void Level::clear ()
+void Level::clear (bool pEndGame)
 {
 	//Delete gates
 	for (Gate* gate : _gates)
@@ -338,6 +406,31 @@ void Level::clear ()
 		delete map->xmlObjects [i];
 	}
 	map->xmlObjects.clear ();
+
+	World::singletonInstance->getMainCamera ()->setBehaviour (nullptr);
+
+	//If we're clearing up the entire game
+	if (pEndGame)
+	{
+		for (int i = 0, size = _activeQuestsCopy.size (); i < size; i ++)
+		{
+			if (_activeQuestsCopy [i] != nullptr)
+			{
+				delete _activeQuestsCopy [i];
+			}
+		}
+		//Make sure there are no lingering singletons
+		if (Player::singletonInstance != nullptr)
+		{
+			Player::singletonInstance->setParent (nullptr);
+			delete Player::singletonInstance;
+		}
+		if (Npc::singletonInstance != nullptr)
+		{
+			Npc::singletonInstance->setParent (nullptr);
+			delete Npc::singletonInstance;
+		}
+	}
 }
 
 //Clear everything in the level, and build a new level

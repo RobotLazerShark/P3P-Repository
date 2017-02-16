@@ -5,13 +5,13 @@
 //Include files
 #include <glm.hpp>
 #include <string>
+#include <GL/glew.h>
 #include <mge/config.hpp>
-#include <mge/core/Mesh.hpp>
-#include <mge/core/Texture.hpp>
-#include <mge/core/GameObject.hpp>
-#include <mge/core/AbstractGame.hpp>
 #include <mge/core/ShaderProgram.hpp>
 #include <mge/materials/AbstractMaterial.hpp>
+
+class Mesh;
+class Texture;
 
 
 class WobbleMaterial : public AbstractMaterial
@@ -19,6 +19,7 @@ class WobbleMaterial : public AbstractMaterial
 	public:
 		WobbleMaterial (string pFilename);
 		virtual ~WobbleMaterial ();
+		static void clearShaderProgram ();
 		void render (Mesh* pMesh, const glm::mat4& pModelMatrix, const glm::mat4& pViewMatrix, const glm::mat4& pProjectionMatrix) override;
 	private:
 		std::string DEFAULT_TEXTURE = "Default.png";
@@ -29,7 +30,7 @@ class WobbleMaterial : public AbstractMaterial
 		static GLint _normalLoc;
 		static GLint _uvLoc;
 		static ShaderProgram* _shaderProgram;
-		Texture* _texture;
+		Texture* _texture = nullptr;
 		static void initializeShader ();
 };
 

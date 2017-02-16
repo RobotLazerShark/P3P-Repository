@@ -6,6 +6,7 @@ using namespace std;
 #include "mge/core/Mesh.hpp"
 #include "mge/behaviours/AbstractBehaviour.hpp"
 #include <mge/core/AbstractGame.hpp>
+#include <mge/core/World.hpp>
 
 
 //////////////////////////////|	INSTANCE MANAGEMENT
@@ -106,6 +107,10 @@ GameObject::~GameObject()
 	if (_collider != nullptr)
 	{
 		delete _collider;
+	}
+	if (_material != nullptr)
+	{
+		delete _material;
 	}
 
 	while (_children.size () > 0)
@@ -248,8 +253,16 @@ Mesh * GameObject::getMesh() const
 
 void GameObject::setBehaviour(AbstractBehaviour* pBehaviour)
 {
-	_behaviour = pBehaviour;
-	_behaviour->setOwner(this);
+	if (_behaviour != nullptr)
+	{
+		delete _behaviour;
+		_behaviour = nullptr;
+	}
+	if (pBehaviour != nullptr)
+	{
+		_behaviour = pBehaviour;
+		_behaviour->setOwner(this);
+	}
 }
 
 AbstractBehaviour * GameObject::getBehaviour() const
@@ -259,20 +272,6 @@ AbstractBehaviour * GameObject::getBehaviour() const
 
 void GameObject::setParent (GameObject* pParent)
 {
-	if (pParent == _parent)
-	{
-		bool oldPartOfWorld = _partOfWorld;
-		_partOfWorld = pParent->_partOfWorld;
-		if (_partOfWorld != oldPartOfWorld)
-		{
-			for (int i = _children.size()-1; i >= 0; i-- )
-			{
-				_children [i]->setParent (this);
-			}
-		}
-		return;
-	}
-
 	bool oldPartOfWorld = _partOfWorld;
 
 	//remove from previous parent
@@ -339,7 +338,7 @@ void GameObject::remove (GameObject* pChild)
 //costly operation, use with care
 glm::vec3 GameObject::getWorldPosition () const
 {
-	if (_parent == nullptr)
+	if (_parent == nullptr || _parent == World::singletonInstance)
 	{
 		_worldTransform = _transform;
 	}

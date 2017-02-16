@@ -1,5 +1,8 @@
 #include <mge/objects/Light.hpp>
 #include <mge/util/ShaderDataUtil.hpp>
+#include <mge/core/Mesh.hpp>
+#include <mge/materials/ColorMaterial.hpp>
+#include <mge/core/World.hpp>
 
 
 //////////////////////////////|	INSTANCE FUNCTIONS

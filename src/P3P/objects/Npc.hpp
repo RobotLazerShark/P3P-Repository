@@ -20,7 +20,7 @@ public:
 	int position [2] = { 0, 0 };
 
 private:
-	GameObject* _model;
+	GameObject* _model = nullptr;
 	int _playerPosition [2] = { 0, 0 };
 	
 };

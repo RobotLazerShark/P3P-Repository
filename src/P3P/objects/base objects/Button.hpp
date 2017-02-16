@@ -12,8 +12,8 @@ class Button : public GameObject
 		Button(int pX, int pZ, ButtonTarget* pTarget);
 		void update(float pStep, bool pUpdateWorldTransform = false) override;
 	private:
-		GameObject* _model;
-		ButtonTarget* _target;
+		GameObject* _model = nullptr;
+		ButtonTarget* _target = nullptr;
 		int _position [2] = { 0, 0 };
 		bool activated = false;
 };

@@ -4,10 +4,9 @@
 //Include files
 #include <glm.hpp>
 #include <mge/config.hpp>
-#include <mge/core/Mesh.hpp>
-#include <mge/materials/ColorMaterial.hpp>
-#include <mge/core/World.hpp>
 #include <mge/core/GameObject.hpp>
+
+class ColorMaterial;
 
 
 class Light : public GameObject
@@ -18,7 +17,7 @@ class Light : public GameObject
 		glm::vec4 _normal;
 		float _angle;
 		glm::vec2 _falloff;
-		ColorMaterial* _colorMaterial;//For visualising the light
+		ColorMaterial* _colorMaterial = nullptr;//For visualising the light
 	public:
 		//Properties
 		enum Shapes { Directional, Point, Spot };

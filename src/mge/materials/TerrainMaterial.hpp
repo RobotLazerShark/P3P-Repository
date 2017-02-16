@@ -5,13 +5,13 @@
 //Include files
 #include <glm.hpp>
 #include <vector>
+#include <GL/glew.h>
 #include <mge/config.hpp>
 #include "mge/core/ShaderProgram.hpp"
-#include "mge/core/Texture.hpp"
-#include <mge/core/Mesh.hpp>
-#include <mge/core/TerrainMesh.hpp>
-#include <mge/core/AbstractGame.hpp>
 #include "mge/materials/AbstractMaterial.hpp"
+
+class Mesh;
+class Texture;
 
 
 class TerrainMaterial : public AbstractMaterial
@@ -23,6 +23,7 @@ class TerrainMaterial : public AbstractMaterial
 		TerrainMaterial (std::string pSplatMapFile, std::string pSplatTexRFile, float pUVScaleR, std::string pSplatTexGFile, float pUVScaleG, std::string pSplatTexBFile, float pUVScaleB, std::string pSplatTexAFile, float pUVScaleA, int pWaterIndex = -1, float pWaveHeight = 0.08f, float pWaveCount = 1);
 		TerrainMaterial (std::string pSplatMapFile, std::vector <std::string> pTextureFiles, bool pLit);
 		virtual ~TerrainMaterial ();
+		static void clearShaderProgram ();
 		void SetLit (bool pLit);
 		void SetShininess (float pShininess = 0);
 		void SetSpecularColor (glm::vec3 pSpecularColor = glm::vec3 (1, 1, 1));

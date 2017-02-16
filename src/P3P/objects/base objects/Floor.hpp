@@ -12,7 +12,7 @@ class Floor : public GameObject
 	public:
 		Floor (int pX, int pZ, int pType);
 	private:
-		GameObject* _model;
+		GameObject* _model = nullptr;
 };
 
 #endif

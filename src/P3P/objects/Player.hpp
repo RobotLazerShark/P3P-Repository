@@ -11,9 +11,8 @@
 #include <JCPPEngine/KeyEvent.hpp>
 #include <JCPPEngine/InputManager.hpp>
 #include <P3P/ProgressTracker.hpp>
-#include <P3P/objects/Collectable.hpp>
-#include <P3P/objects/base objects/BreakingBlock.hpp>
-#include <P3P/objects/Npc.hpp>
+
+class Collectable;
 
 
 class Player : public GameObject, public JCPPEngine::AbstractListener
@@ -30,16 +29,16 @@ class Player : public GameObject, public JCPPEngine::AbstractListener
 	bool _moving = false;
 	int _currentTile[2];//Arrays, because glm::vec uses floats
 	int _oldTile[2];
-	std::vector <Collectable*> inventory;
+	std::vector <std::string> inventory;
 
     protected:
 
     private:
-        ProgressTracker* _progressTracker;
-	GameObject* _model;
+        ProgressTracker* _progressTracker = nullptr;
+	GameObject* _model = nullptr;
 	glm::vec3 _modelOrientation = glm::vec3 (0, 0, 0);
-	AnimationBehaviour* _wheelAnimator;
-	AnimationBehaviour* _baseAnimator;
+	AnimationBehaviour* _wheelAnimator = nullptr;
+	AnimationBehaviour* _baseAnimator = nullptr;
 
 };
 

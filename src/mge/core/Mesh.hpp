@@ -17,6 +17,7 @@ class Mesh
 		Mesh(std::string pId);
 		void copyData (Mesh* pMesh);
 		virtual ~Mesh();
+		static void ClearCache ();
 
         /**
          * Loads a mesh from an .obj file. The file has to have:

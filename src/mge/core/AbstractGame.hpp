@@ -4,11 +4,13 @@
 #include <SFML/Graphics.hpp>
 #include <GL/glew.h>
 #include <string>
-#include <JCPPEngine/AbstractListener.hpp>
+#include <glm.hpp>
 #include <mge/lua/LuaParser.hpp>
+#include <mge/util/ShaderDataUtil.hpp>
+#include <JCPPEngine/AbstractListener.hpp>
 #include <JCPPEngine/EventHandler.hpp>
 #include <JCPPEngine/TextureManager.hpp>
-#include <mge/util/ShaderDataUtil.hpp>
+#include "mge/core/Renderer.hpp"
 using namespace std;
 
 class World;
@@ -38,6 +40,8 @@ class AbstractGame : public JCPPEngine::AbstractListener
 	static int windowHeight;
 	static int windowHalfWidth;
 	static int windowHalfHeight;
+	static AbstractGame* singletonInstance;
+	void Stop ();
 
         //creates a window, initializes glew, a renderer and a world instance
         virtual void initialize();
@@ -69,14 +73,14 @@ class AbstractGame : public JCPPEngine::AbstractListener
         //render all game objects in the display root
         virtual void _render();
 
-		sf::RenderWindow* _window;  //sfml window to render into
-		Renderer* _renderer;        //the renderer class to render the world
-		World* _world;              //the root game object that represents our scene
-		float _fps;                 //stores the real fps
+		sf::RenderWindow* _window = nullptr;  //sfml window to render into
+		Renderer* _renderer = nullptr;        //the renderer class to render the world
+		World* _world = nullptr;              //the root game object that represents our scene
+		float _fps = 0;                 //stores the real fps
 
     private:
-	sf::Sprite* _cursor;
-	LuaParser* _luaParser;
+	sf::Sprite* _cursor = nullptr;
+	LuaParser* _luaParser = nullptr;
         AbstractGame(const AbstractGame&);
         AbstractGame& operator=(const AbstractGame&);
 

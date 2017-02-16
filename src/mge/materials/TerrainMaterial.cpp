@@ -1,4 +1,8 @@
 #include "mge/materials/TerrainMaterial.hpp"
+#include <mge/core/AbstractGame.hpp>
+#include "mge/core/Texture.hpp"
+#include <mge/core/Mesh.hpp>
+#include <mge/core/TerrainMesh.hpp>
 
 
 //Initialize static values
@@ -252,7 +256,17 @@ TerrainMaterial::TerrainMaterial (std::string pSplatMapFile, std::vector <std::s
 	}
 }
 //Destructor
-TerrainMaterial::~TerrainMaterial () {}
+TerrainMaterial::~TerrainMaterial ()
+{
+}
+void TerrainMaterial::clearShaderProgram()
+{
+	if (_shaderProgram != nullptr)
+	{
+		delete _shaderProgram;
+		_shaderProgram = nullptr;
+	}
+}
 
 
 //////////////////////////////|	SETTERS

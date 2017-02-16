@@ -21,7 +21,7 @@ class CameraOrbitBehaviour : public AbstractBehaviour, JCPPEngine::AbstractListe
 		virtual void update (float pStep);
 		virtual void ProcessEvent (sf::Event pEvent);
 	private:
-		GameObject* _targetObject;
+		GameObject* _targetObject = nullptr;
 		float _distanceFromTarget;
 		float _minTiltAngle;
 		float _maxTiltAngle;

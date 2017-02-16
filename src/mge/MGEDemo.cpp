@@ -1,4 +1,9 @@
 #include "mge/MGEDemo.hpp"
+#include <P3P/Level.hpp>
+#include "mge/core/Renderer.hpp"
+#include "mge/core/World.hpp"
+#include "mge/objects/Camera.hpp"
+#include <mge/objects/Light.hpp>
 //[TESTING]
 #include <mge/behaviours/CameraOrbitBehaviour.hpp>
 
@@ -30,7 +35,7 @@ void MGEDemo::_initializeScene()
 	dirLight->rotate (glm::radians (25.0f), glm::vec3 (0, 1, 0));
 	dirLight->rotate (glm::radians (45.0f), glm::vec3 (1, 0, 0));
 	dirLight->setParent (_world);
-	ShaderDataUtil::SetAmbientLight (glm::vec3 (1, 1, 1), 0.15f);
+	ShaderDataUtil::SetAmbientLight (glm::vec3 (1, 1, 1), 0.1f);
 	//camera->setBehaviour (new CameraOrbitBehaviour (10.0f, glm::radians (-60.0f), glm::radians (60.0f), 0.01f, _world));
 
 	//Set up P3P hub (starts the game)
@@ -39,6 +44,6 @@ void MGEDemo::_initializeScene()
 
 MGEDemo::~MGEDemo()
 {
-	_game->clear ();
+	_game->clear (true);
 	delete _game;
 }

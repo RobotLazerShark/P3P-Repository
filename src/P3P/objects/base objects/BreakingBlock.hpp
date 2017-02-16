@@ -18,10 +18,10 @@ public:
 	int _position [2] = { 0, 0 };
 	bool _delete = false;
 private:
-	GameObject* _model;
+	GameObject* _model = nullptr;
 	int _breakLevel = 0;
 	bool _updating = false;
-	AnimationBehaviour* _animator;
+	AnimationBehaviour* _animator = nullptr;
 };
 
 #endif

@@ -22,7 +22,7 @@ class DoomObject : public GameObject, public AbstractMaterial
 		virtual void render (Mesh* pMesh, const glm::mat4& pModelMatrix, const glm::mat4& pViewMatrix, const glm::mat4& pProjectionMatrix);
 	protected:
 		const float SCALE_FACTOR = 40;
-		sf::Sprite* _sprite;
+		sf::Sprite* _sprite = nullptr;
 		bool _valid = false;
 		glm::vec2 _screenPosition;
 		float _imageScale;

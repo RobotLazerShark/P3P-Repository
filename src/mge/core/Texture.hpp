@@ -9,7 +9,7 @@ class Texture
 {
 	public:
 		static Texture* load(const std::string pTexturePath);
-
+		static void ClearCache ();
 		virtual ~Texture();
 
 		GLuint getId();

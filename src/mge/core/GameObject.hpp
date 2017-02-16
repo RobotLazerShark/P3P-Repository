@@ -70,14 +70,14 @@ class GameObject
 		int getChildCount ();
 		GameObject* getChildAt (int pIndex);
 	protected:
-		Collider* _collider;
+		Collider* _collider = nullptr;
 		std::string _name = "";
 		glm::mat4 _transform;
-		GameObject* _parent;
+		GameObject* _parent = nullptr;
 		std::vector<GameObject*> _children;
-		Mesh* _mesh;
-		AbstractBehaviour* _behaviour;
-		AbstractMaterial* _material;
+		Mesh* _mesh = nullptr;
+		AbstractBehaviour* _behaviour = nullptr;
+		AbstractMaterial* _material = nullptr;
 		bool _partOfWorld = false;
 		void _innerAdd (GameObject* pChild);
 		void _innerRemove (GameObject* pChild);

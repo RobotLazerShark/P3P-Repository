@@ -1,8 +1,10 @@
 #include <mge/util/ShaderDataUtil.hpp>
+#include <mge/objects/Camera.hpp>
+#include <mge/objects/Light.hpp>
 
 
 //Static fields
-static Camera* _camera;
+static Camera* _camera = nullptr;
 static glm::vec4 _cameraWorldPosition;
 static glm::vec3 _ambientColor;						//Light class properties	->	Shader properties
 static std::vector <Light*> _directionalLights;//color, intensity, direction			->	color, normal

@@ -15,6 +15,17 @@ Texture::~Texture()
 	glDeleteTextures(1, &_id);
 }
 
+void Texture::ClearCache ()
+{
+	std::map<std::string,Texture*>::iterator itr;
+	std::map<std::string,Texture*>::iterator end = _textures.end ();
+	for (itr = _textures.begin (); itr != end; itr++)
+	{
+		delete itr->second;
+	}
+	_textures.clear ();
+}
+
 GLuint Texture::getId() {
 	return _id;
 }

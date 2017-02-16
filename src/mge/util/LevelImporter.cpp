@@ -1,4 +1,5 @@
 #include <mge/util/LevelImporter.hpp>
+#include <mge/core/AbstractGame.hpp>
 
 
 //Static variables
@@ -162,6 +163,7 @@ LevelMap* LevelImporter::ReadFile (std::string pFilename)
 	else
 	{
 		std::cout << "[ERROR]: could not import level from file 'levels/" << pFilename << "'!" << std::endl;
+		AbstractGame::singletonInstance->Stop ();
 		return nullptr;
 	}
 }

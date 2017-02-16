@@ -3,20 +3,30 @@
 
 //Include files
 #include <mge/core/GameObject.hpp>
-#include <mge/materials/LitMaterial.hpp>
+#include <JCPPEngine/Fontmanager.hpp>
+#include <JCPPEngine/Texturemanager.hpp>
 
 //We can extend this class for different types of collectables if neccesary
 class Collectable : public GameObject
 {
 public:
-	Collectable(int pX, int pZ, std::string pName);
+	Collectable(int pX, int pZ, std::string pName, bool pCopyCollect = false);
+	Collectable (int pX, int pZ, std::string pName, std::string pDialog, bool pCopyCollect = false);
+	~Collectable ();
 	std::string getName ();
-	virtual void collect ();
+	virtual bool collect (int pOldX, int pOldZ);
+	virtual void update (float pStep, bool pUpdateWorldTransform = false) override;
 protected:
-	GameObject* _model;
+	GameObject* _model = nullptr;
 	std::string _name;
-	int _position [2] = { 0, 0 };
 	bool _collected = false;
+	bool _copyCollect = false;
+	bool _hasDialog = false;
+	bool _showingDialog = false;
+	int _position [2] = { 0, 0 };
+	int _playerPosition [2] = { 0, 0 };
+	sf::Sprite* _textBox;
+	sf::Text* _text;
 };
 
 #endif

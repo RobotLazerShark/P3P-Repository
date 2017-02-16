@@ -5,14 +5,14 @@
 //Include files
 #include <glm.hpp>
 #include <string>
+#include <GL/glew.h>
 #include <mge/config.hpp>
-#include <mge/core/Mesh.hpp>
-#include <mge/core/Texture.hpp>
-#include <mge/core/GameObject.hpp>
-#include <mge/core/AbstractGame.hpp>
 #include <mge/core/ShaderProgram.hpp>
 #include <mge/util/ShaderDataUtil.hpp>
 #include <mge/materials/AbstractMaterial.hpp>
+
+class Texture;
+class Mesh;
 
 
 class LitMaterial : public AbstractMaterial
@@ -21,6 +21,7 @@ class LitMaterial : public AbstractMaterial
 		LitMaterial (glm::vec3 pColor, float pShininess = 0, glm::vec3 pSpecularColor = glm::vec3 (1,1,1));
 		LitMaterial (std::string pFilename, float pShininess = 0, glm::vec3 pSpecularColor = glm::vec3 (1,1,1));
 		virtual ~LitMaterial ();
+		static void clearShaderProgram ();
 		void SetColor (glm::vec3 pColor);
 		void SetTexture (std::string pFilename);
 		void SetTextureScale (float pScale);
@@ -59,9 +60,8 @@ class LitMaterial : public AbstractMaterial
 		float _shininess;
 		glm::vec3 _specularColor;
 		glm::vec3 _color;
-		Texture* _texture;
+		Texture* _texture = nullptr;
 		float _texScale = 1;
-		Texture* _normalMap;
 		static void initializeShader ();
 };
 

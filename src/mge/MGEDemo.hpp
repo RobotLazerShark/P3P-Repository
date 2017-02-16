@@ -6,11 +6,9 @@
 #include <glm.hpp>
 #include <iostream>
 #include <string>
-#include "mge/core/Renderer.hpp"
-#include "mge/core/World.hpp"
-#include "mge/objects/Camera.hpp"
-#include <P3P/Level.hpp>
 #include <mge/core/AbstractGame.hpp>
+
+class Level;
 
 class MGEDemo: public AbstractGame
 {
@@ -22,7 +20,7 @@ class MGEDemo: public AbstractGame
 	protected:
 		virtual void _initializeScene();
 	private:
-		Level* _game;
+		Level* _game = nullptr;
 		MGEDemo(const MGEDemo&);
 		MGEDemo& operator=(const MGEDemo&);
 };

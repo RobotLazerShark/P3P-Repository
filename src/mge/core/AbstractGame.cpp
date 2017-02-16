@@ -1,14 +1,21 @@
 ﻿#include "AbstractGame.hpp"
-
+//#include <vld.h>
 #include <iostream>
 using namespace std;
-
-#include "mge/core/Renderer.hpp"
+#include <mge/core/Mesh.hpp>
+#include <mge/core/Texture.hpp>
+#include <mge/materials/ColorMaterial.hpp>
+#include <mge/materials/TextureMaterial.hpp>
+#include <mge/materials/LitMaterial.hpp>
+#include <mge/materials/TerrainMaterial.hpp>
+#include <mge/materials/WobbleMaterial.hpp>
 #include "mge/core/World.hpp"
+#include <P3P/Level.hpp>
 
+AbstractGame* AbstractGame::singletonInstance = nullptr;
 static float timeSinceProgramStart;
-int AbstractGame::windowWidth;
-int AbstractGame::windowHeight;
+int AbstractGame::windowWidth = 1920;
+int AbstractGame::windowHeight = 1080;
 int AbstractGame::windowHalfWidth = AbstractGame::windowWidth * 0.5f;
 int AbstractGame::windowHalfHeight = AbstractGame::windowHeight * 0.5f;
 
@@ -17,8 +24,25 @@ float AbstractGame::Time ()
 	return timeSinceProgramStart;
 }
 
+void AbstractGame::Stop ()
+{
+	if (_luaParser != nullptr)
+	{
+		_luaParser->Clean ();
+		delete _luaParser;
+	}
+	JCPPEngine::SoundManager::Clean ();
+	JCPPEngine::TextureManager::Clean ();
+	_window->close ();
+}
+
 AbstractGame::AbstractGame():_window(NULL),_renderer(NULL),_world(NULL), _fps(0)
 {
+	if (singletonInstance != nullptr)
+	{
+		delete singletonInstance;
+	}
+	singletonInstance = this;
 	JCPPEngine::InputManager ();
 	windowHalfWidth = windowWidth * 0.5f;
 	windowHalfHeight = windowHeight * 0.5f;
@@ -31,6 +55,13 @@ AbstractGame::~AbstractGame()
     delete _window;
     delete _renderer;
     delete _world;
+    Mesh::ClearCache ();
+    Texture::ClearCache ();
+    ColorMaterial::clearShaderProgram ();
+    TextureMaterial::clearShaderProgram();
+    LitMaterial::clearShaderProgram();
+    TerrainMaterial::clearShaderProgram();
+    WobbleMaterial::clearShaderProgram();
 }
 
 void AbstractGame::initialize() {
@@ -57,6 +88,8 @@ void AbstractGame::initialize() {
 void AbstractGame::_initializeWindow() {
 	sf::VideoMode videoMode = //sf::VideoMode::getFullscreenModes () [0];
 		sf::VideoMode(1400,800);//[TESTING]
+	windowWidth = videoMode.width;
+	windowHeight = videoMode.height;
 //	_window = new sf::RenderWindow( videoMode, "G1¡t©h/Fï×", sf::Style::Fullscreen, sf::ContextSettings(24,8,0,3,3));
 	_window = new sf::RenderWindow( videoMode, "« G1¡t©h/Fï× »", sf::Style::Default, sf::ContextSettings(24,8,0,3,3));//[TESTING]
 	windowWidth = videoMode.width;
@@ -134,6 +167,7 @@ void AbstractGame::run ()
 				//Update the lua program
 				if (_luaParser->Update (step))
 				{
+					_luaParser->Clean ();
 					delete _luaParser;
 					_luaParser = nullptr;//LuaParser is deleted, prevent accessing invalid memory address
 					break;
@@ -141,6 +175,7 @@ void AbstractGame::run ()
 			}
 			ShaderDataUtil::UpdateCameraInfo ();
 			_render ();
+			Level::render (_window);
 			if (_luaParser != nullptr)
 			{
 				_luaParser->Render ();
@@ -158,7 +193,11 @@ void AbstractGame::run ()
 		JCPPEngine::EventHandler::ProcessEvents ();
 		if (JCPPEngine::InputManager::GetKeyDown (sf::Keyboard::Escape))
 		{
-			_luaParser->Clean ();
+			if (_luaParser != nullptr)
+			{
+				_luaParser->Clean ();
+				delete _luaParser;
+			}
 			JCPPEngine::SoundManager::Clean ();
 			JCPPEngine::TextureManager::Clean ();
 			_window->close ();
@@ -176,7 +215,8 @@ void AbstractGame::run ()
 	{
 		//Wait until we close the window, so we can still read error messages.
 		JCPPEngine::InputManager::Update ();
-	}
+		JCPPEngine::EventHandler::ProcessEvents ();
+	} 
 }
 
 void AbstractGame::_update(float pStep) {

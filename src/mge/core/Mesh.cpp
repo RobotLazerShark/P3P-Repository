@@ -28,6 +28,17 @@ void Mesh::copyData (Mesh* pMesh)
 	_indices = pMesh->_indices;
 }
 
+void Mesh::ClearCache ()
+{
+	std::map<std::string, Mesh*>::iterator itr;
+	std::map<std::string, Mesh*>::iterator end = _meshCache.end ();
+	for (itr = _meshCache.begin (); itr != end; itr ++)
+	{
+		delete itr->second;
+	}
+	_meshCache.clear ();
+}
+
 Mesh::~Mesh ()
 {
 	//dtor

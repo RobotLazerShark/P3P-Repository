@@ -1,12 +1,11 @@
-#include <glm.hpp>
-
 #include "mge/materials/TextureMaterial.hpp"
+#include <glm.hpp>
 #include "mge/core/Texture.hpp"
 #include "mge/core/Mesh.hpp"
 #include "mge/core/GameObject.hpp"
 #include "mge/config.hpp"
 
-ShaderProgram* TextureMaterial::_shader = NULL;
+ShaderProgram* TextureMaterial::_shader = nullptr;
 GLint TextureMaterial::_MVPmatrixLoc = 0;
 GLint TextureMaterial::_scaleLoc = 0;
 GLint TextureMaterial::_textureLoc = 0;
@@ -16,7 +15,17 @@ TextureMaterial::TextureMaterial(Texture * pDiffuseTexture, float pScale):_diffu
     _lazyInitializeShader();
 }
 
-TextureMaterial::~TextureMaterial() {}
+TextureMaterial::~TextureMaterial()
+{
+}
+void TextureMaterial::clearShaderProgram ()
+{
+	if (_shader != nullptr)
+	{
+		delete _shader;
+		_shader = nullptr;
+	}
+}
 
 void TextureMaterial::_lazyInitializeShader() {
     if (!_shader) {

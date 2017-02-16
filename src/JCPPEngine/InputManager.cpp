@@ -6,7 +6,7 @@ namespace JCPPEngine
 {
 
 	//Static fields
-	static InputManager* _singletonInstance;
+	InputManager* InputManager::singletonInstance = nullptr;
 	//Define keystates
 	const int InputManager::KEY_STILL_UP;
 	const int InputManager::KEY_DOWN;
@@ -20,11 +20,11 @@ namespace JCPPEngine
 	//Class constructor
 	InputManager::InputManager ()
 	{
-		if (_singletonInstance != NULL)
+		if (singletonInstance != nullptr)
 		{
-			return;
+			delete singletonInstance;
 		}
-		_singletonInstance = this;
+		singletonInstance = this;
 
 		//Set initial mousebutton states
 		_mouseStates [0] = (sf::Mouse::isButtonPressed (sf::Mouse::Button::Left)) ? KEY_DOWN : KEY_STILL_UP;

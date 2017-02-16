@@ -10,7 +10,7 @@ namespace JCPPEngine
 	static map <sf::Event::EventType, vector <AbstractListener*>> _sfListeners;
 	static map <JCPPEngine::Event::EventType, vector <AbstractListener*>> _JCPPEListeners;
 	static vector <JCPPEngine::Event*> _eventQueue;
-	static sf::RenderWindow* _window;
+	static sf::RenderWindow* _window = nullptr;
 
 
 

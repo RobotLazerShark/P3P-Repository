@@ -1,14 +1,32 @@
 #include "LuaParser.hpp"
 #ifndef LuaParser_CPP_Def
 #define LuaParser_CPP_Def
+#include <mge/core/World.hpp>
+#include <mge/core/Texture.hpp>
+#include <mge/core/GameObject.hpp>
+#include <mge/core/AbstractGame.hpp>
+#include <mge/core/Mesh.hpp>
+#include <mge/core/TerrainMesh.hpp>
+#include <mge/util/ShaderDataUtil.hpp>
+#include <mge/objects/Camera.hpp>
+#include <mge/objects/Light.hpp>
+#include <mge/objects/DoomSprite.hpp>
+#include <mge/objects/DoomAnimation.hpp>
+#include <mge/objects/DoomText.hpp>
+#include <mge/materials/ColorMaterial.hpp>
+#include <mge/materials/TextureMaterial.hpp>
+#include <mge/materials/LitMaterial.hpp>
+#include <mge/materials/TerrainMaterial.hpp>
+#include <mge/behaviours/RotatingBehaviour.hpp>
+#include <mge/behaviours/KeysBehaviour.hpp>
 using namespace std;
 using namespace JCPPEngine;
 
 
 
 //Static fields
-LuaParser* LuaParser::singletonInstance;
-sf::RenderWindow* LuaParser::_window;
+LuaParser* LuaParser::singletonInstance = nullptr;
+sf::RenderWindow* LuaParser::_window = nullptr;
 
 
 //////////////////////////////| STATIC/LUA FUNCTIONS
@@ -2434,7 +2452,7 @@ LuaParser::LuaParser (sf::RenderWindow* pWindow)
 	//Maintain singleton
 	if (singletonInstance != nullptr)
 	{
-		return;
+		delete singletonInstance;
 	}
 	singletonInstance = this;
 	_errorRaised = false;
@@ -2566,9 +2584,24 @@ LuaParser::LuaParser (sf::RenderWindow* pWindow)
 	_lua = lua_newthread (_luaMain);
 	_originalStatePointerValue = ((int)_lua) + 1;//This calculation prevents anything from adjusting the value stored in _originalStatePointerValue
 
+	_luaFile = "main.lua";
 	SafeRefresh ();//Load lua file and start at main function
 	_currentFunction = "start";//Call start function the first frame
 	_startFrame = true;
+}
+LuaParser::~LuaParser ()
+{
+	_window = nullptr;
+	if (_mouseEvent != nullptr)
+	{
+		delete _mouseEvent;
+		_mouseEvent = nullptr;
+	}
+	if (_curScene != nullptr)
+	{
+		delete _curScene;
+		_curScene = nullptr;
+	}
 }
 //Clean out the LuaParser. This does not delete this object itself.
 void LuaParser::Clean ()

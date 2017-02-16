@@ -1,5 +1,9 @@
 #include "P3P/objects/Player.hpp"
+#include <P3P/objects/Npc.hpp>
 #include <P3P/Level.hpp>
+#include <P3P/objects/Box.hpp>
+#include <P3P/objects/Door.hpp>
+#include <P3P/objects/Collectable.hpp>
 
 #include <typeinfo>
 //Static variables
@@ -11,7 +15,8 @@ Player::Player (int pX, int pZ, ProgressTracker* pProgressTracker) : GameObject 
 {
 	if (singletonInstance != nullptr)
 	{
-		return;
+		singletonInstance->setParent (nullptr);
+		delete singletonInstance;
 	}
 	singletonInstance = this;
         _progressTracker = pProgressTracker;
@@ -50,13 +55,6 @@ Player::~Player ()
 	if (_progressTracker != nullptr)
 	{
 		delete _progressTracker;
-	}
-	for (int i = 0, size = inventory.size (); i < size; i ++)
-	{
-		if (inventory [i] != nullptr)
-		{
-			delete inventory [i];
-		}
 	}
 	inventory.clear ();
 	_wheelAnimator = nullptr;
@@ -128,8 +126,14 @@ bool Player::movePlayer (int pX, int pZ, bool pTranslate)
 	}
 	else if (collectable != nullptr)//The new position contains a collectable
 	{
-		//Collect item and move into its space
-		collectable->collect ();
+		//Collect item and move into its space if possible
+		if (collectable->collect (_oldTile [0], _oldTile [1]))
+		{
+			//we cannot move into the occupied space
+			_currentTile [0] = _oldTile [0];
+			_currentTile [1] = _oldTile [1];
+			return false;
+		}
 	}
 	else
 	{

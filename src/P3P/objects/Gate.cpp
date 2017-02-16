@@ -1,5 +1,6 @@
 #include <P3P/objects/Gate.hpp>
 #include <P3P/Level.hpp>
+#include <P3P/objects/Player.hpp>
 
 
 //Constructor
@@ -51,11 +52,10 @@ bool Gate::setActive (bool pActive)
 			translate (glm::vec3 (0, -1, 0));
 		}
 		//if gate tile is taken by the player
-		else if(dynamic_cast <Player*> ((GameObject*)Level::map->objectTiles[_position [0]][_position [1]]) != nullptr)
+		else if(Player::singletonInstance->_currentTile [0] == _position [0] && Player::singletonInstance->_currentTile [1] == _position [1])
 		{
 			//Kill the player
 			Player::singletonInstance->die ();
-			translate (glm::vec3 (0, -1, 0));
 		}
 		else
 		{

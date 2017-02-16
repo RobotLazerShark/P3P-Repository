@@ -29,7 +29,7 @@ class AbstractBehaviour
     protected:
 
 	    //reference back its owner
-		GameObject* _owner;
+		GameObject* _owner = nullptr;
 
     private:
 

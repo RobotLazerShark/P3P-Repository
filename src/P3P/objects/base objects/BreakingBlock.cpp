@@ -1,5 +1,6 @@
 #include "P3P/objects/base objects/BreakingBlock.hpp"
 #include <P3P/Level.hpp>
+#include <P3P/objects/Player.hpp>
 
 
 //Constructor
@@ -10,7 +11,7 @@ BreakingBlock::BreakingBlock(int pX, int pZ) : GameObject()
 	_model->translate(glm::vec3(0, -0.5f, 0));
 	_model->setParent(this);
 	GameObject* submodel = new GameObject ("cube_flat.obj");
-	submodel->setMaterial(new LitMaterial(glm::vec3(0.6f,0.3f,0.3f)));
+	submodel->setMaterial(new LitMaterial("BreakingBlock.jpg"));
 	submodel->setParent (_model);
 	_animator = new AnimationBehaviour ({ "UnstableBlock.txt", "FallingBlock.txt" });
 	submodel->setBehaviour (_animator);

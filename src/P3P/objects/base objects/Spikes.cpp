@@ -1,5 +1,6 @@
 #include "P3P/objects/base objects/Spikes.hpp"
 #include <P3P/Level.hpp>
+#include <P3P/objects/Player.hpp>
 
 
 //Constructor

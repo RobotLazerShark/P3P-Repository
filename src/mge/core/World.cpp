@@ -10,7 +10,7 @@ World::World():GameObject("root", glm::vec3 (0,0,0)), _mainCamera(0)
 {
 	if (singletonInstance != nullptr)
 	{
-		return;
+		delete singletonInstance;
 	}
 	singletonInstance = this;
 	_partOfWorld = true;

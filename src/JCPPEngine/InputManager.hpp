@@ -27,6 +27,7 @@ namespace JCPPEngine
 			static const int InputManager::KEY_DOWN = 1;
 			static const int InputManager::KEY_STILL_DOWN = 2;
 			static const int InputManager::KEY_UP = 3;
+			static InputManager* singletonInstance;
 	};
 
 }

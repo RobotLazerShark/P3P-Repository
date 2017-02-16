@@ -16,7 +16,7 @@ DoomText::DoomText (std::string pText, std::string pFontFile, unsigned int pSize
 		_imageHalfSize = glm::vec2 (size.width * 0.5f, size.height * 0.5f);
 		_hitboxHalfSize = _imageHalfSize;
 		_hitboxOffset = glm::vec2 (0, 0);
-		_text->setOrigin (_hitboxHalfSize.x, size.height);//Set origin at center - bottom
+		_text->setOrigin (_hitboxHalfSize.x, _hitboxHalfSize.y);//Set origin at center - center
 		_screenPosition = glm::vec2 (AbstractGame::windowWidth * 0.5f, AbstractGame::windowHeight * 0.5f);
 		_text->setPosition (_screenPosition.x, _screenPosition.y);
 		_text->setFillColor (sf::Color ((int)(pColor.r * 255), (int)(pColor.g * 255), (int)(pColor.b * 255)));

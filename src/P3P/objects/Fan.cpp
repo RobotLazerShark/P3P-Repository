@@ -1,5 +1,7 @@
 #include <P3P/objects/Fan.hpp>
 #include <P3P/Level.hpp>
+#include <P3P/objects/Box.hpp>
+#include <P3P/objects/Player.hpp>
 
 Fan::Fan(int pX, int pZ, int pXDirection, int pYDirection, bool pReversed) : GameObject()
 {

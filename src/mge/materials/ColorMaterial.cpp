@@ -5,7 +5,7 @@
 #include "mge/core/GameObject.hpp"
 #include "mge/core/Mesh.hpp"
 
-ShaderProgram* ColorMaterial::_shader = NULL;
+ShaderProgram* ColorMaterial::_shader = nullptr;
 
 GLint ColorMaterial::_uMVPMatrix = 0;
 GLint ColorMaterial::_uDiffuseColor = 0;
@@ -41,6 +41,15 @@ void ColorMaterial::_lazyInitializeShader() {
 ColorMaterial::~ColorMaterial()
 {
     //dtor
+}
+
+void ColorMaterial::clearShaderProgram()
+{
+	if (_shader != nullptr)
+	{
+		delete _shader;
+		_shader = nullptr;
+	}
 }
 
 void ColorMaterial::setDiffuseColor(glm::vec3 pDiffuseColor) {

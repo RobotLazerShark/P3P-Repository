@@ -1,4 +1,5 @@
 #include "P3P/objects/Door.hpp"
+#include <mge/core/World.hpp>
 #include <P3P/Level.hpp>
 
 

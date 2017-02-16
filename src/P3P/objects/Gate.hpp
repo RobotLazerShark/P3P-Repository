@@ -15,7 +15,7 @@ class Gate : public ButtonTarget
 		int z ();
 
 	private:
-		GameObject* _model;
+		GameObject* _model = nullptr;
 		int _position [2] = { 0, 0 };
 };
 

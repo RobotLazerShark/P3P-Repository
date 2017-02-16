@@ -1,4 +1,8 @@
 #include "mge/materials/LitMaterial.hpp"
+#include <mge/core/AbstractGame.hpp>
+#include <mge/core/Mesh.hpp>
+#include <mge/core/Texture.hpp>
+#include <mge/core/GameObject.hpp>
 
 
 //Initialize static values
@@ -63,7 +67,14 @@ LitMaterial::LitMaterial (std::string pFilename, float pShininess, glm::vec3 pSp
 //Destructor
 LitMaterial::~LitMaterial ()
 {
-	delete _texture;
+}
+void LitMaterial::clearShaderProgram()
+{
+	if (_shaderProgram != nullptr)
+	{
+		delete _shaderProgram;
+		_shaderProgram = nullptr;
+	}
 }
 //Set up the shader
 void LitMaterial::initializeShader ()

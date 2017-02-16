@@ -13,8 +13,8 @@ public:
 	Spikes(int pX, int pZ);
 	void update(float pStep, bool pUpdateWorldTransform = false) override;
 private:
-	GameObject* _model;
-	AnimationBehaviour* _animator;
+	GameObject* _model = nullptr;
+	AnimationBehaviour* _animator = nullptr;
 	int _position [2] = { 0, 0 };
 	float _timer = 0;
 

@@ -1,4 +1,8 @@
 #include "mge/materials/WobbleMaterial.hpp"
+#include <mge/core/AbstractGame.hpp>
+#include <mge/core/Mesh.hpp>
+#include <mge/core/Texture.hpp>
+#include <mge/core/GameObject.hpp>
 
 
 //Initialize static values
@@ -26,7 +30,17 @@ WobbleMaterial::WobbleMaterial (std::string pFilename)
 	}
 }
 //Destructor
-WobbleMaterial::~WobbleMaterial () {}
+WobbleMaterial::~WobbleMaterial ()
+{
+}
+void WobbleMaterial::clearShaderProgram ()
+{
+	if (_shaderProgram != nullptr)
+	{
+		delete _shaderProgram;
+		_shaderProgram = nullptr;
+	}
+}
 //Set up the shader
 void WobbleMaterial::initializeShader ()
 {

@@ -15,7 +15,7 @@ class World : public GameObject
 		Camera* getMainCamera();
 
 	private:
-	    Camera* _mainCamera;
+	    Camera* _mainCamera = nullptr;
 
         World(const World&);
         World& operator=(const World&);

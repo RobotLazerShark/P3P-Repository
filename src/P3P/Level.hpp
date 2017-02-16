@@ -3,23 +3,13 @@
 
 
 //Include files
-#include <string>
-#include <mge/util/LevelImporter.hpp>
+#include <SFML\Graphics.hpp>
 #include <mge/core/GameObject.hpp>
-#include <mge/core/World.hpp>
-#include <P3P/ProgressTracker.hpp>
-#include <P3P/Quest.hpp>
-#include <P3P/objects/base objects/Floor.hpp>
-#include <P3P/objects/base objects/BoxSpot.hpp>
-#include <P3P/objects/Player.hpp>
-#include <P3P/objects/Box.hpp>
-#include <P3P/objects/Door.hpp>
-#include <P3P/objects/Gate.hpp>
-#include <P3P/objects/Npc.hpp>
-#include <P3P/objects/Fan.hpp>
-#include <P3P/objects/Collectable.hpp>
-#include <P3P/objects/base objects/Button.hpp>
-#include <P3P/objects/base objects/Spikes.hpp>
+#include <mge/util/LevelImporter.hpp>
+
+class Quest;
+class Gate;
+class Collectable;
 
 
 
@@ -31,23 +21,26 @@ class Level : public GameObject
 		bool _isHub = false;
 		int _nextLevel = -1;
 		std::vector <Gate*> _gates;
-		std::vector <Collectable*> _inventoryCopy;
+		std::vector <std::string> _inventoryCopy;
 		std::vector<Quest*> _activeQuestsCopy;
+		bool _stop = false;
 	public:
 		Level (int pLevelNumber);
 		~Level ();
 		void increaseLevelKey ();
 		int levelKey ();
 		bool levelCompleted = false;
-		void setMap (int pLevelNumber);
+		bool setMap (int pLevelNumber);
 		void loadMap ();
-		void clear ();
+		void clear (bool pEndGame = false);
 		void loadLevel (int pLevelNumber);
 		void reloadLevel ();
 		static const float TILESIZE;
 		static LevelMap* map;
 		static Level* singletonInstance;
+		std::vector <sf::Drawable*>drawBuffer;
 		void update (float pStep, bool pUpdateWorldTransform = false) override;
+		static void render (sf::RenderWindow* pWindow);
 };
 
 #endif

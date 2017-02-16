@@ -1,6 +1,7 @@
 #include <P3P/objects/Npc.hpp>
 #include <P3P/Level.hpp>
 #include <P3P/objects/Player.hpp>
+#include <P3P/objects/Collectable.hpp>
 
 
 //Static variables
@@ -12,7 +13,8 @@ Npc::Npc(int pX, int pZ) : GameObject()
 {
 	if (singletonInstance != nullptr)
 	{
-		return;
+		singletonInstance->setParent (nullptr);
+		delete singletonInstance;
 	}
 	singletonInstance = this;
 
@@ -58,7 +60,7 @@ void Npc::talk()
 		{
 			for (int j = 0, size = Player::singletonInstance->inventory.size(); j < size; j++)
 			{
-				if (quest->_goalItem == Player::singletonInstance->inventory[j]->getName())
+				if (quest->_goalItem == Player::singletonInstance->inventory[j])
 				{
 					//The item will remain in the player's inventory, so in lua dialog can respond to the completion of this quest
 					delete quest;

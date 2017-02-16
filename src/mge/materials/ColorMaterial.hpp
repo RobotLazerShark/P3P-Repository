@@ -3,6 +3,7 @@
 
 #include "mge/materials/AbstractMaterial.hpp"
 #include "mge/core/ShaderProgram.hpp"
+#include <GL/glew.h>
 
 /**
  * Simple single color material.
@@ -14,6 +15,7 @@ class ColorMaterial : public AbstractMaterial
     public:
         ColorMaterial(glm::vec3 pColor = glm::vec3(1,0,0));
         virtual ~ColorMaterial();
+	static void clearShaderProgram();
 
         virtual void render(Mesh* pMesh, const glm::mat4& pModelMatrix, const glm::mat4& pViewMatrix, const glm::mat4& pProjectionMatrix) override;
 

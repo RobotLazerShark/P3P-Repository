@@ -5,8 +5,9 @@
 //Include files
 #include <glm.hpp>
 #include <vector>
-#include <mge/objects/Camera.hpp>
-#include <mge/objects/Light.hpp>
+
+class Camera;
+class Light;
 
 
 class ShaderDataUtil
