@@ -1,23 +1,35 @@
 #include <P3P/objects/Box.hpp>
 #include <P3P/Level.hpp>
+#include <JCPPEngine/Random.hpp>
 
 
 //Constructor with a tile position
 Box::Box (int pX, int pZ) : GameObject ()
 {
 	//Set up model
-	_model = new GameObject ("cube_flat.obj");
-	LitMaterial* mat = new LitMaterial ("Box.jpg");
-	mat->SetTextureScale (0.15f);
-	_model->setMaterial (mat);
-	_model->translate (glm::vec3 (0, 0.5f, 0));
+	_model = new GameObject ();
 	_model->setParent (this);
+	_animator = new AnimationBehaviour ({ "BoxLeft.txt", "BoxUp.txt", "BoxRight.txt", "BoxDown.txt" });
+	_model->setBehaviour (_animator);
+	int tile = JCPPEngine::Random::Range (1, 2);
+	GameObject* subModel = new GameObject ("Box"+to_string (tile)+".obj");
+	subModel->setMaterial (new LitMaterial ("Box"+to_string (tile)+".png"));
+	subModel->setParent (_model);
+	subModel->rotate (glm::radians (JCPPEngine::Random::Range (1, 3) * 90.0f), glm::vec3 (0, 1, 0));
 
 	translate (glm::vec3 (pX * Level::TILESIZE, 0, pZ * Level::TILESIZE));
 	_currentTile [0] = pX;
 	_currentTile [1] = pZ;
 	_oldTile [0] = _currentTile [0];
 	_oldTile [1] = _currentTile [1];
+}
+
+
+//Function to be called when animations are stopped. It has to be in global space, or we have to pass our object type as well.
+void stopFunctionBox (int pAnimIndex, GameObject* pOwner)
+{
+	Box* box = (Box*)pOwner;
+	box->setWorldPosition (glm::vec3 (box->_currentTile [0] * Level::TILESIZE, 0, box->_currentTile [1] * Level::TILESIZE));
 }
 
 
@@ -33,9 +45,16 @@ void Box::moveBox (int pX, int pZ)
     //update object array
     Level::map->objectTiles [_currentTile [0]] [_currentTile [1]] = (int)this;
     Level::map->objectTiles [_oldTile [0]] [_oldTile [1]] = (int)nullptr;
-
-    //move gameoject
-    translate (glm::vec3 (pX * Level::TILESIZE, 0, pZ * Level::TILESIZE));
+    int animation = 0;
+    if (pX == 0 && pZ != 0)
+    {
+        animation = 2 + pZ;
+    }
+    else if (pZ == 0 && pX != 0)
+    {
+        animation = 1 + pX;
+    }
+    _animator->playAnimation (animation, false, &stopFunctionBox, this);
 
     //update BoxSpot if needed
     BoxSpot* boxSpot = dynamic_cast <BoxSpot*> ((GameObject*)Level::map->baseTiles [_currentTile [0]] [_currentTile [1]]);

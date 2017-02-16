@@ -98,7 +98,7 @@ void AbstractGame::_initializeWindow() {
 //	_cursor = new sf::Sprite (*JCPPEngine::TextureManager::GetTexture ("images/Crosshair.png"));
 //	_cursor->setOrigin (12, 12);
 	_luaParser = new LuaParser (_window);
-	//_window->setVerticalSyncEnabled(true);
+	_window->setVerticalSyncEnabled(true);
 }
 
 void AbstractGame::_printVersionInfo() {

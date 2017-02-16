@@ -24,7 +24,7 @@ protected:
 	bool _hasDialog = false;
 	bool _showingDialog = false;
 	int _position [2] = { 0, 0 };
-	int _playerPosition [2] = { 0, 0 };
+	int _playerPosition [2] = { -1, -1 };
 	sf::Sprite* _textBox;
 	sf::Text* _text;
 };

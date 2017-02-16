@@ -1,6 +1,7 @@
 #include "P3P/objects/base objects/BreakingBlock.hpp"
 #include <P3P/Level.hpp>
 #include <P3P/objects/Player.hpp>
+#include <JCPPEngine/Random.hpp>
 
 
 //Constructor
@@ -8,10 +9,11 @@ BreakingBlock::BreakingBlock(int pX, int pZ) : GameObject()
 {
 	//Set up model
 	_model = new GameObject();
-	_model->translate(glm::vec3(0, -0.5f, 0));
+	_model->translate(glm::vec3(0, -0.05f, 0));
+	_model->rotate (glm::radians (JCPPEngine::Random::Range (1, 3) * 90.0f), glm::vec3 (0, 1, 0));
 	_model->setParent(this);
-	GameObject* submodel = new GameObject ("cube_flat.obj");
-	submodel->setMaterial(new LitMaterial("BreakingBlock.jpg"));
+	GameObject* submodel = new GameObject ("FloorBroken.obj");
+	submodel->setMaterial(new LitMaterial("FloorBroken.png"));
 	submodel->setParent (_model);
 	_animator = new AnimationBehaviour ({ "UnstableBlock.txt", "FallingBlock.txt" });
 	submodel->setBehaviour (_animator);

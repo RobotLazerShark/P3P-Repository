@@ -5,7 +5,7 @@
 #include <P3P/objects/Door.hpp>
 #include <P3P/objects/Collectable.hpp>
 
-#include <typeinfo>
+
 //Static variables
 Player* Player::singletonInstance = nullptr;
 
@@ -169,7 +169,7 @@ bool Player::movePlayer (int pX, int pZ, bool pTranslate)
 
 //////////////////////////////|	EVENT-BASED FUNCTIONS
 //Function to be called when animations are stopped. It has to be in global space, or we have to pass our object type as well.
-void stopFunction (int pAnimIndex, GameObject* pOwner)
+void stopFunctionPlayer (int pAnimIndex, GameObject* pOwner)
 {
 	Player* player = (Player*)pOwner;
 	switch (pAnimIndex)
@@ -203,15 +203,19 @@ void Player::ProcessEvent (JCPPEngine::Event* pEvent)
 	switch (keyDownEvent->key ())
 	{
 		case sf::Keyboard::Key::Up:
+		case sf::Keyboard::Key::W:
 			movement [1] --;
 			break;
 		case sf::Keyboard::Key::Down:
+		case sf::Keyboard::Key::S:
 			movement [1] ++;
 			break;
 		case sf::Keyboard::Key::Left:
+		case sf::Keyboard::Key::A:
 			movement [0] --;
 			break;
 		case sf::Keyboard::Key::Right:
+		case sf::Keyboard::Key::D:
 			movement [0] ++;
 			break;
 		case sf::Keyboard::Key::R:
@@ -246,7 +250,7 @@ void Player::ProcessEvent (JCPPEngine::Event* pEvent)
 		{
 			_moving = true;
 			_wheelAnimator->playAnimation (0);
-			_baseAnimator->playAnimation (0, false, &stopFunction, this);
+			_baseAnimator->playAnimation (0, false, &stopFunctionPlayer, this);
 		}
 	}
 }

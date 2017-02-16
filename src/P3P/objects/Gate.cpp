@@ -9,8 +9,12 @@ Gate::Gate(int pX, int pZ) : ButtonTarget ()
 	//Set up model
 	_model = new GameObject("cube_flat.obj");
 	_model->translate(glm::vec3(0, 0.5f, 0));
-	_model->setMaterial(new LitMaterial("Gate.jpg"));
 	_model->setParent(this);
+	GameObject* subModel = new GameObject ("cube_flat.obj");
+	subModel->setMaterial(new LitMaterial("Gate.jpg"));
+	subModel->setParent (_model);
+	_animator = new AnimationBehaviour ({ "GateUp.txt", "GateDown.txt" }, false);
+	subModel->setBehaviour (_animator);
 
 	translate(glm::vec3(pX * Level::TILESIZE, 0, pZ * Level::TILESIZE));
 
@@ -40,7 +44,7 @@ bool Gate::setActive (bool pActive)
 	{
 		//make gate position in array empty
 		Level::map->objectTiles[_position [0]][_position [1]] = (int)nullptr;
-		translate (glm::vec3 (0, 1, 0));
+		_animator->playAnimation (0);
 	}
 	else
 	{
@@ -49,11 +53,12 @@ bool Gate::setActive (bool pActive)
 		{
 			//put gate back into array
 			Level::map->objectTiles[_position [0]][_position [1]] = (int)this;
-			translate (glm::vec3 (0, -1, 0));
+			_animator->playAnimation (1);
 		}
 		//if gate tile is taken by the player
 		else if(Player::singletonInstance->_currentTile [0] == _position [0] && Player::singletonInstance->_currentTile [1] == _position [1])
 		{
+			_animator->playAnimation (1);
 			//Kill the player
 			Player::singletonInstance->die ();
 		}

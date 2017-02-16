@@ -11,11 +11,19 @@ Collectable::Collectable(int pX, int pZ, std::string pName, bool pCopyCollect) :
 	_copyCollect = pCopyCollect;
 
 	//Set up model
-	_model = new GameObject("cube_flat.obj");
-	_model->setMaterial(new LitMaterial(glm::vec3(0.6f,0.6f,0)));
-	_model->translate(glm::vec3(0, 0.5f, 0));
-	_model->setParent(this);
-	_model->scale(0.5f);
+	if (_copyCollect)
+	{
+		_model = new GameObject ("Computer.obj");
+		_model->setMaterial (new LitMaterial ("Computer.png"));
+		_model->rotate (glm::radians (-90.0f), glm::vec3 (0, 1, 0));
+	}
+	else
+	{
+		_model = new GameObject("cube_flat.obj");
+		_model->setMaterial(new LitMaterial(glm::vec3(0.6f,0.6f,0)));
+		_model->translate(glm::vec3(0, 0.5f, 0));
+		_model->scale(0.5f);
+	}
 
 	translate(glm::vec3(pX * Level::TILESIZE, 0, pZ * Level::TILESIZE));
 	_position [0] = pX;
@@ -28,11 +36,20 @@ Collectable::Collectable(int pX, int pZ, std::string pName, std::string pDialog,
 	_copyCollect = pCopyCollect;
 
 	//Set up model
-	_model = new GameObject("cube_flat.obj");
-	_model->setMaterial(new LitMaterial(glm::vec3(0.6f,0.6f,0)));
-	_model->translate(glm::vec3(0, 0.5f, 0));
+	if (_copyCollect)
+	{
+		_model = new GameObject ("Computer.obj");
+		_model->setMaterial (new LitMaterial ("Computer.png"));
+		_model->rotate (glm::radians (-90.0f), glm::vec3 (0, 1, 0));
+	}
+	else
+	{
+		_model = new GameObject("cube_flat.obj");
+		_model->setMaterial(new LitMaterial(glm::vec3(0.6f,0.6f,0)));
+		_model->translate(glm::vec3(0, 0.5f, 0));
+		_model->scale(0.5f);
+	}
 	_model->setParent(this);
-	_model->scale(0.5f);
 	//Set up textbox (won't be visible yet)
 	_textBox = new sf::Sprite (*JCPPEngine::TextureManager::GetTexture ("images/TextBox.png"));
 	_text = new sf::Text (pDialog, *JCPPEngine::FontManager::GetFont ("fonts/Font1.ttf"), 30);

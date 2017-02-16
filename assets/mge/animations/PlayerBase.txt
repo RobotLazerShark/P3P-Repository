@@ -1,6 +1,6 @@
 time = 0
 -
-time = 0:02
+time = 0:04
 rotation = -6, 0, 0
 position = 0, 0, 0.2
 -

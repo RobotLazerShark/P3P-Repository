@@ -7,12 +7,12 @@
 Spikes::Spikes(int pX, int pZ) : GameObject()
 {
 	//Set up model
-	_model = new GameObject("cube_flat.obj");
-	_model->translate(glm::vec3(0, -0.5f, 0));
-	_model->setMaterial(new LitMaterial(glm::vec3(0.75f, 0.25f, 0)));
+	_model = new GameObject("SpikesFloor.obj");
+	_model->translate(glm::vec3(0, -0.05f, 0));
+	_model->setMaterial(new LitMaterial("SpikesFloor.png"));
 	_model->setParent(this);
-	GameObject* submodel = new GameObject ("spikes.obj");
-	submodel->setMaterial (new LitMaterial (glm::vec3 (1, 0, 0.25f)));
+	GameObject* submodel = new GameObject ("Spikes.obj");
+	submodel->setMaterial (new LitMaterial ("Spikes.png"));
 	submodel->setParent (_model);
 	_animator = new AnimationBehaviour ({ "SpikesUp.txt", "SpikesDown.txt" }, false);
 	submodel->setBehaviour (_animator);
@@ -40,12 +40,10 @@ void Spikes::update(float pStep, bool pUpdateWorldTransform)
 		if (_spikesUp) //set color to red(danger)
 		{
 			_animator->playAnimation (0);
-			((LitMaterial*)_model->getMaterial ())->SetColor (glm::vec3 (1, 0, 0));
 		}
 		else //set color to green(safe)
 		{
 			_animator->playAnimation (1);
-			((LitMaterial*)_model->getMaterial ())->SetColor (glm::vec3 (0.75f, 0.25f, 0));
 		}
 	}
 

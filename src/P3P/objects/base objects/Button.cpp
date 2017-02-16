@@ -6,9 +6,10 @@ Button::Button (int pX, int pZ, ButtonTarget* pTarget) : GameObject()
 	_target = pTarget;
 
 	//Set up model
-	_model = new GameObject("cube_flat.obj");
-	_model->translate(glm::vec3(0, -0.5f, 0));
-	_model->setMaterial(new LitMaterial(glm::vec3 (0.5f,1,0.5f)));
+	_model = new GameObject("Button.obj");
+	_model->translate(glm::vec3(0, -0.05f, 0));
+	_model->rotate (glm::radians (180.0f), glm::vec3 (0,1,0));
+	_model->setMaterial(new LitMaterial("Button.png"));
 	_model->setParent(this);
 
 	translate(glm::vec3(pX * Level::TILESIZE, 0, pZ * Level::TILESIZE));

@@ -148,9 +148,15 @@ LevelMap* LevelImporter::ReadFile (std::string pFilename)
 					strPos += 7;
 					while (line [strPos] != '"')
 					{
-						//If we haven't reached the end of the value, add the digit to the number.
+						//If we haven't reached the end of the value, add the character to the value.
 						temp += line [strPos];
 						strPos ++;
+						if (strPos >= line.length ())
+						{
+							getline (file, line);
+							strPos = 0;
+							temp += "\n";
+						}
 					}
 					object->properties.push_back (temp);
 					getline (file, line);

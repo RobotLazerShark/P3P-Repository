@@ -12,9 +12,9 @@ Light::Light (glm::vec3 pColor, float pIntensity) : shape (Shapes::Directional),
 	_color = glm::vec4 (pColor, 1.0f);
 	_intensity = pIntensity;
 	_normal = glm::vec4 (0.0f, -1.0f, 0.0f, 0.0f);//Default direction is down. Rotate object for different directions.
-	setMesh (Mesh::load (config::MGE_MODEL_PATH + "square_arrow.obj"));
-	_colorMaterial = new ColorMaterial (glm::vec3 (_color));
-	setMaterial (_colorMaterial);
+//	setMesh (Mesh::load (config::MGE_MODEL_PATH + "square_arrow.obj"));
+//	_colorMaterial = new ColorMaterial (glm::vec3 (_color));
+//	setMaterial (_colorMaterial);
 }
 //Point light constructor
 Light::Light (glm::vec3 pColor, float pIntensity, glm::vec2 pFalloff) : shape (Shapes::Point), GameObject ()
@@ -23,10 +23,10 @@ Light::Light (glm::vec3 pColor, float pIntensity, glm::vec2 pFalloff) : shape (S
 	_intensity = pIntensity;
 	_falloff = pFalloff * 0.025f;
 	_transform [3] = glm::vec4 (0, 0, 0, 1);
-	setMesh (Mesh::load (config::MGE_MODEL_PATH + "sphere_smooth.obj"));
-	scale (0.25f);
-	_colorMaterial = new ColorMaterial (glm::vec3 (_color));
-	setMaterial (_colorMaterial);
+//	setMesh (Mesh::load (config::MGE_MODEL_PATH + "sphere_smooth.obj"));
+//	scale (0.25f);
+//	_colorMaterial = new ColorMaterial (glm::vec3 (_color));
+//	setMaterial (_colorMaterial);
 }
 Light::Light (glm::vec3 pColor, float pIntensity, glm::vec3 pPosition, glm::vec2 pFalloff) : shape (Shapes::Point), GameObject ()
 {
@@ -34,10 +34,10 @@ Light::Light (glm::vec3 pColor, float pIntensity, glm::vec3 pPosition, glm::vec2
 	_intensity = pIntensity;
 	_falloff = pFalloff * 0.025f;
 	_transform [3] = glm::vec4 (pPosition, 1.0f);
-	setMesh (Mesh::load (config::MGE_MODEL_PATH + "sphere_smooth.obj"));
-	scale (0.25f);
-	_colorMaterial = new ColorMaterial (glm::vec3 (_color));
-	setMaterial (_colorMaterial);
+//	setMesh (Mesh::load (config::MGE_MODEL_PATH + "sphere_smooth.obj"));
+//	scale (0.25f);
+//	_colorMaterial = new ColorMaterial (glm::vec3 (_color));
+//	setMaterial (_colorMaterial);
 }
 //Spot light constructor (Note: angles are always in radians, use glm::radians () to convert from degrees)
 Light::Light (glm::vec3 pColor, float pIntensity, float pAngle, glm::vec2 pFalloff) : shape (Shapes::Spot), GameObject ()
@@ -48,9 +48,9 @@ Light::Light (glm::vec3 pColor, float pIntensity, float pAngle, glm::vec2 pFallo
 	_angle = pAngle;
 	_falloff = pFalloff * 0.025f;
 	_transform [3] = glm::vec4 (0, 0, 0, 1);
-	setMesh (Mesh::load (config::MGE_MODEL_PATH + "square_cone.obj"));
-	_colorMaterial = new ColorMaterial (glm::vec3 (_color));
-	setMaterial (_colorMaterial);
+//	setMesh (Mesh::load (config::MGE_MODEL_PATH + "square_cone.obj"));
+//	_colorMaterial = new ColorMaterial (glm::vec3 (_color));
+//	setMaterial (_colorMaterial);
 }
 Light::Light (glm::vec3 pColor, float pIntensity, glm::vec3 pPosition, float pAngle, glm::vec2 pFalloff) : shape (Shapes::Spot), GameObject ()
 {
@@ -60,9 +60,9 @@ Light::Light (glm::vec3 pColor, float pIntensity, glm::vec3 pPosition, float pAn
 	_angle = pAngle;
 	_falloff = pFalloff * 0.025f;
 	_transform [3] = glm::vec4 (pPosition, 1.0f);
-	setMesh (Mesh::load (config::MGE_MODEL_PATH + "square_cone.obj"));
-	_colorMaterial = new ColorMaterial (glm::vec3 (_color));
-	setMaterial (_colorMaterial);
+//	setMesh (Mesh::load (config::MGE_MODEL_PATH + "square_cone.obj"));
+//	_colorMaterial = new ColorMaterial (glm::vec3 (_color));
+//	setMaterial (_colorMaterial);
 }
 //Destructor
 Light::~Light () {}

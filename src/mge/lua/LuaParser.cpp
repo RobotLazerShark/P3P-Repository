@@ -2382,7 +2382,7 @@ int setLightAngle (lua_State* pLua)
 		Light* light = (Light*)lua_tointeger (pLua, -2);
 		if (light != nullptr)
 		{
-			light->SetAngle (lua_tonumber (pLua, -1));
+			light->SetAngle (glm::radians (lua_tonumber (pLua, -1)));
 		}
 		else
 		{

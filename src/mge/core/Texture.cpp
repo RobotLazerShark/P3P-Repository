@@ -36,13 +36,28 @@ Texture* Texture::load(std::string pName)
     Texture* texture = nullptr;
 
     //try to locate texture
-   	std::map<std::string, Texture*>::iterator textureIterator = _textures.find(pName);
+    std::map<std::string, Texture*>::iterator textureIterator = _textures.find(pName);
 
-   	if (textureIterator == _textures.end()) {
-        texture = _loadFromFile(pName);
+    if (textureIterator == _textures.end())
+    {
+	sf::Image image;
+	if (image.loadFromFile (pName))
+	{
+	        texture = new Texture ();
+	        glBindTexture (GL_TEXTURE_2D, texture->getId());
+	        image.flipVertically ();
+	        glTexImage2D (GL_TEXTURE_2D, 0, GL_RGBA, image.getSize().x, image.getSize().y, 0, GL_RGBA, GL_UNSIGNED_BYTE, image.getPixelsPtr());
+	        glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	        glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	        glBindTexture(GL_TEXTURE_2D, 0);
+	        _textures[pName] = texture;
+	}
+	else
+	{
+		return nullptr;
+	}
 //	std::cout << "Texture " << pName << " with id " << texture->getId() << " loaded." << std::endl;
 //	std::cout << "Caching texture." << std::endl;
-        _textures[pName] = texture;
     } else {
 //	std::cout << "Returning cached texture " << pName << std::endl;
         texture = textureIterator->second;
