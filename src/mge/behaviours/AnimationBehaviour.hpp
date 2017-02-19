@@ -30,6 +30,7 @@ class AnimationBehaviour : public AbstractBehaviour
 		AnimationBehaviour (std::vector <std::string> pAnimFiles, bool pResetTransform = true);
 		void update (float pStep) override;
 		void playAnimation (int pAnimIndex, bool pLoop = false, void (*pFuncPtr) (int, GameObject*) = nullptr, GameObject* pFuncOwner = nullptr);
+		void playAnimation (int pAnimIndex, bool pLoop, bool pResetTransform, void (*pFuncPtr) (int, GameObject*) = nullptr, GameObject* pFuncOwner = nullptr);
 		int currentAnimation ();
 		bool looping ();
 		void stopAnimation ();

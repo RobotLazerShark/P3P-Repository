@@ -216,6 +216,26 @@ void AnimationBehaviour::playAnimation (int pAnimIndex, bool pLoop, void(*pFuncP
 	_lastFrame = 0;
 	_loop = pLoop;
 }
+void AnimationBehaviour::playAnimation (int pAnimIndex, bool pLoop, bool pResetTransform, void(*pFuncPtr) (int, GameObject*), GameObject* pFuncOwner)
+{
+	if (_playing)
+	{
+		stopAnimation ();
+	}
+	_stopFunction = pFuncPtr;
+	_stopFunctionOwner = pFuncOwner;
+	_resetTransform = pResetTransform;
+	_normalTransform = _owner->getTransform ();
+	KeyFrame start = _animations [pAnimIndex] [0];
+	glm::mat4 newTransform = glm::translate (start.position);
+	newTransform *= glm::rotate (glm::radians (start.rotation.y), glm::vec3 (0,1,0)) * glm::rotate (glm::radians (start.rotation.x), glm::vec3 (1,0,0)) * glm::rotate (glm::radians (start.rotation.z), glm::vec3 (0,0,1));
+	newTransform = glm::scale (newTransform, start.scale);
+	_owner->setTransform (newTransform);
+	_playing = true;
+	_currentAnimation = pAnimIndex;
+	_lastFrame = 0;
+	_loop = pLoop;
+}
 
 //Stop playing the animation, if one is playing.
 void AnimationBehaviour::stopAnimation ()

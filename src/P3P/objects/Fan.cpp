@@ -4,11 +4,13 @@
 #include <P3P/objects/Player.hpp>
 
 
-Fan::Fan(int pX, int pZ, int pXDirection, int pYDirection, bool pReversed) : GameObject()
+Fan::Fan(int pX, int pZ, int pXDirection, int pYDirection, bool pReversed) : ButtonTarget()
 {
 	//Set up model
 	_model = new GameObject("cube_flat.obj");
 	_model->translate(glm::vec3(0, 0.5f, 0));
+	//Rotate fan to face push/pull direction
+//	_model->rotate (glm::radians (90.0f * ?), glm::vec3 (0, 1, 0));
 	if (!pReversed)
 	{
 		_model->setMaterial(new LitMaterial("Fan.jpg"));
@@ -18,6 +20,12 @@ Fan::Fan(int pX, int pZ, int pXDirection, int pYDirection, bool pReversed) : Gam
 		_model->setMaterial(new LitMaterial("FanR.jpg"));
 	}
 	_model->setParent(this);
+	GameObject* subModel = new GameObject ("cube_flat.obj");
+	subModel->setMaterial (new LitMaterial ("Black.png"));
+	_animator = new AnimationBehaviour ({ "Fan.txt", "FanReverse.txt" }, false);
+	subModel->setBehaviour (_animator);
+	subModel->setParent (_model);
+	_animator->playAnimation ((pReversed) ? 1 : 0, true);
 	translate(glm::vec3(pX * Level::TILESIZE, 0, pZ * Level::TILESIZE));
 
 	//save position
@@ -68,6 +76,22 @@ void Fan::move(int pX, int pZ)
 
 	//move gameoject
 	translate(glm::vec3(pX * Level::TILESIZE, 0, pZ * Level::TILESIZE));
+}
+
+bool Fan::setActive (bool pActive)
+{
+	//Switch fan's direction
+	if (pActive && !_active)
+	{
+		_active = true;
+		_reversed = !_reversed;
+	}
+	else if (!pActive && _active)
+	{
+		_active = true;
+		_reversed = !_reversed;
+	}
+	return true;
 }
 
 void Fan::update(float pStep, bool pUpdateWorldTransform)

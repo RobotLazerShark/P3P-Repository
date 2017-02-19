@@ -24,9 +24,33 @@ Spikes::Spikes(int pX, int pZ) : GameObject()
 	_position [1] = pZ;
 }
 
+bool Spikes::setActive (bool pActive)
+{
+	if (pActive && !_stopped)
+	{
+		_stopped = true;
+		_timer = 0;
+		if (_spikesUp)
+		{
+			_spikesUp = false;
+			_animator->playAnimation (1);
+		}
+	}
+	else if (!pActive && _stopped)
+	{
+		_stopped = false;
+	}
+	return true;
+}
+
 void Spikes::update(float pStep, bool pUpdateWorldTransform)
 {
 	GameObject::update(pStep, pUpdateWorldTransform);
+
+	if (_stopped)
+	{
+		return;
+	}
 
 	//update time
 	_timer = _timer + pStep;
@@ -37,11 +61,11 @@ void Spikes::update(float pStep, bool pUpdateWorldTransform)
 		_timer = 0;
 		_spikesUp = !_spikesUp;
 
-		if (_spikesUp) //set color to red(danger)
+		if (_spikesUp)
 		{
 			_animator->playAnimation (0);
 		}
-		else //set color to green(safe)
+		else
 		{
 			_animator->playAnimation (1);
 		}

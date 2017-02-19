@@ -38,8 +38,8 @@ Player::Player (int pX, int pZ, ProgressTracker* pProgressTracker) : GameObject 
 	GameObject* baseModel = new GameObject ("PlayerBase.obj");
 	baseModel->setParent (baseRotation);
 	baseModel->setMaterial (new LitMaterial ("PlayerBase"+to_string (JCPPEngine::Random::Range (1, 4))+".png"));
-	_wheelAnimator = new AnimationBehaviour ({ "PlayerWheel.txt" });
-	_baseAnimator = new AnimationBehaviour ({ "PlayerBase.txt" });
+	_wheelAnimator = new AnimationBehaviour ({ "PlayerWheel.txt", "PlayerWheelDestruct.txt" });
+	_baseAnimator = new AnimationBehaviour ({ "PlayerBase.txt", "PlayerBaseDestruct.txt" });
 	wheelModel->setBehaviour (_wheelAnimator);
 	baseModel->setBehaviour (_baseAnimator);
 
@@ -75,8 +75,13 @@ void stopFunctionPlayer (int pAnimIndex, GameObject* pOwner)
 	switch (pAnimIndex)
 	{
 		case 0:
-			player->_moving = false;
+			player->_noMove = false;
 			player->setWorldPosition (glm::vec3 (player->_currentTile [0] * Level::TILESIZE, 0, player->_currentTile [1] * Level::TILESIZE));
+			break;
+		case 1:
+			player->_noMove = false;
+			player->_dead = false;
+			Level::singletonInstance->reloadLevel ();
 			break;
 		default:
 			break;
@@ -205,15 +210,23 @@ bool Player::movePlayer (int pX, int pZ, bool pAnimate)
 //Cause the player to die, and reload the level
 void Player::die ()
 {
-	//Play death animation/sound
-	Level::singletonInstance->reloadLevel ();
+	if (_dead)
+	{
+		return;
+	}
+	_noMove = true;
+	_dead = true;
+	_baseAnimator->stopAnimation ();
+	_wheelAnimator->stopAnimation ();
+	_baseAnimator->playAnimation (1, false, false, &stopFunctionPlayer, this);
+	_wheelAnimator->playAnimation (1, false, false);
 }
 
 //Process input events
 void Player::ProcessEvent (JCPPEngine::Event* pEvent)
 {
 	JCPPEngine::KeyEvent* keyDownEvent = (JCPPEngine::KeyEvent*)pEvent;
-	if (keyDownEvent == nullptr || keyDownEvent->keyState () != JCPPEngine::InputManager::KEY_DOWN || _moving)
+	if (keyDownEvent == nullptr || keyDownEvent->keyState () != JCPPEngine::InputManager::KEY_DOWN || _noMove)
 	{
 		return;
 	}
@@ -238,7 +251,7 @@ void Player::ProcessEvent (JCPPEngine::Event* pEvent)
 			movement [0] ++;
 			break;
 		case sf::Keyboard::Key::R:
-			Level::singletonInstance->reloadLevel ();
+			die ();
 			return;
 		default:
 			break;
@@ -267,7 +280,7 @@ void Player::ProcessEvent (JCPPEngine::Event* pEvent)
 		_modelOrientation.y = temp;
 		if (movePlayer (movement [0], movement [1], true))
 		{
-			_moving = true;
+			_noMove = true;
 		}
 	}
 }
