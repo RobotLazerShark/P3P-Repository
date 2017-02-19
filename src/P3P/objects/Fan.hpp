@@ -17,7 +17,7 @@ class Fan : public GameObject
 		int _position[2] = { 0, 0 };
 		int _direction[2] = { 0, 0 };
 		bool _reversed;
-		//_visibleArea size is bigger than actual visile are is
+		//_visibleArea size is bigger than actual visible area is
 		//because we need to store first object outside visible area to check if we can move a box there
 		static const int _visibleAreaSize = 6;
 		int _visibleArea[_visibleAreaSize];

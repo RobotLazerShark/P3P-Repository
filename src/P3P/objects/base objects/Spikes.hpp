@@ -19,7 +19,7 @@ private:
 	float _timer = 0;
 
 	bool _spikesUp = false;
-	const float SWITCH_TIME = 2;
+	const float SWITCH_TIME = 2.25f;
 };
 
 #endif

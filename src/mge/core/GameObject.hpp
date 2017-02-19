@@ -71,7 +71,7 @@ class GameObject
 		GameObject* getChildAt (int pIndex);
 	protected:
 		Collider* _collider = nullptr;
-		std::string _name = "";
+		std::string _name;
 		glm::mat4 _transform;
 		GameObject* _parent = nullptr;
 		std::vector<GameObject*> _children;

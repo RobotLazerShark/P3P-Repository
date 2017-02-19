@@ -21,6 +21,7 @@ class Level : public GameObject
 		bool _isHub = false;
 		int _nextLevel = -1;
 		std::vector <Gate*> _gates;
+		std::vector <GameObject*> _nonWalkables;
 		std::vector <std::string> _inventoryCopy;
 		std::vector<Quest*> _activeQuestsCopy;
 		bool _stop = false;

@@ -1,5 +1,5 @@
 ﻿#include "AbstractGame.hpp"
-//#include <vld.h>
+#include <vld.h>
 #include <iostream>
 using namespace std;
 #include <mge/core/Mesh.hpp>
@@ -86,12 +86,12 @@ void AbstractGame::initialize() {
 ///SETUP
 
 void AbstractGame::_initializeWindow() {
-	sf::VideoMode videoMode = //sf::VideoMode::getFullscreenModes () [0];
-		sf::VideoMode(1400,800);//[TESTING]
+	sf::VideoMode videoMode = sf::VideoMode::getFullscreenModes () [0];
+		//sf::VideoMode(1400,800);//[TESTING]
 	windowWidth = videoMode.width;
 	windowHeight = videoMode.height;
-//	_window = new sf::RenderWindow( videoMode, "G1¡t©h/Fï×", sf::Style::Fullscreen, sf::ContextSettings(24,8,0,3,3));
-	_window = new sf::RenderWindow( videoMode, "« G1¡t©h/Fï× »", sf::Style::Default, sf::ContextSettings(24,8,0,3,3));//[TESTING]
+	_window = new sf::RenderWindow( videoMode, "G1¡t©h/Fï×", sf::Style::Fullscreen, sf::ContextSettings(24,8,0,3,3));
+//	_window = new sf::RenderWindow( videoMode, "« G1¡t©h/Fï× »", sf::Style::Default, sf::ContextSettings(24,8,0,3,3));//[TESTING]
 	windowWidth = videoMode.width;
 	windowHeight = videoMode.height;
 	_window->setMouseCursorVisible (false);
@@ -200,6 +200,7 @@ void AbstractGame::run ()
 			}
 			JCPPEngine::SoundManager::Clean ();
 			JCPPEngine::TextureManager::Clean ();
+			JCPPEngine::FontManager::Clean ();
 			_window->close ();
 		}
 		else if (JCPPEngine::InputManager::GetKeyDown (sf::Keyboard::Num1))

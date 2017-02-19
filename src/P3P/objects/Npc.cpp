@@ -31,6 +31,7 @@ Npc::Npc(int pX, int pZ) : GameObject()
 //Destructor
 Npc::~Npc ()
 {
+	singletonInstance->setParent (nullptr);
 	singletonInstance = nullptr;
 }
 
@@ -41,8 +42,8 @@ void Npc::update (float pStep, bool pUpdateWorldTransform)
 	if (talking && Player::singletonInstance->_currentTile [0] != _playerPosition [0] || Player::singletonInstance->_currentTile [1] != _playerPosition [1])
 	{
 		talking = false;
-		_playerPosition [0] = 0;
-		_playerPosition [1] = 0;
+		_playerPosition [0] = -1;
+		_playerPosition [1] = -1;
 	}
 }
 

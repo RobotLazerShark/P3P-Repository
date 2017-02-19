@@ -10,8 +10,8 @@
 class Collectable : public GameObject
 {
 public:
-	Collectable(int pX, int pZ, std::string pName, bool pCopyCollect = false);
-	Collectable (int pX, int pZ, std::string pName, std::string pDialog, bool pCopyCollect = false);
+	Collectable(int pX, int pZ, std::string pName, bool pCopyCollect);
+	Collectable (int pX, int pZ, std::string pName, std::string pDialog, bool pCopyCollect);
 	~Collectable ();
 	std::string getName ();
 	virtual bool collect (int pOldX, int pOldZ);

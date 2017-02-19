@@ -21,7 +21,7 @@ public:
 
 private:
 	GameObject* _model = nullptr;
-	int _playerPosition [2] = { 0, 0 };
+	int _playerPosition [2] = { -1, -1 };
 	
 };
 

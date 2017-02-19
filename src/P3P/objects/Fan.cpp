@@ -3,6 +3,7 @@
 #include <P3P/objects/Box.hpp>
 #include <P3P/objects/Player.hpp>
 
+
 Fan::Fan(int pX, int pZ, int pXDirection, int pYDirection, bool pReversed) : GameObject()
 {
 	//Set up model
@@ -38,14 +39,16 @@ Fan::Fan(int pX, int pZ, int pXDirection, int pYDirection, bool pReversed) : Gam
 		if
 		(
 			tempX >= 0 && tempX < Level::map->width &&
-			tempY >= 0 && tempY < Level::map->height
+			tempY >= 0 && tempY < Level::map->height &&
+			Level::map->baseTiles [tempX] [tempY] != (int)nullptr
 		)
 		{
 			_visibleArea [i] = Level::map->objectTiles [tempX] [tempY];
 		}
 		else 
 		{
-			_visibleArea [i] = 0;
+			//Make sure fan doesn't push anything into this spot
+			_visibleArea [i] = -1;
 		}
 	}
 }
@@ -96,7 +99,8 @@ bool Fan::checkForChanges() //return true if any changes found
 		if
 		(
 			tempX >= 0 && tempX < Level::map->width &&
-			tempY >= 0 && tempY < Level::map->height
+			tempY >= 0 && tempY < Level::map->height &&
+			Level::map->baseTiles [tempX] [tempY] != (int)nullptr
 		)
 		{
 			//check if element in visible area is equal to saved one
@@ -109,11 +113,9 @@ bool Fan::checkForChanges() //return true if any changes found
 		}
 		else 
 		{
-			if (_visibleArea [i] != 0)
-			{
-				_visibleArea [i] = 0;
-				changes = true;
-			}
+			//Make sure fan doesn't push anything into this spot
+			_visibleArea [i] = -1;
+			return changes;
 		}
 	}
 	return changes;
@@ -129,17 +131,23 @@ void Fan::push() //moves every box in vision by 1 tile if possible
 	}
 	for (int i = _changeIndex; i >= 0; i --)//Go through all positions that are affected by the change
 	{
+		if (_visibleArea[i] == -1)
+		{
+			return;
+		}
 		if (_visibleArea [i+1] == (int)nullptr && _visibleArea [i] != (int)nullptr)
 		{
 			box = dynamic_cast <Box*> ((GameObject*)_visibleArea [i]);
 			player = dynamic_cast <Player*> ((GameObject*)_visibleArea [i]);
 			if (box != nullptr)
 			{
-				box->moveBox(_direction[0], _direction[1]);
+				box->stopAnimation ();
+				box->moveBox(_direction[0], _direction[1], (_visibleArea [i+1] == (_visibleAreaSize-1) || _visibleArea [i+2] != (int)nullptr));
 			}
 			else if (player != nullptr)
 			{
-				player->movePlayer(_direction[0], _direction[1], true);
+				player->stopAnimation ();
+				player->movePlayer(_direction[0], _direction[1], ((_visibleArea [i+1] == (_visibleAreaSize-1)) ? _visibleArea [i+2] != (int)nullptr : false));
 			}
 		}
 	}
@@ -157,11 +165,13 @@ void Fan::pull()
 			player = dynamic_cast <Player*> ((GameObject*)_visibleArea [i]);
 			if (box != nullptr)
 			{
-				box->moveBox(-_direction[0], -_direction[1]);
+				box->stopAnimation ();
+				box->moveBox(-_direction[0], -_direction[1], false);
 			}
 			else if (player != nullptr)
 			{
-				player->movePlayer(-_direction[0], -_direction[1], true);
+				player->stopAnimation ();
+				player->movePlayer(-_direction[0], -_direction[1], false);
 			}
 		}
 	}

@@ -20,7 +20,8 @@ class Player : public GameObject, public JCPPEngine::AbstractListener
     public:
         Player (int pX, int pZ, ProgressTracker* pProgressTracker);
 	~Player () override;
-        bool movePlayer (int pX, int pZ, bool pTranslate = true);
+        bool movePlayer (int pX, int pZ, bool pAnimate = true);
+	void stopAnimation ();
 	void ProcessEvent (JCPPEngine::Event* pEvent) override;
 	void die ();
 	static Player* singletonInstance;

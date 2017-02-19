@@ -17,6 +17,7 @@
 #include <mge/behaviours/ThirdPersonCameraBehaviour.hpp>
 #include <mge/objects/Camera.hpp>
 #include <P3P/ProgressTracker.hpp>
+#include <mge/materials/LitMaterial.hpp>
 
 
 //Static variables
@@ -119,7 +120,21 @@ int Level::levelKey ()
 //Load a map by the level number
 bool Level::setMap (int pLevelNumber)
 {
-	_levelNumber = pLevelNumber;
+	if (pLevelNumber != _levelNumber)
+	{
+		_levelNumber = pLevelNumber;
+		if (_levelNumber == 0)
+		{
+			_isHub = true;
+			levelCompleted = true;
+		}
+		else
+		{
+			_isHub = false;
+			levelCompleted = false;
+		}
+	}
+
 	if (map != nullptr)
 	{
 		delete map;
@@ -143,20 +158,10 @@ bool Level::setMap (int pLevelNumber)
 //Build level as described in map
 void Level::loadMap ()
 {
-	if (_levelNumber == 0)
-	{
-		_isHub = true;
-		levelCompleted = true;
-	}
-	else
-	{
-		_isHub = false;
-		levelCompleted = false;
-	}
-
 	//Create progresstracker, to track boxspots
 	ProgressTracker* progressTracker = new ProgressTracker ();
 	GameObject* temp = nullptr;
+	GameObject* temp2 = nullptr;
 
 	//Build all base tiles
 	for (int x = 0; x < map->width; x++)
@@ -167,8 +172,6 @@ void Level::loadMap ()
 			{
 				case 1:
 				case 2:
-				case 3:
-				case 4:
 					//Floor tiles (same functionality, different looks)
 					temp = new Floor (x, y, map->baseTiles [x] [y]);
 					temp->setParent (this);
@@ -192,6 +195,187 @@ void Level::loadMap ()
 					temp = new Spikes (x, y);
 					temp->setParent (this);
 					map->baseTiles [x] [y] = (int)temp;
+					break;
+				case 3:
+				case 4:
+				case 5:
+				case 6:
+					//Wall corner
+					temp = new GameObject ();
+					temp2 = new GameObject ("Wall.obj");
+					temp2->setMaterial (new LitMaterial ("Wall.png"));
+					temp2->setParent (temp);
+					temp2 = new GameObject ("Wall.obj");
+					temp2->setMaterial (new LitMaterial ("Wall.png"));
+					temp2->translate (glm::vec3 (0, 1, 0));
+					temp2->setParent (temp);
+					temp2 = new GameObject ("Wall.obj");
+					temp2->setMaterial (new LitMaterial ("Wall.png"));
+					temp2->translate (glm::vec3 (0, 2, 0));
+					temp2->setParent (temp);
+					temp2 = new GameObject ("Wall.obj");
+					temp2->setMaterial (new LitMaterial ("Wall.png"));
+					temp2->translate (glm::vec3 (1, 0, -1));
+					temp2->rotate (glm::radians (-90.0f), glm::vec3 (0, 1, 0));
+					temp2->setParent (temp);
+					temp2 = new GameObject ("Wall.obj");
+					temp2->setMaterial (new LitMaterial ("Wall.png"));
+					temp2->translate (glm::vec3 (1, 1, -1));
+					temp2->rotate (glm::radians (-90.0f), glm::vec3 (0, 1, 0));
+					temp2->setParent (temp);
+					temp2 = new GameObject ("Wall.obj");
+					temp2->setMaterial (new LitMaterial ("Wall.png"));
+					temp2->translate (glm::vec3 (1, 2, -1));
+					temp2->rotate (glm::radians (-90.0f), glm::vec3 (0, 1, 0));
+					temp2->setParent (temp);
+					temp->setParent (this);
+					temp->translate (glm::vec3 (TILESIZE * x, 0.5f, TILESIZE * y));
+					temp->rotate (glm::radians (-90.0f * (map->baseTiles[x][y]-3)), glm::vec3 (0, 1, 0));
+					//This tile should not be walkable
+					_nonWalkables.push_back (temp);
+					map->baseTiles [x] [y] = (int)nullptr;
+					break;
+				case 9:
+				case 10:
+				case 11:
+				case 12:
+					//Wall pipe 1
+					temp = new GameObject ();
+					temp2 = new GameObject ("Pipe1.obj");
+					temp2->setMaterial (new LitMaterial ("Pipe1.png"));
+					temp2->setParent (temp);
+					temp2 = new GameObject ("Wall.obj");
+					temp2->setMaterial (new LitMaterial ("Wall.png"));
+					temp2->translate (glm::vec3 (-1, 1.55f, 0));
+					temp2->setParent (temp);
+					temp2 = new GameObject ("Wall.obj");
+					temp2->setMaterial (new LitMaterial ("Wall.png"));
+					temp2->translate (glm::vec3 (-1, 2.55f, 0));
+					temp2->setParent (temp);
+					temp->setParent (this);
+					temp->translate (glm::vec3 (TILESIZE * x, -0.05, TILESIZE * y));
+					temp->rotate (glm::radians (-90.0f * (map->baseTiles[x][y]-9)), glm::vec3 (0, 1, 0));
+					map->baseTiles [x] [y] = (int)temp;
+					break;
+				case 13:
+				case 14:
+				case 15:
+				case 16:
+					//Wall pipe 2
+					temp = new GameObject ();
+					temp2 = new GameObject ("Pipe2.obj");
+					temp2->setMaterial (new LitMaterial ("Pipe2.png"));
+					temp2->setParent (temp);
+					temp2 = new GameObject ("Wall.obj");
+					temp2->setMaterial (new LitMaterial ("Wall.png"));
+					temp2->translate (glm::vec3 (-1, 1.55f, 0));
+					temp2->setParent (temp);
+					temp2 = new GameObject ("Wall.obj");
+					temp2->setMaterial (new LitMaterial ("Wall.png"));
+					temp2->translate (glm::vec3 (0, 1.55f, -1));
+					temp2->rotate (glm::radians (-90.0f), glm::vec3 (0, 1, 0));
+					temp2->setParent (temp);
+					temp2 = new GameObject ("Wall.obj");
+					temp2->setMaterial (new LitMaterial ("Wall.png"));
+					temp2->translate (glm::vec3 (-1, 2.55f, 0));
+					temp2->setParent (temp);
+					temp2 = new GameObject ("Wall.obj");
+					temp2->setMaterial (new LitMaterial ("Wall.png"));
+					temp2->translate (glm::vec3 (0, 2.55f, -1));
+					temp2->rotate (glm::radians (-90.0f), glm::vec3 (0, 1, 0));
+					temp2->setParent (temp);
+					temp->setParent (this);
+					temp->translate (glm::vec3 (TILESIZE * x, -0.05f, TILESIZE * y));
+					temp->rotate (glm::radians (-90.0f * (map->baseTiles[x][y]-13)), glm::vec3 (0, 1, 0));
+					map->baseTiles [x] [y] = (int) temp;
+					break;
+				case 21:
+				case 22:
+				case 23:
+				case 24:
+					//Wall
+					temp = new GameObject ();
+					temp2 = new GameObject ("Wall.obj");
+					temp2->setMaterial (new LitMaterial ("Wall.png"));
+					temp2->setParent (temp);
+					temp2 = new GameObject ("Wall.obj");
+					temp2->setMaterial (new LitMaterial ("Wall.png"));
+					temp2->translate (glm::vec3 (0, 1, 0));
+					temp2->setParent (temp);
+					temp2 = new GameObject ("Wall.obj");
+					temp2->setMaterial (new LitMaterial ("Wall.png"));
+					temp2->translate (glm::vec3 (0, 2, 0));
+					temp2->setParent (temp);
+					temp->setParent (this);
+					temp->translate (glm::vec3 (TILESIZE * x, 0.5f, TILESIZE * y));
+					temp->rotate (glm::radians (-90.0f * (map->baseTiles[x][y]-21)), glm::vec3 (0, 1, 0));
+					//This tile should not be walkable
+					_nonWalkables.push_back (temp);
+					map->baseTiles [x] [y] = (int)nullptr;
+					break;
+				case 25:
+				case 26:
+				case 27:
+				case 28:
+					//Wall pipe 3
+					temp = new GameObject ();
+					temp2 = new GameObject ("Pipe3.obj");
+					temp2->setMaterial (new LitMaterial ("Pipe3.png"));
+					temp2->setParent (temp);
+					temp2 = new GameObject ("Wall.obj");
+					temp2->setMaterial (new LitMaterial ("Wall.png"));
+					temp2->translate (glm::vec3 (-1, 1.55f, 0));
+					temp2->setParent (temp);
+					temp2 = new GameObject ("Wall.obj");
+					temp2->setMaterial (new LitMaterial ("Wall.png"));
+					temp2->translate (glm::vec3 (0, 1.55f, -1));
+					temp2->rotate (glm::radians (-90.0f), glm::vec3 (0, 1, 0));
+					temp2->setParent (temp);
+					temp2 = new GameObject ("Wall.obj");
+					temp2->setMaterial (new LitMaterial ("Wall.png"));
+					temp2->translate (glm::vec3 (-1, 2.55f, 0));
+					temp2->setParent (temp);
+					temp2 = new GameObject ("Wall.obj");
+					temp2->setMaterial (new LitMaterial ("Wall.png"));
+					temp2->translate (glm::vec3 (0, 2.55f, -1));
+					temp2->rotate (glm::radians (-90.0f), glm::vec3 (0, 1, 0));
+					temp2->setParent (temp);
+					temp->setParent (this);
+					temp->translate (glm::vec3 (TILESIZE * x, -0.05f, TILESIZE * y));
+					temp->rotate (glm::radians (-90.0f * (map->baseTiles[x][y]-25)), glm::vec3 (0, 1, 0));
+					map->baseTiles [x] [y] = (int) temp;
+					break;
+				case 29:
+				case 30:
+				case 31:
+				case 32:
+					//Wall pipe 4
+					temp = new GameObject ();
+					temp2 = new GameObject ("Pipe4.obj");
+					temp2->setMaterial (new LitMaterial ("Pipe4.png"));
+					temp2->setParent (temp);
+					temp2 = new GameObject ("Wall.obj");
+					temp2->setMaterial (new LitMaterial ("Wall.png"));
+					temp2->translate (glm::vec3 (-1, 1.55f, 0));
+					temp2->setParent (temp);
+					temp2 = new GameObject ("WallPipeL.obj");
+					temp2->setMaterial (new LitMaterial ("WallPipeL.png"));
+					temp2->translate (glm::vec3 (0, 1.55f, -1));
+					temp2->rotate (glm::radians (-90.0f), glm::vec3 (0, 1, 0));
+					temp2->setParent (temp);
+					temp2 = new GameObject ("Wall.obj");
+					temp2->setMaterial (new LitMaterial ("Wall.png"));
+					temp2->translate (glm::vec3 (-1, 2.55f, 0));
+					temp2->setParent (temp);
+					temp2 = new GameObject ("WallPipeL.obj");
+					temp2->setMaterial (new LitMaterial ("WallPipeL.png"));
+					temp2->translate (glm::vec3 (0, 2.55f, -1));
+					temp2->rotate (glm::radians (-90.0f), glm::vec3 (0, 1, 0));
+					temp2->setParent (temp);
+					temp->setParent (this);
+					temp->translate (glm::vec3 (TILESIZE * x, -0.05f, TILESIZE * y));
+					temp->rotate (glm::radians (-90.0f * (map->baseTiles[x][y]-29)), glm::vec3 (0, 1, 0));
+					map->baseTiles [x] [y] = (int) temp;
 					break;
 				default:
 					map->baseTiles [x] [y] = (int)nullptr;
@@ -217,8 +401,8 @@ void Level::loadMap ()
 					}
 					break;
 				case 34:
-					//Box
-					temp = new Box (x, y);
+					//PowerBox
+					temp = new Box (x, y, true);
 					temp->setParent (this);
 					map->objectTiles [x] [y] = (int)temp;
 					break;
@@ -226,11 +410,12 @@ void Level::loadMap ()
 					//Npc
 					temp = new Npc (x, y);
 					temp->setParent (this);
-					map->objectTiles [x] [y] = (int)Npc::singletonInstance;
+					map->objectTiles [x] [y] = (int)temp;
 					if (_activeQuestsCopy.size () > 0)
 					{
 						((Npc*)temp)->activeQuests = std::vector <Quest*> (_activeQuestsCopy);
 					}
+					break;
 				case 37:
 					//Gate
 					temp = new Gate (x, y);
@@ -277,6 +462,25 @@ void Level::loadMap ()
 					temp = new Fan(x, y, 0, -1, true);
 					temp->setParent(this);
 					map->objectTiles[x][y] = (int)temp;
+					break;
+				case 48:
+					//Box
+					temp = new Box (x, y, false);
+					temp->setParent (this);
+					map->objectTiles [x] [y] = (int)temp;
+					break;
+				case 49:
+					//Lights
+					temp = new GameObject ("Lights.obj");
+					temp->setMaterial (new LitMaterial ("Lights.png"));
+					temp->setParent (this);
+					temp->translate (glm::vec3 (TILESIZE * x, 0, TILESIZE * y));
+					temp->rotate (glm::radians (180.0f), glm::vec3 (0, 1, 0));
+					map->objectTiles [x] [y] = (int)temp;
+					if (x > 0)
+					{
+						map->objectTiles [x-1] [y] = (int)new GameObject ();
+					}
 					break;
 				default:
 					map->objectTiles[x][y] = (int)nullptr;
@@ -326,7 +530,7 @@ void Level::loadMap ()
 				}
 				else
 				{
-					temp = new Collectable (object->x, object->z, object->properties [0], object->properties [1]);
+					temp = new Collectable (object->x, object->z, object->properties [0], (std::stoi (object->properties [1]) > 0));
 				}
 				temp->setParent (this);
 				//If there is an object already in this place, delete it.
@@ -339,8 +543,8 @@ void Level::loadMap ()
 				map->objectTiles [object->x] [object->z] = (int)temp;
 				break;
 			case 38:
-				//Door: property = number of level to load
-				temp = new Door (object->x, object->z, std::stoi (object->properties [0]));
+				//Door: property = number of level to load & orientation
+				temp = new Door (object->x, object->z, std::stoi (object->properties [0]), std::stoi (object->properties [1]));
 				temp->setParent (this);
 				//If there is an object already in this place, delete it.
 				if (map->objectTiles [object->x] [object->z] != (int)nullptr)
@@ -350,6 +554,7 @@ void Level::loadMap ()
 					delete block;
 				}
 				map->objectTiles [object->x] [object->z] = (int)temp;
+				progressTracker->doors.push_back ((Door*)temp);
 				break;
 			default:
 				break;
@@ -368,6 +573,14 @@ void Level::clear (bool pEndGame)
 		delete gate;
 	}
 	_gates.clear ();
+
+	//Delete decorative, non-walkable baselayer tiles
+	for (int i = 0, size = _nonWalkables.size (); i < size; i ++)
+	{
+		_nonWalkables [i]->setParent (nullptr);
+		delete _nonWalkables [i];
+	}
+	_nonWalkables.clear ();
 
 	//Delete platforms and objects
 	_gates.clear ();

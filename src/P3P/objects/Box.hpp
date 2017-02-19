@@ -15,13 +15,15 @@ class LevelMap;
 class Box : public GameObject
 {
     public:
-        Box (int pX, int pZ);
-        void moveBox (int pX, int pZ);
+        Box (int pX, int pZ, bool pPowered);
+        void moveBox (int pX, int pZ, bool pAnimate = true);
+	void stopAnimation ();
         //Preferably these variables would be private, but they are needed in a globalspace function
         //They use the private name conventions because they should be used as such
 	int _currentTile [2] = { 0, 0 };
     protected:
     private:
+	    bool _powered = false;
 	int _oldTile [2] = { 0, 0 };
 	GameObject* _model = nullptr;
 	AnimationBehaviour* _animator = nullptr;

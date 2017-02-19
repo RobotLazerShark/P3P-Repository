@@ -22,5 +22,12 @@ bool ProgressTracker::checkWin()
         }
     }
 
+    if (win)
+    {
+	for (int i = 0, size = doors.size (); i < size; i ++)
+	{
+		doors [i]->open ();
+	}
+    }
     return win;
 }

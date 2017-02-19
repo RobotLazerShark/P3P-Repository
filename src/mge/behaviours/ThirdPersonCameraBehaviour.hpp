@@ -15,10 +15,13 @@ class ThirdPersonCameraBehaviour : public AbstractBehaviour
 		float _height = 5;
 		float _distanceProjectionLength = 0;
 		Player * _player = nullptr;
+		float _curTargetPos [2] = { 0, 0 };
+		int _newTargetPos [2] = { 0, 0 };
+		float _smoothing = 0.98f;
 		bool _start = true;
 		glm::vec3 _distanceVector;
 		void lookAtPlayer();
-		const float SPEED = 1.25f; //unit per sec
+		const float SPEED = 2.0f; //unit per sec
 };
 
 #endif

@@ -10,6 +10,7 @@
 #include <JCPPEngine/AbstractListener.hpp>
 #include <JCPPEngine/EventHandler.hpp>
 #include <JCPPEngine/TextureManager.hpp>
+#include <JCPPEngine/FontManager.hpp>
 #include "mge/core/Renderer.hpp"
 using namespace std;
 

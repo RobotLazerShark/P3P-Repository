@@ -6,9 +6,9 @@
 BoxSpot::BoxSpot (int pX, int pZ) : GameObject ()
 {
 	//Set up model
-	_model = new GameObject ("cube_flat.obj");
-	_model->setMaterial (new LitMaterial (glm::vec3 (0.5f, 0.5f, 0)));
-	_model->translate (glm::vec3 (0, -0.5f, 0));
+	_model = new GameObject ("BoxSpot.obj");
+	_model->setMaterial (new LitMaterial ("BoxSpot.png"));
+	_model->translate (glm::vec3 (0, -0.05f, 0));
 	_model->setParent (this);
 
 	translate (glm::vec3 (pX * Level::TILESIZE, 0, pZ * Level::TILESIZE));

@@ -10,23 +10,14 @@ Floor::Floor (int pX, int pZ, int pType) : GameObject ()
 	LitMaterial* mat;
 	switch (pType)
 	{
-	//	case 1:
-	//		_model = new GameObject ("Floor1.obj");
-	//		_model->setMaterial (new LitMaterial ("Floor1.png"));
-	//		_model->translate (glm::vec3 (0, -0.05, 0));
-	//		break;
-	//	case 2:
-	//		_model = new GameObject ("Floor2.obj");
-	//		_model->setMaterial (new LitMaterial ("Floor2.png"));
-	//		_model->translate (glm::vec3 (0, -0.05f, 0));
-	//		break;
-	//	case 3:
-	//		_model = new GameObject ("Floor3.obj");
-	//		_model->setMaterial (new LitMaterial ("Floor3.png"));
-	//		_model->translate (glm::vec3 (0, -0.05f, 0));
-	//		break;
+		case 1:
+			_model = new GameObject ("Floor1.obj");
+			_model->setMaterial (new LitMaterial ("Floor1.png"));
+			_model->translate (glm::vec3 (0, -0.05, 0));
+			break;
 		default:
-			int tile = JCPPEngine::Random::Range (1, 3);
+			int tile = JCPPEngine::Random::Range (1, 10);
+			tile = (tile <= 7) ? 1 : JCPPEngine::Random::Range (2, 3);
 			_model = new GameObject ("Floor"+to_string (tile)+".obj");
 			_model->setMaterial (new LitMaterial ("Floor"+to_string (tile)+".png"));
 			_model->translate (glm::vec3 (0, -0.05f, 0));

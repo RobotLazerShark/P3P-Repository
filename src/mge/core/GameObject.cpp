@@ -103,14 +103,17 @@ GameObject::~GameObject()
 	if (_behaviour != nullptr)
 	{
 		delete _behaviour;
+		_behaviour = nullptr;
 	}
 	if (_collider != nullptr)
 	{
 		delete _collider;
+		_collider = nullptr;
 	}
 	if (_material != nullptr)
 	{
 		delete _material;
+		_material = nullptr;
 	}
 
 	while (_children.size () > 0)
@@ -119,6 +122,7 @@ GameObject::~GameObject()
 		if (child == nullptr) continue;
 		remove (child);
 		delete child;
+		child = nullptr;
 	}
 }
 

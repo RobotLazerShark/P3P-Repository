@@ -3,6 +3,7 @@
 
 #include <vector>
 #include "P3P/objects/base objects/BoxSpot.hpp"
+#include <P3P/objects/Door.hpp>
 
 class ProgressTracker
 {
@@ -10,6 +11,7 @@ class ProgressTracker
         ProgressTracker();
 	~ProgressTracker();
         std::vector <BoxSpot*> boxSpots;
+	std::vector <Door*> doors;
 
         bool checkWin();
     protected:

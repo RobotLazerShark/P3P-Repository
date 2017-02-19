@@ -11,7 +11,8 @@ class Texture;
 class TextureMaterial : public AbstractMaterial
 {
     public:
-        TextureMaterial (Texture* pDiffuseTexture, float pScale = 1);
+        TextureMaterial (Texture* pDiffuseTexture, float pScale = 1, bool pWave = false);
+	TextureMaterial (std::string pTextureFile, float pScale = 1, bool pWave = false);
         virtual ~TextureMaterial ();
 	static void clearShaderProgram ();
         virtual void render(Mesh* pMesh, const glm::mat4& pModelMatrix, const glm::mat4& pViewMatrix, const glm::mat4& pProjectionMatrix) override;
@@ -24,11 +25,13 @@ class TextureMaterial : public AbstractMaterial
         static ShaderProgram* _shader;
         static void _lazyInitializeShader();
 	static GLint _scaleLoc;
+	static GLint _timeLoc;
 	static GLint _textureLoc;
 	static GLint _MVPmatrixLoc;
 
         Texture* _diffuseTexture = nullptr;
-	float _scale;
+	float _scale = 1;
+	bool _wave = false;
 
         TextureMaterial(const TextureMaterial&);
         TextureMaterial& operator=(const TextureMaterial&);

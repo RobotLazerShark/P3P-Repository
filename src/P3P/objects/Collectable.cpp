@@ -8,6 +8,7 @@
 Collectable::Collectable(int pX, int pZ, std::string pName, bool pCopyCollect) : GameObject()
 {
 	_name = pName;
+	_hasDialog = false;
 	_copyCollect = pCopyCollect;
 
 	//Set up model
@@ -15,6 +16,7 @@ Collectable::Collectable(int pX, int pZ, std::string pName, bool pCopyCollect) :
 	{
 		_model = new GameObject ("Computer.obj");
 		_model->setMaterial (new LitMaterial ("Computer.png"));
+		_model->translate (glm::vec3 (0, 0.05f, 0));
 		_model->rotate (glm::radians (-90.0f), glm::vec3 (0, 1, 0));
 	}
 	else
@@ -24,6 +26,7 @@ Collectable::Collectable(int pX, int pZ, std::string pName, bool pCopyCollect) :
 		_model->translate(glm::vec3(0, 0.5f, 0));
 		_model->scale(0.5f);
 	}
+	_model->setParent (this);
 
 	translate(glm::vec3(pX * Level::TILESIZE, 0, pZ * Level::TILESIZE));
 	_position [0] = pX;
@@ -40,6 +43,7 @@ Collectable::Collectable(int pX, int pZ, std::string pName, std::string pDialog,
 	{
 		_model = new GameObject ("Computer.obj");
 		_model->setMaterial (new LitMaterial ("Computer.png"));
+		_model->translate (glm::vec3 (0, 0.05f, 0));
 		_model->rotate (glm::radians (-90.0f), glm::vec3 (0, 1, 0));
 	}
 	else
@@ -50,6 +54,7 @@ Collectable::Collectable(int pX, int pZ, std::string pName, std::string pDialog,
 		_model->scale(0.5f);
 	}
 	_model->setParent(this);
+
 	//Set up textbox (won't be visible yet)
 	_textBox = new sf::Sprite (*JCPPEngine::TextureManager::GetTexture ("images/TextBox.png"));
 	_text = new sf::Text (pDialog, *JCPPEngine::FontManager::GetFont ("fonts/Font1.ttf"), 30);
@@ -64,8 +69,11 @@ Collectable::Collectable(int pX, int pZ, std::string pName, std::string pDialog,
 }
 Collectable::~Collectable ()
 {
-	delete _textBox;
-	delete _text;
+	if (_hasDialog)
+	{
+		delete _textBox;
+		delete _text;
+	}
 	GameObject::~GameObject ();
 }
 

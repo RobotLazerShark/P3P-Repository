@@ -4,15 +4,30 @@
 #include "mge/core/Mesh.hpp"
 #include "mge/core/GameObject.hpp"
 #include "mge/config.hpp"
+#include <mge/core/AbstractGame.hpp>
 
 ShaderProgram* TextureMaterial::_shader = nullptr;
 GLint TextureMaterial::_MVPmatrixLoc = 0;
 GLint TextureMaterial::_scaleLoc = 0;
+GLint TextureMaterial::_timeLoc = 0;
 GLint TextureMaterial::_textureLoc = 0;
 
-TextureMaterial::TextureMaterial(Texture * pDiffuseTexture, float pScale):_diffuseTexture(pDiffuseTexture) {
+TextureMaterial::TextureMaterial(Texture * pDiffuseTexture, float pScale, bool pWave):_diffuseTexture(pDiffuseTexture) {
 	_scale = pScale;
+	_wave = pWave;
     _lazyInitializeShader();
+}
+TextureMaterial::TextureMaterial (std::string pTextureFile, float pScale, bool pWave)
+{
+	_scale = pScale;
+	_wave = pWave;
+	_diffuseTexture = Texture::load (config::MGE_TEXTURE_PATH + pTextureFile);
+	if (_diffuseTexture == nullptr)
+	{
+		cout << "There was a problem loading the texture. Using the default one instread." << endl;
+		_diffuseTexture = Texture::load (config::MGE_TEXTURE_PATH + "White.png");
+	}
+	_lazyInitializeShader();
 }
 
 TextureMaterial::~TextureMaterial()
@@ -35,6 +50,7 @@ void TextureMaterial::_lazyInitializeShader() {
         _shader->finalize();
 
 	_scaleLoc = _shader->getUniformLocation ("scale");
+	_timeLoc = _shader->getUniformLocation ("time");
 	_textureLoc = _shader->getUniformLocation ("textureDiffuse");
 	_MVPmatrixLoc = _shader->getUniformLocation ("MVPmatrix");
     }
@@ -63,6 +79,14 @@ void TextureMaterial::render(Mesh* pMesh, const glm::mat4& pModelMatrix, const g
     glUniformMatrix4fv ( _MVPmatrixLoc, 1, GL_FALSE, glm::value_ptr (MVPmatrix));
 
 	glUniform1f (_scaleLoc, _scale);
+	if (_wave)
+	{
+		glUniform1f (_timeLoc, AbstractGame::Time ());
+	}
+	else
+	{
+		glUniform1f (_timeLoc, -1);
+	}
 
     //now inform mesh of where to stream its data
     pMesh->streamToOpenGL(

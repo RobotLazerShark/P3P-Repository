@@ -31,14 +31,14 @@ void MGEDemo::_initializeScene()
 	_world->setMainCamera (camera);
 
 	//[TESTING]
-	Light* dirLight = new Light (glm::vec3 (1, 1, 1), 0.3f);
+	Light* dirLight = new Light (glm::vec3 (1, 1, 1), 0.4f);
 	dirLight->rotate (glm::radians (25.0f), glm::vec3 (0, 1, 0));
 	dirLight->rotate (glm::radians (45.0f), glm::vec3 (1, 0, 0));
 	dirLight->setParent (_world);
-	Light* spotLight = new Light (glm::vec3 (1, 0.95f, 0.8f), 5.0f, glm::vec3 (1, 2.5f, 0), glm::radians (60.0f), glm::vec2 (0.25f, 0.75f));
-	spotLight->rotate (glm::radians (210.0f), glm::vec3 (0, 1, 0));
-	spotLight->rotate (glm::radians (35.0f), glm::vec3 (1, 0, 0));
-	spotLight->setParent (_world);
+//	Light* spotLight = new Light (glm::vec3 (1, 0.95f, 0.8f), 5.0f, glm::vec3 (1, 2.5f, 0), glm::radians (60.0f), glm::vec2 (0.25f, 0.75f));
+//	spotLight->rotate (glm::radians (210.0f), glm::vec3 (0, 1, 0));
+//	spotLight->rotate (glm::radians (35.0f), glm::vec3 (1, 0, 0));
+//	spotLight->setParent (_world);
 	ShaderDataUtil::SetAmbientLight (glm::vec3 (0.8f, 0.9f, 1), 0.1f);
 	//camera->setBehaviour (new CameraOrbitBehaviour (10.0f, glm::radians (-60.0f), glm::radians (60.0f), 0.01f, _world));
 

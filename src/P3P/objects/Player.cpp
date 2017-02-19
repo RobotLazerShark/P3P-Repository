@@ -4,6 +4,7 @@
 #include <P3P/objects/Box.hpp>
 #include <P3P/objects/Door.hpp>
 #include <P3P/objects/Collectable.hpp>
+#include <JCPPEngine/Random.hpp>
 
 
 //Static variables
@@ -25,16 +26,18 @@ Player::Player (int pX, int pZ, ProgressTracker* pProgressTracker) : GameObject 
 	//set up model
 	_model = new GameObject ();
 	_model->translate (glm::vec3 (0, 0.5f, 0));
+	_model->rotate (glm::radians (180.0f), glm::vec3 (0, 1, 0));
+	_modelOrientation.y = 180;
 	_model->setParent (this);//By making the model a child object, we can rotate it without it affecting translation directions.
-	GameObject* wheelModel = new GameObject ("cylinder_lowpoly.obj");
+	GameObject* wheelModel = new GameObject ("Playerwheel.obj");
 	wheelModel->setParent (_model);
-	wheelModel->setMaterial (new LitMaterial ("Default.png"));
-	GameObject* baseModelOffset = new GameObject ();
-	baseModelOffset->translate (glm::vec3 (0, 0.5f, 0));
-	baseModelOffset->setParent (_model);
-	GameObject* baseModel = new GameObject ("cube_flat.obj");
-	baseModel->setParent (baseModelOffset);
-	baseModel->setMaterial (new LitMaterial (glm::vec3 (1, 1, 1)));
+	wheelModel->setMaterial (new LitMaterial ("PlayerWheel.png"));
+	GameObject* baseRotation = new GameObject ();
+	baseRotation->rotate (glm::radians (180.0f), glm::vec3 (0, 1, 0));
+	baseRotation->setParent (_model);
+	GameObject* baseModel = new GameObject ("PlayerBase.obj");
+	baseModel->setParent (baseRotation);
+	baseModel->setMaterial (new LitMaterial ("PlayerBase"+to_string (JCPPEngine::Random::Range (1, 4))+".png"));
 	_wheelAnimator = new AnimationBehaviour ({ "PlayerWheel.txt" });
 	_baseAnimator = new AnimationBehaviour ({ "PlayerBase.txt" });
 	wheelModel->setBehaviour (_wheelAnimator);
@@ -50,6 +53,7 @@ Player::Player (int pX, int pZ, ProgressTracker* pProgressTracker) : GameObject 
 //Destructor
 Player::~Player ()
 {
+	singletonInstance->setParent (nullptr);
 	singletonInstance = nullptr;
 	unregisterForEvent (JCPPEngine::Event::EventType::KeyDown);
 	if (_progressTracker != nullptr)
@@ -63,9 +67,33 @@ Player::~Player ()
 }
 
 
+//////////////////////////////|	ANIMATION
+//Function to be called when animations are stopped. It has to be in global space, or we have to pass our object type as well.
+void stopFunctionPlayer (int pAnimIndex, GameObject* pOwner)
+{
+	Player* player = (Player*)pOwner;
+	switch (pAnimIndex)
+	{
+		case 0:
+			player->_moving = false;
+			player->setWorldPosition (glm::vec3 (player->_currentTile [0] * Level::TILESIZE, 0, player->_currentTile [1] * Level::TILESIZE));
+			break;
+		default:
+			break;
+	}
+}
+
+//Stop any playing animations
+void Player::stopAnimation ()
+{
+	_wheelAnimator->stopAnimation ();
+	_baseAnimator->stopAnimation ();
+}
+
+
 //////////////////////////////|	UPDATING FUNCTIONS
 //Move the player by a given amount of tiles
-bool Player::movePlayer (int pX, int pZ, bool pTranslate)
+bool Player::movePlayer (int pX, int pZ, bool pAnimate)
 {
     //update position
     _oldTile [0] = _currentTile [0];
@@ -149,7 +177,12 @@ bool Player::movePlayer (int pX, int pZ, bool pTranslate)
     Level::map->objectTiles [_oldTile [0]] [_oldTile [1]] = (int)nullptr;
 
     //move
-    if (pTranslate)
+    if (pAnimate)
+    {
+	_wheelAnimator->playAnimation (0);
+	_baseAnimator->playAnimation (0, false, &stopFunctionPlayer, this);
+    }
+    else
     {
         translate (glm::vec3 (pX * Level::TILESIZE, 0, pZ * Level::TILESIZE));
     }
@@ -168,20 +201,6 @@ bool Player::movePlayer (int pX, int pZ, bool pTranslate)
 
 
 //////////////////////////////|	EVENT-BASED FUNCTIONS
-//Function to be called when animations are stopped. It has to be in global space, or we have to pass our object type as well.
-void stopFunctionPlayer (int pAnimIndex, GameObject* pOwner)
-{
-	Player* player = (Player*)pOwner;
-	switch (pAnimIndex)
-	{
-		case 0:
-			player->_moving = false;
-			player->setWorldPosition (glm::vec3 (player->_currentTile [0] * Level::TILESIZE, 0, player->_currentTile [1] * Level::TILESIZE));
-			break;
-		default:
-			break;
-	}
-}
 
 //Cause the player to die, and reload the level
 void Player::die ()
@@ -246,11 +265,9 @@ void Player::ProcessEvent (JCPPEngine::Event* pEvent)
 		}
 		_model->rotate (glm::vec3 (0, temp, 0) - _modelOrientation);
 		_modelOrientation.y = temp;
-		if (movePlayer (movement [0], movement [1], false))
+		if (movePlayer (movement [0], movement [1], true))
 		{
 			_moving = true;
-			_wheelAnimator->playAnimation (0);
-			_baseAnimator->playAnimation (0, false, &stopFunctionPlayer, this);
 		}
 	}
 }
