@@ -1,5 +1,6 @@
 #include <P3P/objects/Box.hpp>
 #include <P3P/Level.hpp>
+#include <P3P/objects/base objects/BoxSpot.hpp>
 #include <JCPPEngine/Random.hpp>
 
 
@@ -10,7 +11,7 @@ Box::Box (int pX, int pZ, bool pPowered) : GameObject ()
 	//Set up model
 	_model = new GameObject ();
 	_model->setParent (this);
-	_animator = new AnimationBehaviour ({ "BoxLeft.txt", "BoxUp.txt", "BoxRight.txt", "BoxDown.txt" });
+	_animator = new AnimationBehaviour ({ "BoxLeft.txt", "BoxUp.txt", "BoxRight.txt", "BoxDown.txt", "BoxOnSpot.txt" });
 	_model->setBehaviour (_animator);
 	if (_powered)
 	{
@@ -41,6 +42,21 @@ void stopFunctionBox (int pAnimIndex, GameObject* pOwner)
 {
 	Box* box = (Box*)pOwner;
 	box->setWorldPosition (glm::vec3 (box->_currentTile [0] * Level::TILESIZE, 0, box->_currentTile [1] * Level::TILESIZE));
+
+	if (pAnimIndex != 4 && box->_powered)
+	{
+	    //update BoxSpot if needed
+	    BoxSpot* boxSpot = dynamic_cast <BoxSpot*> ((GameObject*)Level::map->baseTiles [box->_currentTile [0]] [box->_currentTile [1]]);
+	    if (boxSpot != nullptr)
+	    {
+		    boxSpot->taken = true;
+		    box->_animator->playAnimation (4, false, false);
+	    }
+	}
+	if (pAnimIndex != 4)
+	{
+		box->_model->setLocalPosition (glm::vec3 (0, 0, 0));
+	}
 }
 
 //Stop any playing animation
@@ -74,7 +90,7 @@ void Box::moveBox (int pX, int pZ, bool pAnimate)
 	    {
 	        animation = 1 + pX;
 	    }
-	    _animator->playAnimation (animation, false, &stopFunctionBox, this);
+	    _animator->playAnimation (animation, false, true, &stopFunctionBox, this);
     }
     else
     {
@@ -84,12 +100,7 @@ void Box::moveBox (int pX, int pZ, bool pAnimate)
     if (_powered)
     {
 	    //update BoxSpot if needed
-	    BoxSpot* boxSpot = dynamic_cast <BoxSpot*> ((GameObject*)Level::map->baseTiles [_currentTile [0]] [_currentTile [1]]);
-	    if (boxSpot != nullptr)
-	    {
-		    boxSpot->taken = true;
-	    }
-	    boxSpot = dynamic_cast <BoxSpot*> ((GameObject*)Level::map->baseTiles [_oldTile [0]] [_oldTile [1]]);
+	    BoxSpot* boxSpot = dynamic_cast <BoxSpot*> ((GameObject*)Level::map->baseTiles [_oldTile [0]] [_oldTile [1]]);
 	    if (boxSpot != nullptr)
 	    {
 		    boxSpot->taken = false;

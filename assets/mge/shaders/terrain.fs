@@ -18,18 +18,18 @@ uniform vec3 specularColor;
 uniform vec4 cameraPosition;
 uniform vec3 ambientColor;
 uniform int directionalCount;
-uniform vec3 directionalColors [50];//Added maximum enables dynamic indexing
-uniform vec4 directionalNormals [50];
+uniform vec3 directionalColors [10];//Added maximum enables dynamic indexing
+uniform vec4 directionalNormals [10];
 uniform int pointCount;
-uniform vec3 pointColors [50];
-uniform vec4 pointPositions [50];
-uniform vec2 pointFalloffs [50];
+uniform vec3 pointColors [10];
+uniform vec4 pointPositions [10];
+uniform vec2 pointFalloffs [10];
 uniform int spotCount;
-uniform vec3 spotColors [50];
-uniform vec4 spotPositions [50];
-uniform vec4 spotNormals [50];
-uniform float spotAngledots [50];
-uniform vec2 spotFalloffs [50];
+uniform vec3 spotColors [10];
+uniform vec4 spotPositions [10];
+uniform vec4 spotNormals [10];
+uniform float spotAngledots [10];
+uniform vec2 spotFalloffs [10];
 in vec4 fragWorldPosition;
 in vec4 fragWorldNormal;
 in vec2 splatUV;

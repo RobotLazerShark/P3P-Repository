@@ -936,20 +936,9 @@ int createTextureMaterial (lua_State* pLua)
 {
 	if (lua_isstring (pLua, -1))
 	{
-		string filePath = config::MGE_TEXTURE_PATH+(string)lua_tostring (pLua, -1);
-		Texture* texture = Texture::load (filePath);
-		if (texture == nullptr)
-		{
-			throwError ("The file '"+filePath+"' could not be loaded!");
-			lua_settop(pLua, 0);
-			lua_pushnil (pLua);
-		}
-		else
-		{
-			TextureMaterial* material = new TextureMaterial (texture);
-			lua_settop(pLua, 0);
-			lua_pushinteger (pLua, (int)material);
-		}
+		TextureMaterial* material = new TextureMaterial (lua_tostring(pLua, -1));
+		lua_settop(pLua, 0);
+		lua_pushinteger (pLua, (int)material);
 	}
 	else
 	{
@@ -2229,12 +2218,17 @@ int setAmbientLight (lua_State* pLua)
 	{
 		float intensity = lua_tonumber (pLua, -1);
 		glm::vec3 luaColor;
-		for (int i = 0; i < 3; i ++)
-		{
-			lua_pushinteger (pLua, (i + 1));//Push index we want to access in the table onto the stack (table is now at -(3 + i))
-			lua_gettable (pLua, -(3 + i));//Replaces the key on top of the stack with its corresponding value
-			luaColor [i] = lua_tonumber (pLua, -1);//Add the value from the table to the vector
-		}
+		//Read color values from table
+		lua_pushstring (pLua, "r");
+		lua_gettable (pLua, -3);
+		luaColor.x = lua_tonumber (pLua, -1);
+		lua_pushstring (pLua, "g");
+		lua_gettable (pLua, -4);
+		luaColor.y = lua_tonumber (pLua, -1);
+		lua_pushstring (pLua, "b");
+		lua_gettable (pLua, -5);
+		luaColor.z = lua_tonumber (pLua, -1);
+
 		ShaderDataUtil::SetAmbientLight (luaColor, intensity);
 	}
 	else if (lua_isnumber (pLua, -4) && lua_isnumber (pLua, -3) && lua_isnumber (pLua, -2) && lua_isnumber (pLua, -1))
@@ -2446,6 +2440,298 @@ int printString (lua_State* pLua)
 
 
 //////////////////////////////|	INSTANCE CONTROL
+////////////////////|	Create custom 'libraries'
+//Game lib
+int open_gamelib (lua_State* pLua)
+{
+	lua_settop(pLua, 0);
+	lua_newtable (pLua);//Creating the lua table (table now at -1)
+	lua_pushstring (pLua, "time");//Push the key onto the stack (table now at -2)
+	lua_pushcfunction (pLua, &getTimeSinceProgramStart);//Push the value onto the stack (table now at -3)
+	lua_settable (pLua, -3);//Put the key-value pair in the table (table now at -1)
+	lua_pushstring (pLua, "setAmbientLight");//Push the key onto the stack (table now at -2)
+	lua_pushcfunction (pLua, &setAmbientLight);//Push the value onto the stack (table now at -3)
+	lua_settable (pLua, -3);//Put the key-value pair in the table (table now at -1)
+	lua_setglobal (pLua, "Game");
+	return 1;
+}
+//Lua lib
+int open_lualib (lua_State* pLua)
+{
+	lua_settop(pLua, 0);
+	lua_newtable (pLua);
+	lua_pushstring (pLua, "wait");
+	lua_pushcfunction (pLua, &pauseLua);
+	lua_settable (pLua, -3);
+	lua_pushstring (pLua, "update");
+	lua_pushcfunction (pLua, &setUpdatingFunction);
+	lua_settable (pLua, -3);
+	lua_pushstring (pLua, "image");
+	lua_pushcfunction (pLua, &createImage);
+	lua_settable (pLua, -3);
+	lua_pushstring (pLua, "ifClicked");
+	lua_pushcfunction (pLua, &checkButton);
+	lua_settable (pLua, -3);
+	lua_pushstring (pLua, "text");
+	lua_pushcfunction (pLua, &createText);
+	lua_settable (pLua, -3);
+	lua_pushstring (pLua, "drawTable");
+	lua_pushcfunction (pLua, &putTableInDrawBuffer);
+	lua_settable (pLua, -3);
+	lua_pushstring (pLua, "sound");
+	lua_pushcfunction (pLua, &playSound);
+	lua_settable (pLua, -3);
+	lua_pushstring (pLua, "soundLoop");
+	lua_pushcfunction (pLua, &playLoopingSound);
+	lua_settable (pLua, -3);
+	lua_pushstring (pLua, "stopLoop");
+	lua_pushcfunction (pLua, &stopLoopingSound);
+	lua_settable (pLua, -3);
+	lua_setglobal (pLua, "Lua");//Name the newly made library
+	return 1;
+}
+//Hidden lib
+int open_hiddenlib (lua_State* pLua)
+{
+	lua_settop(pLua, 0);
+	lua_newtable (pLua);
+	lua_pushstring (pLua, "draw");
+	lua_pushcfunction (pLua, &putInDrawBuffer);
+	lua_settable (pLua, -3);
+	lua_pushstring (pLua, "deleteDrawable");
+	lua_pushcfunction (pLua, &deleteDrawable);
+	lua_settable (pLua, -3);
+	lua_pushstring (pLua, "loadScene");
+	lua_pushcfunction (pLua, &loadScene);
+	lua_settable (pLua, -3);
+	lua_pushstring (pLua, "object");
+	lua_pushcfunction (pLua, &createObject);
+	lua_settable (pLua, -3);
+	lua_pushstring (pLua, "delete");
+	lua_pushcfunction (pLua, &deleteObjectByPointer);
+	lua_settable (pLua, -3);
+	//Getters
+	lua_pushstring (pLua, "getDrawablePosition");
+	lua_pushcfunction (pLua, &getDrawablePosition);
+	lua_settable (pLua, -3);
+	lua_pushstring (pLua, "getLocalPosition");
+	lua_pushcfunction (pLua, &getLocalPositionByPointer);
+	lua_settable (pLua, -3);
+	lua_pushstring (pLua, "getWorldPosition");
+	lua_pushcfunction (pLua, &getWorldPositionByPointer);
+	lua_settable (pLua, -3);
+	//Setters
+	lua_pushstring (pLua, "setDrawablePosition");
+	lua_pushcfunction (pLua, &setDrawablePosition);
+	lua_settable (pLua, -3);
+	lua_pushstring (pLua, "setLocalPosition");
+	lua_pushcfunction (pLua, &setLocalPositionByPointer);
+	lua_settable (pLua, -3);
+	lua_pushstring (pLua, "setWorldPosition");
+	lua_pushcfunction (pLua, &setWorldPositionByPointer);
+	lua_settable (pLua, -3);
+	lua_pushstring (pLua, "setMesh");
+	lua_pushcfunction (pLua, &setMeshByPointer);
+	lua_settable (pLua, -3);
+	lua_pushstring (pLua, "setMaterial");
+	lua_pushcfunction (pLua, &setMaterialByPointer);
+	lua_settable (pLua, -3);
+	lua_pushstring (pLua, "setBehaviour");
+	lua_pushcfunction (pLua, &setBehaviourByPointer);
+	lua_settable (pLua, -3);
+	lua_pushstring (pLua, "parent");
+	lua_pushcfunction (pLua, &setParentByPointer);
+	lua_settable (pLua, -3);
+	lua_pushstring (pLua, "unparent");
+	lua_pushcfunction (pLua, &removeParentByPointer);
+	lua_settable (pLua, -3);
+	//Transformations
+	lua_pushstring (pLua, "moveDrawable");
+	lua_pushcfunction (pLua, &moveDrawable);
+	lua_settable (pLua, -3);
+	lua_pushstring (pLua, "rotateDrawable");
+	lua_pushcfunction (pLua, &rotateDrawable);
+	lua_settable (pLua, -3);
+	lua_pushstring (pLua, "scaleDrawable");
+	lua_pushcfunction (pLua, &scaleDrawable);
+	lua_settable (pLua, -3);
+	lua_pushstring (pLua, "move");
+	lua_pushcfunction (pLua, &translateObjectByPointer);
+	lua_settable (pLua, -3);
+	lua_pushstring (pLua, "rotate");
+	lua_pushcfunction (pLua, &rotateObjectByPointer);
+	lua_settable (pLua, -3);
+	lua_pushstring (pLua, "scale");
+	lua_pushcfunction (pLua, &scaleObjectByPointer);
+	lua_settable (pLua, -3);
+	lua_pushstring (pLua, "badScale");
+	lua_pushcfunction (pLua, &badScaleObjectByPointer);
+	lua_settable (pLua, -3);
+	//Collisions
+	lua_pushstring (pLua, "addCollider");
+	lua_pushcfunction (pLua, &addColliderByPointer);
+	lua_settable (pLua, -3);
+	lua_pushstring (pLua, "removeCollider");
+	lua_pushcfunction (pLua, &removeColliderByPointer);
+	lua_settable (pLua, -3);
+	lua_pushstring (pLua, "ifCollide");
+	lua_pushcfunction (pLua, &checkCollisionByPointer);
+	lua_settable (pLua, -3);
+	//Light
+	lua_pushstring (pLua, "directionalLight");
+	lua_pushcfunction (pLua, &createDirectionalLight);
+	lua_settable (pLua, -3);
+	lua_pushstring (pLua, "pointLight");
+	lua_pushcfunction (pLua, &createPointLight);
+	lua_settable (pLua, -3);
+	lua_pushstring (pLua, "spotLight");
+	lua_pushcfunction (pLua, &createSpotLight);
+	lua_settable (pLua, -3);
+	lua_pushstring (pLua, "setLightColor");
+	lua_pushcfunction (pLua, &setLightColor);
+	lua_settable (pLua, -3);
+	lua_pushstring (pLua, "setLightIntensity");
+	lua_pushcfunction (pLua, &setLightIntensity);
+	lua_settable (pLua, -3);
+	lua_pushstring (pLua, "setLightFalloff");
+	lua_pushcfunction (pLua, &setLightFalloff);
+	lua_settable (pLua, -3);
+	lua_pushstring (pLua, "setLightAngle");
+	lua_pushcfunction (pLua, &setLightAngle);
+	lua_settable (pLua, -3);
+	//Meshes
+	lua_pushstring (pLua, "mesh");
+	lua_pushcfunction (pLua, &createMesh);
+	lua_settable (pLua, -3);
+	lua_pushstring (pLua, "terrainmesh");
+	lua_pushcfunction (pLua, &createTerrainMesh);
+	lua_settable (pLua, -3);
+	//Materials
+	lua_pushstring (pLua, "colorMaterial");
+	lua_pushcfunction (pLua, &createColorMaterial);
+	lua_settable (pLua, -3);
+	lua_pushstring (pLua, "setColorMaterialColor");
+	lua_pushcfunction (pLua, &setColorMaterialColor);
+	lua_settable (pLua, -3);
+	lua_pushstring (pLua, "litColorMaterial");
+	lua_pushcfunction (pLua, &createColorLitMaterial);
+	lua_settable (pLua, -3);
+	lua_pushstring (pLua, "setLitMaterialColor");
+	lua_pushcfunction (pLua, &setLitMaterialColor);
+	lua_settable (pLua, -3);
+	lua_pushstring (pLua, "setLitMaterialShininess");
+	lua_pushcfunction (pLua, &setLitMaterialShininess);
+	lua_settable (pLua, -3);
+	lua_pushstring (pLua, "setLitMaterialSpecularColor");
+	lua_pushcfunction (pLua, &setLitMaterialSpecularColor);
+	lua_settable (pLua, -3);
+	lua_pushstring (pLua, "textureMaterial");
+	lua_pushcfunction (pLua, &createTextureMaterial);
+	lua_settable (pLua, -3);
+	lua_pushstring (pLua, "setTextureMaterialTexture");
+	lua_pushcfunction (pLua, &setTextureMaterialTexture);
+	lua_settable (pLua, -3);
+	lua_pushstring (pLua, "setTextureMaterialScale");
+	lua_pushcfunction (pLua, &setTextureMaterialScale);
+	lua_settable (pLua, -3);
+	lua_pushstring (pLua, "litTextureMaterial");
+	lua_pushcfunction (pLua, &createTextureLitMaterial);
+	lua_settable (pLua, -3);
+	lua_pushstring (pLua, "setLitMaterialTexture");
+	lua_pushcfunction (pLua, &setLitMaterialTexture);
+	lua_settable (pLua, -3);
+	lua_pushstring (pLua, "setLitMaterialScale");
+	lua_pushcfunction (pLua, &setLitMaterialScale);
+	lua_settable (pLua, -3);
+	lua_pushstring (pLua, "terrainMaterial");
+	lua_pushcfunction (pLua, &createTerrainMaterial);
+	lua_settable (pLua, -3);
+	lua_pushstring (pLua, "setTerrainMaterialTexR");
+	lua_pushcfunction (pLua, &setTerrainMaterialTexR);
+	lua_settable (pLua, -3);
+	lua_pushstring (pLua, "setTerrainMaterialTexRScale");
+	lua_pushcfunction (pLua, &setTerrainMaterialTexRScale);
+	lua_settable (pLua, -3);
+	lua_pushstring (pLua, "setTerrainMaterialTexG");
+	lua_pushcfunction (pLua, &setTerrainMaterialTexG);
+	lua_settable (pLua, -3);
+	lua_pushstring (pLua, "setTerrainMaterialTexGScale");
+	lua_pushcfunction (pLua, &setTerrainMaterialTexGScale);
+	lua_settable (pLua, -3);
+	lua_pushstring (pLua, "setTerrainMaterialTexB");
+	lua_pushcfunction (pLua, &setTerrainMaterialTexB);
+	lua_settable (pLua, -3);
+	lua_pushstring (pLua, "setTerrainMaterialTexBScale");
+	lua_pushcfunction (pLua, &setTerrainMaterialTexBScale);
+	lua_settable (pLua, -3);
+	lua_pushstring (pLua, "setTerrainMaterialTexA");
+	lua_pushcfunction (pLua, &setTerrainMaterialTexA);
+	lua_settable (pLua, -3);
+	lua_pushstring (pLua, "setTerrainMaterialTexAScale");
+	lua_pushcfunction (pLua, &setTerrainMaterialTexAScale);
+	lua_settable (pLua, -3);
+	lua_pushstring (pLua, "setTerrainMaterialTexScales");
+	lua_pushcfunction (pLua, &setTerrainMaterialTexScales);
+	lua_settable (pLua, -3);
+	lua_pushstring (pLua, "setTerrainMaterialLit");
+	lua_pushcfunction (pLua, &setTerrainMaterialLit);
+	lua_settable (pLua, -3);
+	lua_pushstring (pLua, "setTerrainMaterialShininess");
+	lua_pushcfunction (pLua, &setTerrainMaterialShininess);
+	lua_settable (pLua, -3);
+	lua_pushstring (pLua, "setTerrainMaterialSpecularColor");
+	lua_pushcfunction (pLua, &setTerrainMaterialSpecularColor);
+	lua_settable (pLua, -3);
+	lua_pushstring (pLua, "setTerrainMaterialWaterIndex");
+	lua_pushcfunction (pLua, &setTerrainMaterialWaterIndex);
+	lua_settable (pLua, -3);
+	lua_pushstring (pLua, "setTerrainMaterialWaveHeight");
+	lua_pushcfunction (pLua, &setTerrainMaterialWaveHeight);
+	lua_settable (pLua, -3);
+	lua_pushstring (pLua, "setTerrainMaterialWaveCount");
+	lua_pushcfunction (pLua, &setTerrainMaterialWaveCount);
+	lua_settable (pLua, -3);
+	//Behaviours
+	lua_pushstring (pLua, "rotatingBehaviour");
+	lua_pushcfunction (pLua, &createRotatingBehaviour);
+	lua_settable (pLua, -3);
+	lua_pushstring (pLua, "keysBehaviour");
+	lua_pushcfunction (pLua, &createKeysBehaviour);
+	lua_settable (pLua, -3);
+	//Doom objects
+	lua_pushstring (pLua, "doomObject");
+	lua_pushcfunction (pLua, &createDoomObject);
+	lua_settable (pLua, -3);
+	lua_pushstring (pLua, "setClickHitbox");
+	lua_pushcfunction (pLua, &setClickHitboxByPointer);
+	lua_settable (pLua, -3);
+	lua_pushstring (pLua, "ifDoomClicked");
+	lua_pushcfunction (pLua, &checkDoomButton);
+	lua_settable (pLua, -3);
+	lua_setglobal (pLua, "Hidden");//Name the newly made library
+	return 1;
+}
+//Import lib
+int open_importlib (lua_State* pLua)
+{
+	lua_settop(pLua, 0);
+	lua_newtable (pLua);
+	lua_pushstring (pLua, "UnityCamera");
+	lua_pushcfunction (pLua, &importUnityCamera);
+	lua_settable (pLua, -3);
+	lua_pushstring (pLua, "UnityLight");
+	lua_pushcfunction (pLua, &importUnityLight);
+	lua_settable (pLua, -3);
+	lua_pushstring (pLua, "UnityObject");
+	lua_pushcfunction (pLua, &importUnityObject);
+	lua_settable (pLua, -3);
+	lua_pushstring (pLua, "RotatingBehaviour");
+	lua_pushcfunction (pLua, &createRotatingBehaviour);
+	lua_settable (pLua, -3);
+	lua_setglobal (pLua, "Import");//Name the newly made library
+	return 1;
+}
+
 //Set up a LuaParser
 LuaParser::LuaParser (sf::RenderWindow* pWindow)
 {
@@ -2467,120 +2753,12 @@ LuaParser::LuaParser (sf::RenderWindow* pWindow)
 		return;
 	}
 	luaL_openlibs (_luaMain);//Open all default lua libraries
-	//Create lua libraries
-	static const luaL_Reg GameFunctions [] =
-	{
-		{ "time", getTimeSinceProgramStart },
-		{ "setAmbientLight", setAmbientLight }
-	};
-	luaL_newlib (_luaMain, GameFunctions);
-	lua_setglobal (_luaMain, "Game");//Name the newly made library
-	static const luaL_Reg LuaFunctions [] =
-	{
-		{ "wait", pauseLua },
-		{ "update", setUpdatingFunction },
-		{ "image", createImage },
-		{ "ifClicked", checkButton },
-		{ "text", createText },
-		{ "drawTable", putTableInDrawBuffer },
-		{ "sound", playSound },
-		{ "soundLoop", playLoopingSound },
-		{ "stopLoop", stopLoopingSound }
-	};
-	luaL_newlib (_luaMain, LuaFunctions);
-	lua_setglobal (_luaMain, "Lua");//Name the newly made library
-	static const luaL_Reg HiddenFunctions [] =
-	{
-		{ "draw", putInDrawBuffer },
-		{ "deleteDrawable", deleteDrawable },
-		{ "loadScene", loadScene },
-		{ "object", createObject },
-		{ "delete", deleteObjectByPointer },
-		//Getters
-		{ "getDrawablePosition", getDrawablePosition },
-		{ "getLocalPosition", getLocalPositionByPointer },
-		{ "getWorldPosition", getWorldPositionByPointer },
-		//Setters
-		{ "setDrawablePosition", setDrawablePosition },
-		{ "setLocalPosition", setLocalPositionByPointer },
-		{ "setWorldPosition", setWorldPositionByPointer },
-		{ "setMesh", setMeshByPointer },
-		{ "setMaterial", setMaterialByPointer },
-		{ "setBehaviour", setBehaviourByPointer },
-		{ "parent", setParentByPointer },
-		{ "unparent", removeParentByPointer },
-		//Transformations
-		{ "moveDrawable", moveDrawable },
-		{ "rotateDrawable", rotateDrawable },
-		{ "scaleDrawable", scaleDrawable },
-		{ "move", translateObjectByPointer },
-		{ "rotate", rotateObjectByPointer },
-		{ "scale", scaleObjectByPointer },
-		{ "badScale", badScaleObjectByPointer },
-		//Collisions
-		{ "addCollider", addColliderByPointer },
-		{ "removeCollider", removeColliderByPointer },
-		{ "ifCollide", checkCollisionByPointer },
-		//Light
-		{ "directionalLight", createDirectionalLight },
-		{ "pointLight", createPointLight },
-		{ "spotLight", createSpotLight },
-		{ "setLightColor", setLightColor },
-		{ "setLightIntensity", setLightIntensity },
-		{ "setLightFalloff", setLightFalloff },
-		{ "setLightAngle", setLightAngle },
-		//Importing
-		{ "UnityCamera", importUnityCamera },
-		{ "UnityLight", importUnityLight },
-		{ "UnityObject", importUnityObject },
-		//Meshes
-		{ "mesh", createMesh },
-		{ "terrainMesh", createTerrainMesh },
-		//Materials
-		{ "colorMaterial", createColorMaterial },
-		{ "setColorMaterialColor", setColorMaterialColor },
-		{ "litColorMaterial", createColorLitMaterial },
-		{ "setLitMaterialColor", setLitMaterialColor },
-		{ "setLitMaterialShininess", setLitMaterialShininess },
-		{ "setLitMaterialSpecularColor", setLitMaterialSpecularColor },
-		{ "textureMaterial", createTextureMaterial },
-		{ "setTextureMaterialTexture", setTextureMaterialTexture },
-		{ "setTextureMaterialScale", setTextureMaterialScale },
-		{ "litTextureMaterial", createTextureLitMaterial },
-		{ "setLitMaterialTexture", setLitMaterialTexture },
-		{ "setLitMaterialScale", setLitMaterialScale },
-		{ "terrainMaterial", createTerrainMaterial },
-		{ "setTerrainMaterialTexR", setTerrainMaterialTexR },
-		{ "setTerrainMaterialTexRScale", setTerrainMaterialTexRScale },
-		{ "setTerrainMaterialTexG", setTerrainMaterialTexG },
-		{ "setTerrainMaterialTexGScale", setTerrainMaterialTexGScale },
-		{ "setTerrainMaterialTexB", setTerrainMaterialTexB },
-		{ "setTerrainMaterialTexBScale", setTerrainMaterialTexBScale },
-		{ "setTerrainMaterialTexA", setTerrainMaterialTexA },
-		{ "setTerrainMaterialTexAScale", setTerrainMaterialTexAScale },
-		{ "setTerrainMaterialTexScales", setTerrainMaterialTexScales },
-		{ "setTerrainMaterialLit", setTerrainMaterialLit },
-		{ "setTerrainMaterialShininess", setTerrainMaterialShininess },
-		{ "setTerrainMaterialSpecularColor", setTerrainMaterialSpecularColor },
-		{ "setTerrainMaterialWaterIndex", setTerrainMaterialWaterIndex },
-		{ "setTerrianMaterialWaveHeight", setTerrainMaterialWaveHeight },
-		{ "setTerrianMaterialWaveCount", setTerrainMaterialWaveCount },
-		//Behaviours
-		{ "rotatingBehaviour", createRotatingBehaviour },
-		{ "keysBehaviour", createKeysBehaviour },
-		//Doom objects
-		{ "doomObject", createDoomObject },
-		{ "setClickHitbox", setClickHitboxByPointer },
-		{ "ifDoomClicked", checkDoomButton }
-	};
-	luaL_newlib (_luaMain, HiddenFunctions);
-	lua_setglobal (_luaMain, "Hidden");//Name the newly made library
-	static const luaL_Reg ImportFunctions [] =
-	{
-		{ "RotatingBehaviour" },
-	};
-	luaL_newlib (_luaMain, ImportFunctions);
-	lua_setglobal (_luaMain, "Import");//Name the newly made library
+	//Open all custom 'libraries'
+	open_gamelib (_luaMain);
+	open_lualib (_luaMain);
+	open_hiddenlib (_luaMain);
+	open_importlib (_luaMain);
+
 	_lua = lua_newthread (_luaMain);
 	_originalStatePointerValue = ((int)_lua) + 1;//This calculation prevents anything from adjusting the value stored in _originalStatePointerValue
 
@@ -2602,6 +2780,16 @@ LuaParser::~LuaParser ()
 		delete _curScene;
 		_curScene = nullptr;
 	}
+	if (_lua != nullptr)
+	{
+		lua_close (_lua);
+		_lua = nullptr;
+	}
+	if (_luaMain != nullptr)
+	{
+		lua_close (_luaMain);
+		_luaMain = nullptr;
+	}
 }
 //Clean out the LuaParser. This does not delete this object itself.
 void LuaParser::Clean ()
@@ -2622,7 +2810,7 @@ void LuaParser::Clean ()
 	}
 	_drawBuffer.clear ();
 	SoundManager::Clean ();
-	//It would be nice to clean out the lua_State pointer as well, but that causes some very complicated problems...
+	//The lua state pointers are cleared when luaparser is deleted
 }
 //Reload the lua file to implement changes at runtime
 void LuaParser::Refresh ()

@@ -1,5 +1,5 @@
 ﻿#include "AbstractGame.hpp"
-#include <vld.h>
+//#include <vld.h>
 #include <iostream>
 using namespace std;
 #include <mge/core/Mesh.hpp>

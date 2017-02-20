@@ -247,14 +247,18 @@ void AnimationBehaviour::stopAnimation ()
 		_owner->setTransform (_normalTransform);
 	}
 	_normalTransform = glm::mat4 ();
-	//Call stopfunction
-	if (_stopFunction != nullptr)
-	{
-		_stopFunction (_currentAnimation, _stopFunctionOwner);
-	}
+	//Copy values into temporary variables, then clear them (we may call playanimation from the stopfunction)
+	int tempIndex = _currentAnimation;
+	void (*tempFunc) (int, GameObject*) = _stopFunction;
+	GameObject* tempOwner = _stopFunctionOwner;
 	_currentAnimation = -1;
 	_stopFunction = nullptr;
 	_stopFunctionOwner = nullptr;
+	//Call stopfunction
+	if (tempFunc != nullptr)
+	{
+		tempFunc (tempIndex, tempOwner);
+	}
 }
 
 

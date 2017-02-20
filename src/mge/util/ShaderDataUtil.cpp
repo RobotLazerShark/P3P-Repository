@@ -24,15 +24,15 @@ void ShaderDataUtil::AddLight (Light* pLight)
 	switch (pLight->shape)//The type-based sorting is done here so that the correct data-retrieval functions are called when information is requested
 	{
 		case Light::Shapes::Directional:
-			if (_directionalLights.size () == 50) return;
+			if (_directionalLights.size () == 10) return;
 			_directionalLights.push_back (pLight);
 			break;
 		case Light::Shapes::Point:
-			if (_pointLights.size () == 50) return;
+			if (_pointLights.size () == 10) return;
 			_pointLights.push_back (pLight);
 			break;
 		case Light::Shapes::Spot:
-			if (_spotLights.size () == 50) return;
+			if (_spotLights.size () == 10) return;
 			_spotLights.push_back (pLight);
 			break;
 		default:
@@ -83,7 +83,7 @@ void ShaderDataUtil::SetCamera (Camera* pCamera)
 {
 	_camera = pCamera;
 }
-//Update the camera information (this function is called once each frame, so we calculate this data as little as possible
+//Update the camera information (this function is called once each rendered frame, so we calculate this data as little as possible
 void ShaderDataUtil::UpdateCameraInfo ()
 {
 	_cameraWorldPosition = glm::vec4 (_camera->getWorldPosition (), 1);
