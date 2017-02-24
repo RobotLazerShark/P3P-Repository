@@ -5,11 +5,8 @@
 #include <array>
 #include <SFML/Graphics.hpp>
 #include <mge/core/GameObject.hpp>
-#include <mge/materials/LitMaterial.hpp>
 #include <mge/behaviours/AnimationBehaviour.hpp>
 #include <JCPPEngine/AbstractListener.hpp>
-#include <JCPPEngine/KeyEvent.hpp>
-#include <JCPPEngine/InputManager.hpp>
 #include <P3P/ProgressTracker.hpp>
 
 class Collectable;
@@ -25,14 +22,15 @@ class Player : public GameObject, public JCPPEngine::AbstractListener
 	void ProcessEvent (JCPPEngine::Event* pEvent) override;
 	void die ();
 	static Player* singletonInstance;
+	std::vector <std::string> inventory;
+	bool hasItem (std::string pItemName);
 	//Preferably these variables would be private, but they are needed in a globalspace function
 	//They use the private name conventions because they should be used as such
 	bool _noMove = false;
 	bool _dead = false;
 	int _currentTile[2];//Arrays, because glm::vec uses floats
 	int _oldTile[2];
-	std::vector <std::string> inventory;
-
+	bool blockMovement = false;
     protected:
 
     private:

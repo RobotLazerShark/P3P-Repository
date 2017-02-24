@@ -9,14 +9,11 @@
 #include <mge/util/ShaderDataUtil.hpp>
 #include <JCPPEngine/AbstractListener.hpp>
 #include <JCPPEngine/EventHandler.hpp>
-#include <JCPPEngine/TextureManager.hpp>
-#include <JCPPEngine/FontManager.hpp>
 #include "mge/core/Renderer.hpp"
 using namespace std;
 
 class World;
 class Renderer;
-class LuaParser;
 
 /**
  * Defines the basic structure for a game, with defaults already filled in.
@@ -81,7 +78,7 @@ class AbstractGame : public JCPPEngine::AbstractListener
 
     private:
 	sf::Sprite* _cursor = nullptr;
-	LuaParser* _luaParser = nullptr;
+	LuaParser* _luaParser;
         AbstractGame(const AbstractGame&);
         AbstractGame& operator=(const AbstractGame&);
 

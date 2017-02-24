@@ -1,6 +1,12 @@
 #include "LuaParser.hpp"
 #ifndef LuaParser_CPP_Def
 #define LuaParser_CPP_Def
+#include <stdio.h>
+#include <glm.hpp>
+#include <cmath>
+#include <iostream>
+#include <string>
+#include <vector>
 #include <mge/core/World.hpp>
 #include <mge/core/Texture.hpp>
 #include <mge/core/GameObject.hpp>
@@ -19,6 +25,9 @@
 #include <mge/materials/TerrainMaterial.hpp>
 #include <mge/behaviours/RotatingBehaviour.hpp>
 #include <mge/behaviours/KeysBehaviour.hpp>
+#include <P3P/objects/Npc.hpp>
+#include <P3P/objects/Player.hpp>
+#include <P3P/Level.hpp>
 using namespace std;
 using namespace JCPPEngine;
 
@@ -306,13 +315,6 @@ int createImage (lua_State* pLua)
 	{
 		string filePath = "images/" + (string)lua_tostring (pLua, -3);
 		sf::Texture* texture = TextureManager::GetTexture (filePath);
-		if (texture == nullptr)
-		{
-			throwError ("The file '" + filePath + "' could not be loaded!");
-			lua_settop(pLua, 0);
-			lua_pushnil (pLua);
-			return 1;
-		}
 		sf::Sprite* image = new sf::Sprite (*texture);
 		sf::Vector2u size = texture->getSize ();
 		image->setOrigin (size.x * 0.5f, size.y * 0.5f);
@@ -384,14 +386,7 @@ int createText (lua_State* pLua)
 	if (lua_isstring (pLua, -8) && lua_isstring (pLua, -7) && lua_isinteger (pLua, -6) && lua_isinteger (pLua, -5) && lua_isinteger (pLua, -4) && lua_isnumber (pLua, -3) && lua_isnumber (pLua, -2) && lua_isnumber (pLua, -1))
 	{
 		string filePath = "fonts/" + (string)lua_tostring (pLua, -7);
-		sf::Font* font = FontManager::GetFont (filePath);
-		if (font == nullptr)
-		{
-			throwError ("The file '"+filePath+"' could not be loaded!");
-			lua_settop (pLua, 0);
-			lua_pushnil (pLua);
-		}
-		sf::Text* text = new sf::Text (lua_tostring (pLua, -8), *font, (unsigned int)lua_tointeger (pLua, -6));
+		sf::Text* text = new sf::Text (lua_tostring (pLua, -8), *FontManager::GetFont (filePath), (unsigned int)lua_tointeger (pLua, -6));
 		text->setPosition (lua_tointeger (pLua, -5), lua_tointeger (pLua, -4));
 		text->setFillColor (sf::Color ((int)(lua_tonumber (pLua, -3) * 255), (int)(lua_tonumber (pLua, -2) * 255), (int)(lua_tonumber (pLua, -1) * 255)));
 		lua_settop (pLua, 0);
@@ -400,14 +395,7 @@ int createText (lua_State* pLua)
 	else if (lua_isstring (pLua, -5) && lua_isstring (pLua, -4) && lua_isinteger (pLua, -3) && lua_isinteger (pLua, -2) && lua_isinteger (pLua, -1))
 	{
 		string filePath = "fonts/" + (string)lua_tostring (pLua, -4);
-		sf::Font* font = FontManager::GetFont (filePath);
-		if (font == nullptr)
-		{
-			throwError ("The file '"+filePath+"' could not be loaded!");
-			lua_settop (pLua, 0);
-			lua_pushnil (pLua);
-		}
-		sf::Text* text = new sf::Text (lua_tostring (pLua, -5), *font, (unsigned int)lua_tointeger (pLua, -3));
+		sf::Text* text = new sf::Text (lua_tostring (pLua, -5), *FontManager::GetFont (filePath), (unsigned int)lua_tointeger (pLua, -3));
 		text->setPosition (lua_tointeger (pLua, -2), lua_tointeger (pLua, -1));
 		lua_settop (pLua, 0);
 		lua_pushinteger (pLua, (int)text);
@@ -2392,6 +2380,136 @@ int setLightAngle (lua_State* pLua)
 }
 
 
+////////////////////|	DIALOG
+//Get whether the npc is talking with the player
+int isTalking (lua_State* pLua)
+{
+	if (Npc::singletonInstance != nullptr)
+	{
+		lua_pushboolean (pLua, Npc::singletonInstance->talking);
+	}
+	else
+	{
+		lua_pushboolean (pLua, false);
+	}
+	return 1;
+}
+//Get the number of times the player has talked to the npc about the current quest
+int questTalks (lua_State* pLua)
+{
+	if (Npc::singletonInstance != nullptr)
+	{
+		lua_pushinteger (pLua, Npc::singletonInstance->questTalks);
+	}
+	else
+	{
+		lua_pushinteger (pLua, -1);
+	}
+	return 1;
+}
+//Get the number of completed quests
+int completedQuests (lua_State* pLua)
+{
+	if (Npc::singletonInstance != nullptr)
+	{
+		lua_pushinteger (pLua, Npc::singletonInstance->completedQuests);
+	}
+	else
+	{
+		lua_pushinteger (pLua, -1);
+	}
+	return 1;
+}
+//Get wheter the talk key was pressed during this frame
+int waitForKeyPress (lua_State* pLua)
+{
+	LuaParser::singletonInstance->_yieldTimer = -1;
+	lua_settop (pLua, 0);
+	return lua_yieldk (pLua, 0, 0, 0);
+}
+//Lock/unlock player movement
+int lockPlayer (lua_State* pLua)
+{
+	if (lua_isboolean (pLua, -1) && Player::singletonInstance != nullptr)
+	{
+		Player::singletonInstance->blockMovement = lua_toboolean (pLua, -1);
+	}
+	return 0;
+}
+//Get whether the player has a certain Item
+int checkInventory (lua_State* pLua)
+{
+	if (lua_isstring (pLua, -1) && Player::singletonInstance != nullptr)
+	{
+		bool itemFound = Player::singletonInstance->hasItem (lua_tostring (pLua, -1));
+		lua_settop (pLua, 0);
+		lua_pushboolean (pLua, itemFound);
+	}
+	else
+	{
+		lua_settop (pLua, 0);
+		lua_pushboolean (pLua, false);
+	}
+	return 1;
+}
+//Give the player a quest. Before this quest can be completed, all previous quests have to be completed first.
+int giveQuest (lua_State* pLua)
+{
+	if (lua_isstring (pLua, -1) && Npc::singletonInstance != nullptr)
+	{
+		Npc::singletonInstance->addQuest (new Quest ("", lua_tostring (pLua, -1)));
+	}
+	lua_settop (pLua, 0);
+	return 0;
+}
+//Show dialog (even though player may not be near)
+int showDialog (lua_State* pLua)
+{
+	if (lua_isstring (pLua, -1) && Npc::singletonInstance != nullptr)
+	{
+		if (!Npc::singletonInstance->talking)
+		{
+			Npc::singletonInstance->displayDialog (lua_tostring (pLua, -1));
+		}
+		else
+		{
+			Npc::singletonInstance->updateDialog (lua_tostring (pLua, -1));
+		}
+	}
+	lua_settop (pLua, 0);
+	return 0;
+}
+//Update the diplayed dialog
+int updateDialog (lua_State* pLua)
+{
+	if (lua_isstring (pLua, -1) && Npc::singletonInstance != nullptr)
+	{
+		if (Npc::singletonInstance->talking)
+		{
+			Npc::singletonInstance->updateDialog (lua_tostring (pLua, -1));
+		}
+	}
+	lua_settop (pLua, 0);
+	return 0;
+}
+//Stop displaying dialog
+int stopDialog (lua_State* pLua)
+{
+	if (Npc::singletonInstance != nullptr)
+	{
+		Npc::singletonInstance->stopDialog ();
+	}
+	return 0;
+}
+//Check if the current level is the hub
+int isHub (lua_State* pLua)
+{
+	lua_settop (pLua, 0);
+	lua_pushboolean (pLua, Level::singletonInstance->isHub ());
+	return 1;
+}
+
+
 ////////////////////|	FLOW CONTROL
 //Set which lua function will be updated
 int setUpdatingFunction (lua_State* pLua)
@@ -2731,6 +2849,64 @@ int open_importlib (lua_State* pLua)
 	lua_setglobal (pLua, "Import");//Name the newly made library
 	return 1;
 }
+//Npc lib
+int open_npclib (lua_State* pLua)
+{
+	lua_settop (pLua, 0);
+	lua_newtable (pLua);
+	lua_pushstring (pLua, "isTalking");
+	lua_pushcfunction (pLua, &isTalking);
+	lua_settable (pLua, -3);
+	lua_pushstring (pLua, "showDialog");
+	lua_pushcfunction (pLua, &showDialog);
+	lua_settable (pLua, -3);
+	lua_pushstring (pLua, "updateDialog");
+	lua_pushcfunction (pLua, &updateDialog);
+	lua_settable (pLua, -3);
+	lua_pushstring (pLua, "stopDialog");
+	lua_pushcfunction (pLua, &stopDialog);
+	lua_settable (pLua, -3);
+	lua_setglobal (pLua, "Npc");//Name the newly made library
+	return 1;
+}
+//Player lib
+int open_playerlib (lua_State* pLua)
+{
+	lua_settop (pLua, 0);
+	lua_newtable (pLua);
+	lua_pushstring (pLua, "questTalks");
+	lua_pushcfunction (pLua, &questTalks);
+	lua_settable (pLua, -3);
+	lua_pushstring (pLua, "completedQuests");
+	lua_pushcfunction (pLua, &completedQuests);
+	lua_settable (pLua, -3);
+	lua_pushstring (pLua, "waitForKey");
+	lua_pushcfunction (pLua, &waitForKeyPress);
+	lua_settable (pLua, -3);
+	lua_pushstring (pLua, "lock");
+	lua_pushcfunction (pLua, &lockPlayer);
+	lua_settable (pLua, -3);
+	lua_pushstring (pLua, "hasItem");
+	lua_pushcfunction (pLua, &checkInventory);
+	lua_settable (pLua, -3);
+	lua_pushstring (pLua, "giveQuest");
+	lua_pushcfunction (pLua, &giveQuest);
+	lua_settable (pLua, -3);
+	lua_setglobal (pLua, "Player");//Name the newly made library
+	return 1;
+}
+//Level lib
+int open_levellib (lua_State* pLua)
+{
+	lua_settop (pLua, 0);
+	lua_newtable (pLua);
+	lua_pushstring (pLua, "isHub");
+	lua_pushcfunction (pLua, &isHub);
+	lua_settable (pLua, -3);
+	lua_setglobal (pLua, "Level");//Name newly made library
+	return 1;
+}
+
 
 //Set up a LuaParser
 LuaParser::LuaParser (sf::RenderWindow* pWindow)
@@ -2738,12 +2914,14 @@ LuaParser::LuaParser (sf::RenderWindow* pWindow)
 	//Maintain singleton
 	if (singletonInstance != nullptr)
 	{
+		singletonInstance->Clean ();
 		delete singletonInstance;
 	}
 	singletonInstance = this;
 	_errorRaised = false;
 	_window = pWindow;
 	registerForEvent (JCPPEngine::Event::EventType::MouseDown);
+	registerForEvent (JCPPEngine::Event::EventType::KeyDown);
 
 	_luaMain = luaL_newstate ();
 	if (_luaMain == nullptr)
@@ -2758,6 +2936,12 @@ LuaParser::LuaParser (sf::RenderWindow* pWindow)
 	open_lualib (_luaMain);
 	open_hiddenlib (_luaMain);
 	open_importlib (_luaMain);
+	open_npclib (_luaMain);
+	open_playerlib (_luaMain);
+	open_levellib (_luaMain);
+
+	lua_pushcfunction (_luaMain, &printString);
+	lua_setglobal (_luaMain, "print");
 
 	_lua = lua_newthread (_luaMain);
 	_originalStatePointerValue = ((int)_lua) + 1;//This calculation prevents anything from adjusting the value stored in _originalStatePointerValue
@@ -2769,7 +2953,8 @@ LuaParser::LuaParser (sf::RenderWindow* pWindow)
 }
 LuaParser::~LuaParser ()
 {
-	_window = nullptr;
+	unregisterForEvent (JCPPEngine::Event::EventType::MouseDown);
+	unregisterForEvent (JCPPEngine::Event::EventType::KeyDown);
 	if (_mouseEvent != nullptr)
 	{
 		delete _mouseEvent;
@@ -2780,16 +2965,21 @@ LuaParser::~LuaParser ()
 		delete _curScene;
 		_curScene = nullptr;
 	}
+	if (_drawBuffer.size () > 0)
+	{
+		for (int i = 0, size = _drawBuffer.size (); i < size; i ++)
+		{
+			delete _drawBuffer [i];
+		}
+		_drawBuffer.clear ();
+	}
 	if (_lua != nullptr)
 	{
 		lua_close (_lua);
 		_lua = nullptr;
 	}
-	if (_luaMain != nullptr)
-	{
-		lua_close (_luaMain);
-		_luaMain = nullptr;
-	}
+	singletonInstance = nullptr;
+	_window = nullptr;
 }
 //Clean out the LuaParser. This does not delete this object itself.
 void LuaParser::Clean ()
@@ -2895,7 +3085,17 @@ bool LuaParser::Update (float pStep)
 		_yieldTimer -= pStep;
 		if (_yieldTimer <= 0)
 		{
-			_yieldTimer = -1;//Make sure floating-point errors won't result in a false positive
+			_yieldTimer = -0.1f;//Make sure floating-point errors won't result in a false positive
+			lua_settop (_lua, 0);//We were yielding, so we have to continue from where lua yielded
+		}
+	}
+	else if (_yieldTimer < -0.9f)
+	{
+		_yieldTimer -= pStep;
+		//We're waiting for input
+		if (_spacePress || _yieldTimer < -30)//Make sure we don't wait infinitely
+		{
+			_yieldTimer = -0.1f;//Make sure floating-point errors won't result in a false positive
 			lua_settop (_lua, 0);//We were yielding, so we have to continue from where lua yielded
 		}
 	}
@@ -2903,7 +3103,7 @@ bool LuaParser::Update (float pStep)
 	{
 		lua_getglobal (_lua, _currentFunction.c_str ());//We weren't yielding, so the selected function can be called
 	}
-	if (_yieldTimer < 0)
+	if (_yieldTimer < 0 && _yieldTimer > -1)
 	{
 		int result = lua_resume (_lua, 0, 0);
 		if (result != LUA_OK && result != LUA_YIELD)
@@ -2927,6 +3127,7 @@ bool LuaParser::Update (float pStep)
 	{
 		_mouseEvent = nullptr;
 	}
+	_spacePress = false;
 	if (_startFrame)
 	{
 		_currentFunction = "main";
@@ -2940,7 +3141,7 @@ void LuaParser::Render ()
 	int size = _drawBuffer.size ();
 	if (size > 0)
 	{
-		//Draw all images in the buffer, then delete the instances
+		//Draw all images in the buffer
 		for (int i = 0; i < size; i ++)
 		{
 			if (_drawBuffer [i] != nullptr)
@@ -2956,14 +3157,25 @@ void LuaParser::Render ()
 //Store any mouse clicks this frame
 void LuaParser::ProcessEvent (JCPPEngine::Event* pEvent)
 {
-	JCPPEngine::MouseEvent* tempEvent = static_cast <MouseEvent*> (pEvent);
-	if (tempEvent != nullptr && tempEvent->button () == sf::Mouse::Button::Left)
+	JCPPEngine::MouseEvent* mouseEvent = dynamic_cast <MouseEvent*> (pEvent);
+	JCPPEngine::KeyEvent* keyEvent = dynamic_cast <KeyEvent*> (pEvent);
+	if (mouseEvent != nullptr)
 	{
-		if (_mouseEvent != nullptr)
+		if (mouseEvent->button () == sf::Mouse::Button::Left)
 		{
-			delete _mouseEvent;
+			if (_mouseEvent != nullptr)
+			{
+				delete _mouseEvent;
+			}
+			_mouseEvent = new MouseEvent (mouseEvent);//Creating a copy, eventhandler deletes its events after they are processed.
 		}
-		_mouseEvent = new MouseEvent (tempEvent);//Creating a copy, eventhandler deletes its events after they are processed.
+	}
+	else if (keyEvent != nullptr)
+	{
+		if (keyEvent->key () == sf::Keyboard::Key::Space)
+		{
+			_spacePress = true;
+		}
 	}
 }
 #endif

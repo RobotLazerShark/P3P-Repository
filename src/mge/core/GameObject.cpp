@@ -12,18 +12,13 @@ using namespace std;
 //////////////////////////////|	INSTANCE MANAGEMENT
 //Constructor with position
 GameObject::GameObject(std::string pName, glm::vec3 pPosition )
-:	_name( pName ), _transform( glm::translate( pPosition ) ),
-    _parent(NULL), _children(), _mesh( NULL ),_behaviour( NULL ), _material(NULL), _collider (nullptr)
+:	_name( pName ), _transform( glm::translate( pPosition ) ),_children()
 {
 }
 //Constructor with position and axis-aligned box collider
 GameObject::GameObject (string pName, glm::vec3 pPosition, glm::vec3 pHalfExtents, glm::vec3 pCenterOffset, bool pBigBox, bool pStatic)
 {
 	_name = pName;
-	_parent = nullptr;
-	_behaviour = nullptr;
-	_material = nullptr;
-	_mesh = nullptr;
 	_transform = glm::translate (pPosition);
 	_collider = new Collider (pHalfExtents, pCenterOffset, pBigBox, pStatic);
 }
@@ -31,70 +26,40 @@ GameObject::GameObject (string pName, glm::vec3 pPosition, glm::vec3 pHalfExtent
 GameObject::GameObject (string pName, glm::vec3 pPosition, float pRadius, glm::vec3 pCenterOffset, bool pStatic)
 {
 	_name = pName;
-	_parent = nullptr;
-	_behaviour = nullptr;
-	_material = nullptr;
-	_mesh = nullptr;
 	_transform = glm::translate(pPosition);
 	_collider = new Collider (pRadius, pCenterOffset, pStatic);
 }
 //Constructor with mesh
 GameObject::GameObject (string pFilename)
 {
-	_name = pFilename + ":" + to_string (AbstractGame::Time ());
-	_parent = nullptr;
-	_behaviour = nullptr;
-	_material = nullptr;
-	_collider = nullptr;
+	_name = pFilename;
 	_mesh = Mesh::load (config::MGE_MODEL_PATH + pFilename);
 }
 //Constructor with mesh and axis-aligned box collider
 GameObject::GameObject (string pFilename, glm::vec3 pHalfExtents, glm::vec3 pCenterOffset, bool pBigBox, bool pStatic)
 {
-	_name = pFilename + ":" + to_string (AbstractGame::Time ());
-	_parent = nullptr;
-	_behaviour = nullptr;
-	_material = nullptr;
+	_name = pFilename;
 	_collider = new Collider (pHalfExtents, pCenterOffset, pBigBox, pStatic);
 	_mesh = Mesh::load (config::MGE_MODEL_PATH + pFilename);
 }
 GameObject::GameObject (string pFilename, float pRadius, glm::vec3 pCenterOffset, bool pStatic)
 {
-	_name = pFilename + ":" + to_string (AbstractGame::Time ());
-	_parent = nullptr;
-	_behaviour = nullptr;
-	_material = nullptr;
+	_name = pFilename;
 	_collider = new Collider (pRadius, pCenterOffset, pStatic);
 	_mesh = Mesh::load (config::MGE_MODEL_PATH + pFilename);
 }
 //Empty constructor
 GameObject::GameObject ()
 {
-	_name = "[X]:" + to_string (AbstractGame::Time ());
-	_parent = nullptr;
-	_behaviour = nullptr;
-	_material = nullptr;
-	_mesh = nullptr;
-	_collider = nullptr;
 }
 //Constructor with axis-aligned box collider
 GameObject::GameObject (glm::vec3 pHalfExtents, glm::vec3 pCenterOffset, bool pBigBox, bool pStatic)
 {
-	_name = "[X]:" + to_string (AbstractGame::Time ());
-	_parent = nullptr;
-	_behaviour = nullptr;
-	_material = nullptr;
-	_mesh = nullptr;
 	_collider = new Collider (pHalfExtents, pCenterOffset, pBigBox, pStatic);
 }
 //Constructor with sphere collider
 GameObject::GameObject (float pRadius, glm::vec3 pCenterOffset, bool pStatic)
 {
-	_name = "[X]:" + to_string (AbstractGame::Time ());
-	_parent = nullptr;
-	_behaviour = nullptr;
-	_material = nullptr;
-	_mesh = nullptr;
 	_collider = new Collider (pRadius, pCenterOffset, pStatic);
 }
 //Destructor
@@ -124,6 +89,7 @@ GameObject::~GameObject()
 		delete child;
 		child = nullptr;
 	}
+	_children.clear ();
 }
 
 //////////////////////////////|	COLLISIONS
@@ -233,6 +199,11 @@ glm::vec3 GameObject::getLocalPosition() const
 
 void GameObject::setMaterial(AbstractMaterial* pMaterial)
 {
+	if (_material != nullptr)
+	{
+		delete _material;
+		_material = nullptr;
+	}
     _material = pMaterial;
 }
 
@@ -312,6 +283,7 @@ GameObject* GameObject::getParent() {
 
 void GameObject::_innerAdd (GameObject* pChild)
 {
+	if (pChild == nullptr) return;
 	_children.push_back (pChild);
 }
 

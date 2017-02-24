@@ -1,11 +1,12 @@
 #include "FontManager.hpp"
+#include <iostream>
 
 
 namespace JCPPEngine
 {
 
 	//Static fields
-	static std::map <std::string, sf::Font*> _fonts;
+	static std::map <std::string, sf::Font> _fonts;
 
 
 	//If necessary, creates requested font and then returns it
@@ -13,24 +14,13 @@ namespace JCPPEngine
 	{
 		if (_fonts.count (pFontFile) == 0)
 		{
-			sf::Font* font = new sf::Font ();
-			font->loadFromFile (pFontFile);
-			_fonts [pFontFile] = font;
-			return font;
+			_fonts [pFontFile] = sf::Font ();
+			if (!_fonts [pFontFile].loadFromFile (pFontFile))
+			{
+				std::cout<<"[ERROR]: could not load the font '"<<pFontFile<<"'!"<<std::endl;
+			}
 		}
-		return _fonts [pFontFile];
-	}
-
-
-	//Clear all used memory
-	void FontManager::Clean ()
-	{
-		std::map <std::string, sf::Font*>::iterator end = _fonts.end ();
-		for (std::map <std::string, sf::Font*>::iterator itr = _fonts.begin (); itr != end; ++itr)
-		{
-			delete itr->second;
-		}
-		_fonts.clear ();
+		return &_fonts [pFontFile];
 	}
 
 }

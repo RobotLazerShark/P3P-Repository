@@ -48,6 +48,6 @@ void MGEDemo::_initializeScene()
 
 MGEDemo::~MGEDemo()
 {
-	_game->clear (true);
+	_game->clear ();
 	delete _game;
 }

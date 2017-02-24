@@ -4,6 +4,9 @@
 #include <P3P/objects/Box.hpp>
 #include <P3P/objects/Door.hpp>
 #include <P3P/objects/Collectable.hpp>
+#include <mge/materials/LitMaterial.hpp>
+#include <JCPPEngine/KeyEvent.hpp>
+#include <JCPPEngine/InputManager.hpp>
 #include <JCPPEngine/Random.hpp>
 
 
@@ -206,7 +209,6 @@ bool Player::movePlayer (int pX, int pZ, bool pAnimate)
 
 
 //////////////////////////////|	EVENT-BASED FUNCTIONS
-
 //Cause the player to die, and reload the level
 void Player::die ()
 {
@@ -226,7 +228,7 @@ void Player::die ()
 void Player::ProcessEvent (JCPPEngine::Event* pEvent)
 {
 	JCPPEngine::KeyEvent* keyDownEvent = (JCPPEngine::KeyEvent*)pEvent;
-	if (keyDownEvent == nullptr || keyDownEvent->keyState () != JCPPEngine::InputManager::KEY_DOWN || _noMove)
+	if (keyDownEvent == nullptr || keyDownEvent->keyState () != JCPPEngine::InputManager::KEY_DOWN || _noMove || blockMovement)
 	{
 		return;
 	}
@@ -283,4 +285,17 @@ void Player::ProcessEvent (JCPPEngine::Event* pEvent)
 			_noMove = true;
 		}
 	}
+}
+
+//Check if the player has a certain item in their inventory
+bool Player::hasItem (std::string pItemName)
+{
+	for (int i = 0, size = inventory.size (); i < size; i ++)
+	{
+		if (inventory [i] == pItemName)
+		{
+			return true;
+		}
+	}
+	return false;
 }

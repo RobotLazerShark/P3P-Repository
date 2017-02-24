@@ -6,18 +6,20 @@
 
 Fan::Fan(int pX, int pZ, int pXDirection, int pYDirection, bool pReversed) : ButtonTarget()
 {
+	//set mode
+	_reversed = pReversed;
+
 	//Set up model
 	_model = new GameObject("cube_flat.obj");
 	_model->translate(glm::vec3(0, 0.5f, 0));
 	//Rotate fan to face push/pull direction
-//	_model->rotate (glm::radians (90.0f * ?), glm::vec3 (0, 1, 0));
-	if (!pReversed)
+	if (pXDirection == 0)
 	{
-		_model->setMaterial(new LitMaterial("Fan.jpg"));
+		_model->rotate (glm::radians (90.0f * pYDirection), glm::vec3 (0, 1, 0));
 	}
-	else
+	else if (pYDirection == 0)
 	{
-		_model->setMaterial(new LitMaterial("FanR.jpg"));
+		_model->rotate(glm::radians((pXDirection < 0) ? 180.0f : 0.0f), glm::vec3(0, 1, 0));
 	}
 	_model->setParent(this);
 	GameObject* subModel = new GameObject ("cube_flat.obj");
@@ -25,7 +27,8 @@ Fan::Fan(int pX, int pZ, int pXDirection, int pYDirection, bool pReversed) : But
 	_animator = new AnimationBehaviour ({ "Fan.txt", "FanReverse.txt" }, false);
 	subModel->setBehaviour (_animator);
 	subModel->setParent (_model);
-	_animator->playAnimation ((pReversed) ? 1 : 0, true);
+	_model->setMaterial (new LitMaterial (_reversed ? "FanR.png" : "Fan.png"));
+	_animator->playAnimation (_reversed ? 1 : 0, true);
 	translate(glm::vec3(pX * Level::TILESIZE, 0, pZ * Level::TILESIZE));
 
 	//save position
@@ -36,8 +39,6 @@ Fan::Fan(int pX, int pZ, int pXDirection, int pYDirection, bool pReversed) : But
 	_direction[0] = pXDirection;
 	_direction[1] = pYDirection;
 
-	//set mode
-	_reversed = pReversed;
 	//save items in visible area
 	for (int i = 0; i < _visibleAreaSize; i++)
 	{
@@ -85,11 +86,15 @@ bool Fan::setActive (bool pActive)
 	{
 		_active = true;
 		_reversed = !_reversed;
+		_model->setMaterial (new LitMaterial (_reversed ? "FanR.png" : "Fan.png"));
+		_animator->playAnimation (_reversed ? 1 : 0, true);
 	}
 	else if (!pActive && _active)
 	{
 		_active = true;
 		_reversed = !_reversed;
+		_model->setMaterial (new LitMaterial (_reversed ? "FanR.png" : "Fan.png"));
+		_animator->playAnimation (_reversed ? 1 : 0, true);
 	}
 	return true;
 }

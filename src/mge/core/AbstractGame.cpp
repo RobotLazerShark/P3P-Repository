@@ -1,5 +1,5 @@
 ﻿#include "AbstractGame.hpp"
-//#include <vld.h>
+#include <vld.h>
 #include <iostream>
 using namespace std;
 #include <mge/core/Mesh.hpp>
@@ -9,6 +9,9 @@ using namespace std;
 #include <mge/materials/LitMaterial.hpp>
 #include <mge/materials/TerrainMaterial.hpp>
 #include <mge/materials/WobbleMaterial.hpp>
+#include <JCPPEngine/TextureManager.hpp>
+#include <JCPPEngine/FontManager.hpp>
+#include <JCPPEngine/InputManager.hpp>
 #include "mge/core/World.hpp"
 #include <P3P/Level.hpp>
 
@@ -26,14 +29,20 @@ float AbstractGame::Time ()
 
 void AbstractGame::Stop ()
 {
+	unregisterForEvent (sf::Event::Closed);
+	unregisterForEvent (sf::Event::Resized);
+	unregisterForEvent (sf::Event::KeyPressed);
 	if (_luaParser != nullptr)
 	{
 		_luaParser->Clean ();
 		delete _luaParser;
+		_luaParser = nullptr;
 	}
 	JCPPEngine::SoundManager::Clean ();
-	JCPPEngine::TextureManager::Clean ();
-	_window->close ();
+	if (_window != nullptr)
+	{
+		_window->close ();
+	}
 }
 
 AbstractGame::AbstractGame():_window(NULL),_renderer(NULL),_world(NULL), _fps(0)
@@ -52,7 +61,18 @@ AbstractGame::AbstractGame():_window(NULL),_renderer(NULL),_world(NULL), _fps(0)
 AbstractGame::~AbstractGame()
 {
     //dtor
-    delete _window;
+    if (_luaParser != nullptr)
+    {
+	_luaParser->Clean ();
+	delete _luaParser;
+	_luaParser = nullptr;
+    }
+    JCPPEngine::SoundManager::Clean ();
+    if (_window != nullptr)
+    {
+	delete _window;
+	_window = nullptr;
+    }
     delete _renderer;
     delete _world;
     Mesh::ClearCache ();
@@ -167,9 +187,7 @@ void AbstractGame::run ()
 				//Update the lua program
 				if (_luaParser->Update (step))
 				{
-					_luaParser->Clean ();
-					delete _luaParser;
-					_luaParser = nullptr;//LuaParser is deleted, prevent accessing invalid memory address
+					Stop ();
 					break;
 				}
 			}
@@ -191,19 +209,7 @@ void AbstractGame::run ()
 			if (timeSinceLastRender != 0) _fps = 1.0f / timeSinceLastRender;
 		}
 		JCPPEngine::EventHandler::ProcessEvents ();
-		if (JCPPEngine::InputManager::GetKeyDown (sf::Keyboard::Escape))
-		{
-			if (_luaParser != nullptr)
-			{
-				_luaParser->Clean ();
-				delete _luaParser;
-			}
-			JCPPEngine::SoundManager::Clean ();
-			JCPPEngine::TextureManager::Clean ();
-			JCPPEngine::FontManager::Clean ();
-			_window->close ();
-		}
-		else if (JCPPEngine::InputManager::GetKeyDown (sf::Keyboard::Num1))
+		if (JCPPEngine::InputManager::GetKeyDown (sf::Keyboard::Num1))
 		{
 			_luaParser->Refresh ();
 		}
@@ -212,7 +218,7 @@ void AbstractGame::run ()
 			_luaParser->SafeRefresh ();
 		}
 	}
-	while (!JCPPEngine::InputManager::GetKeyDown (sf::Keyboard::Space))
+	while (!JCPPEngine::InputManager::GetKeyDown (sf::Keyboard::Space))//[TESTING]
 	{
 		//Wait until we close the window, so we can still read error messages.
 		JCPPEngine::InputManager::Update ();
@@ -230,17 +236,15 @@ void AbstractGame::_render () {
 
 void AbstractGame::ProcessEvent (sf::Event pEvent)
 {
-	bool exit = false;
-
 	switch (pEvent.type)
 	{
 		case sf::Event::Closed:
-			exit = true;
+			Stop ();
 			break;
 		case sf::Event::KeyPressed:
 			if (pEvent.key.code == sf::Keyboard::Escape)
 			{
-				exit = true;
+				Stop ();
 			}
 			break;
 		case sf::Event::Resized:
@@ -250,10 +254,5 @@ void AbstractGame::ProcessEvent (sf::Event pEvent)
 			break;
 		default:
 			break;
-	}
-
-	if (exit)
-	{
-		_window->close ();
 	}
 }

@@ -3,13 +3,16 @@
 #include <P3P/objects/Player.hpp>
 #include <P3P/Level.hpp>
 #include <mge/core/AbstractGame.hpp>
+#include <JCPPEngine/InputManager.hpp>
+#include <JCPPEngine/TextureManager.hpp>
+#include <JCPPEngine/FontManager.hpp>
 
 //Constructor
-Collectable::Collectable(int pX, int pZ, std::string pName, bool pCopyCollect) : GameObject()
+Collectable::Collectable(int pX, int pZ, std::string pName) : GameObject()
 {
 	_name = pName;
 	_hasDialog = false;
-	_copyCollect = pCopyCollect;
+	_copyCollect = false;
 
 	//Set up model
 	if (_copyCollect)
@@ -21,7 +24,7 @@ Collectable::Collectable(int pX, int pZ, std::string pName, bool pCopyCollect) :
 	}
 	else
 	{
-		_model = new GameObject("cube_flat.obj");
+		_model = new GameObject ("cube_flat.obj");
 		_model->setMaterial(new LitMaterial(glm::vec3(0.6f,0.6f,0)));
 		_model->translate(glm::vec3(0, 0.5f, 0));
 		_model->scale(0.5f);
@@ -37,6 +40,7 @@ Collectable::Collectable(int pX, int pZ, std::string pName, std::string pDialog,
 	_name = pName;
 	_hasDialog = true;
 	_copyCollect = pCopyCollect;
+	registerForEvent (JCPPEngine::Event::EventType::KeyDown);
 
 	//Set up model
 	if (_copyCollect)
@@ -48,7 +52,7 @@ Collectable::Collectable(int pX, int pZ, std::string pName, std::string pDialog,
 	}
 	else
 	{
-		_model = new GameObject("cube_flat.obj");
+		_model = new GameObject ("cube_flat.obj");
 		_model->setMaterial(new LitMaterial(glm::vec3(0.6f,0.6f,0)));
 		_model->translate(glm::vec3(0, 0.5f, 0));
 		_model->scale(0.5f);
@@ -69,10 +73,26 @@ Collectable::Collectable(int pX, int pZ, std::string pName, std::string pDialog,
 }
 Collectable::~Collectable ()
 {
+	setParent (nullptr);
+	if (_model != nullptr)
+	{
+		_model->setParent (nullptr);
+		delete _model;
+		_model = nullptr;
+	}
 	if (_hasDialog)
 	{
+		unregisterForEvent (JCPPEngine::Event::EventType::KeyDown);
+	}
+	if (_textBox != nullptr)
+	{
 		delete _textBox;
+		_textBox = nullptr;
+	}
+	if (_text != nullptr)
+	{
 		delete _text;
+		_text = nullptr;
 	}
 	GameObject::~GameObject ();
 }
@@ -81,6 +101,7 @@ Collectable::~Collectable ()
 //Update
 void Collectable::update (float pStep, bool pUpdateWorldTransform)
 {
+	GameObject::update (pStep, pUpdateWorldTransform);
 	if (_hasDialog)
 	{
 		if (Player::singletonInstance->_currentTile [0] == _playerPosition [0] && Player::singletonInstance->_currentTile [1] == _playerPosition [1])
@@ -94,9 +115,22 @@ void Collectable::update (float pStep, bool pUpdateWorldTransform)
 		{
 			//Stop displaying dialog
 			_showingDialog = false;
-			if (_collected && !_copyCollect)//Don't show the dialog again if not 'copied'
+			if (!_copyCollect)//Don't show the dialog again if not 'copied'
 			{
 				setParent (nullptr);
+				unregisterForEvent (JCPPEngine::Event::EventType::KeyDown);
+				if (_textBox != nullptr)
+				{
+					delete _textBox;
+					_textBox = nullptr;
+				}
+				if (_text != nullptr)
+				{
+					delete _text;
+					_text = nullptr;
+				}
+				Level::singletonInstance->deleteBuffer.push_back (this);
+				_hasDialog = false;
 			}
 			else
 			{
@@ -105,7 +139,41 @@ void Collectable::update (float pStep, bool pUpdateWorldTransform)
 			}
 		}
 	}
-	GameObject::update (pStep, pUpdateWorldTransform);
+}
+//Close textbox on keypress
+void Collectable::ProcessEvent (JCPPEngine::Event* pEvent)
+{
+	JCPPEngine::KeyEvent* tempEvent = (JCPPEngine::KeyEvent*)pEvent;
+	if (tempEvent->key () == sf::Keyboard::Key::Space && _showingDialog)
+	{
+		if (_showingDialog)
+		{
+			//Stop displaying dialog
+			_showingDialog = false;
+			if (!_copyCollect)//Don't show the dialog again if not 'copied'
+			{
+				setParent (nullptr);
+				unregisterForEvent (JCPPEngine::Event::EventType::KeyDown);
+				if (_textBox != nullptr)
+				{
+					delete _textBox;
+					_textBox = nullptr;
+				}
+				if (_text != nullptr)
+				{
+					delete _text;
+					_text = nullptr;
+				}
+				Level::singletonInstance->deleteBuffer.push_back (this);
+				_hasDialog = false;
+			}
+			else
+			{
+				_playerPosition [0] = -1;
+				_playerPosition [1] = -1;
+			}
+		}
+	}
 }
 
 
@@ -139,6 +207,8 @@ bool Collectable::collect (int pOldX, int pOldZ)
 	if (!_copyCollect)//Make object invisible/uninteractable
 	{
 		_model->setParent (nullptr);
+		delete _model;
+		_model = nullptr;
 		Level::map->objectTiles [_position [0]] [_position [1]] = (int)nullptr;
 		_playerPosition [0] = Player::singletonInstance->_currentTile [0];
 		_playerPosition [1] = Player::singletonInstance->_currentTile [1];

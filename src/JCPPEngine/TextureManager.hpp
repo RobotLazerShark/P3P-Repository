@@ -12,7 +12,6 @@ namespace JCPPEngine
 	{
 		public:
 			static sf::Texture* GetTexture (std::string pTextureFile);
-			static void Clean ();
 	};
 }
 

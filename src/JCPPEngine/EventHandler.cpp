@@ -79,12 +79,15 @@ namespace JCPPEngine
 	//Send events to registered listeners
 	void EventHandler::ProcessEvents ()
 	{
-		sf::Event tempEvent;
-		while (_window->pollEvent (tempEvent))
+		if (_window != nullptr)
 		{
-			for (int i = 0, size = _sfListeners [tempEvent.type].size (); i < size; i ++)
+			sf::Event tempEvent;
+			while (_window->pollEvent (tempEvent))
 			{
-				_sfListeners [tempEvent.type] [i]->ProcessEvent (tempEvent);
+				for (int i = 0, size = _sfListeners [tempEvent.type].size (); i < size; i ++)
+				{
+					_sfListeners [tempEvent.type] [i]->ProcessEvent (tempEvent);
+				}
 			}
 		}
 		if (_eventQueue.size () > 0)

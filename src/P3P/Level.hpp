@@ -16,7 +16,7 @@ class Collectable;
 class Level : public GameObject
 {
 	protected:
-		int _levelNumber = 0;
+		int _levelNumber = -1;
 		int _levelKey = 1;
 		bool _isHub = false;
 		int _nextLevel = -1;
@@ -24,22 +24,25 @@ class Level : public GameObject
 		std::vector <GameObject*> _nonWalkables;
 		std::vector <std::string> _inventoryCopy;
 		std::vector<Quest*> _activeQuestsCopy;
+		int _questTalksCopy = 0;
 		bool _stop = false;
 	public:
 		Level (int pLevelNumber);
 		~Level ();
 		void increaseLevelKey ();
 		int levelKey ();
+		bool isHub ();
 		bool levelCompleted = false;
 		bool setMap (int pLevelNumber);
 		void loadMap ();
-		void clear (bool pEndGame = false);
+		void clear ();
 		void loadLevel (int pLevelNumber);
 		void reloadLevel ();
 		static const float TILESIZE;
 		static LevelMap* map;
 		static Level* singletonInstance;
 		std::vector <sf::Drawable*>drawBuffer;
+		std::vector <Collectable*>deleteBuffer;
 		void update (float pStep, bool pUpdateWorldTransform = false) override;
 		static void render (sf::RenderWindow* pWindow);
 };

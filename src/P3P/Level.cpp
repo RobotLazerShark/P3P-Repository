@@ -31,7 +31,7 @@ Level::Level (int pLevelNumber)
 {
 	if (singletonInstance != nullptr)
 	{
-		return;
+		delete singletonInstance;
 	}
 	singletonInstance = this;
 	setParent (World::singletonInstance);
@@ -42,12 +42,24 @@ Level::Level (int pLevelNumber)
 Level::~Level ()
 {
 	delete map;
-	_inventoryCopy.clear ();
 	for (int i = 0, size = _activeQuestsCopy.size (); i < size; i ++)
 	{
-		delete _activeQuestsCopy [i];
+		if (_activeQuestsCopy [i] != nullptr)
+		{
+			delete _activeQuestsCopy [i];
+		}
 	}
-	_activeQuestsCopy.clear ();
+	//Make sure there are no lingering singletons
+	if (Player::singletonInstance != nullptr)
+	{
+		Player::singletonInstance->setParent (nullptr);
+		delete Player::singletonInstance;
+	}
+	if (Npc::singletonInstance != nullptr)
+	{
+		Npc::singletonInstance->setParent (nullptr);
+		delete Npc::singletonInstance;
+	}
 	singletonInstance = nullptr;
 	setParent (nullptr);
 	GameObject::~GameObject ();
@@ -69,17 +81,6 @@ void Level::update (float pStep, bool pUpdateWorldTransform)
 	//there won't be any issues with objects being deleted when the function returns.
 	if (_nextLevel != -1)
 	{
-		//Make sure the copies are not linked to the originals
-		if (Player::singletonInstance != nullptr && Player::singletonInstance->inventory.size () > 0)
-		{
-			_inventoryCopy.clear ();
-			_inventoryCopy = std::vector <std::string> (Player::singletonInstance->inventory);
-		}
-		if (Npc::singletonInstance != nullptr && Npc::singletonInstance->activeQuests.size () > 0)
-		{
-			_activeQuestsCopy.clear ();
-			_activeQuestsCopy = std::vector <Quest*> (Npc::singletonInstance->activeQuests);
-		}
 		clear ();
 		if (!setMap (_nextLevel))
 		{
@@ -101,6 +102,11 @@ void Level::render (sf::RenderWindow* pWindow)
 		pWindow->draw (*Level::singletonInstance->drawBuffer [i]);
 		pWindow->popGLStates ();
 	}
+}
+
+bool Level::isHub ()
+{
+	return _isHub;
 }
 
 //////////////////////////////|	LEVEL ACCESS
@@ -415,6 +421,7 @@ void Level::loadMap ()
 					{
 						((Npc*)temp)->activeQuests = std::vector <Quest*> (_activeQuestsCopy);
 					}
+					Npc::singletonInstance->questTalks = _questTalksCopy;
 					break;
 				case 37:
 					//Gate
@@ -524,13 +531,13 @@ void Level::loadMap ()
 				break;
 			case 36:
 				//Collectable: property = name & stay & dialog
-				if (object->properties.size () > 2)
+				if (object->properties.size () > 1)
 				{
 					temp = new Collectable (object->x, object->z, object->properties [0], object->properties [2], (std::stoi (object->properties [1]) > 0));
 				}
 				else
 				{
-					temp = new Collectable (object->x, object->z, object->properties [0], (std::stoi (object->properties [1]) > 0));
+					temp = new Collectable (object->x, object->z, object->properties [0]);
 				}
 				temp->setParent (this);
 				//If there is an object already in this place, delete it.
@@ -563,8 +570,24 @@ void Level::loadMap ()
 }
 
 //Delete all objects in the level
-void Level::clear (bool pEndGame)
+void Level::clear ()
 {
+	//Copy important lists
+	if (Player::singletonInstance != nullptr && Player::singletonInstance->inventory.size () > 0)
+	{
+		_inventoryCopy.clear ();
+		_inventoryCopy = std::vector <std::string> (Player::singletonInstance->inventory);
+	}
+	if (Npc::singletonInstance != nullptr)
+	{
+		_questTalksCopy = Npc::singletonInstance->questTalks;
+		if (Npc::singletonInstance->activeQuests.size () > 0)
+		{
+			_activeQuestsCopy.clear ();
+			_activeQuestsCopy = std::vector <Quest*> (Npc::singletonInstance->activeQuests);
+		}
+	}
+
 	//Delete gates
 	for (Gate* gate : _gates)
 	{
@@ -573,6 +596,12 @@ void Level::clear (bool pEndGame)
 		delete gate;
 	}
 	_gates.clear ();
+	//Delete collectables that have not yet been deleted
+	for (Collectable* collectable : deleteBuffer)
+	{
+		delete collectable;
+	}
+	deleteBuffer.clear ();
 
 	//Delete decorative, non-walkable baselayer tiles
 	for (int i = 0, size = _nonWalkables.size (); i < size; i ++)
@@ -583,7 +612,6 @@ void Level::clear (bool pEndGame)
 	_nonWalkables.clear ();
 
 	//Delete platforms and objects
-	_gates.clear ();
 	GameObject* temp;
 	int ptr;
 	for (int x = 0; x < map->width; x ++)
@@ -621,29 +649,6 @@ void Level::clear (bool pEndGame)
 	map->xmlObjects.clear ();
 
 	World::singletonInstance->getMainCamera ()->setBehaviour (nullptr);
-
-	//If we're clearing up the entire game
-	if (pEndGame)
-	{
-		for (int i = 0, size = _activeQuestsCopy.size (); i < size; i ++)
-		{
-			if (_activeQuestsCopy [i] != nullptr)
-			{
-				delete _activeQuestsCopy [i];
-			}
-		}
-		//Make sure there are no lingering singletons
-		if (Player::singletonInstance != nullptr)
-		{
-			Player::singletonInstance->setParent (nullptr);
-			delete Player::singletonInstance;
-		}
-		if (Npc::singletonInstance != nullptr)
-		{
-			Npc::singletonInstance->setParent (nullptr);
-			delete Npc::singletonInstance;
-		}
-	}
 }
 
 //Clear everything in the level, and build a new level

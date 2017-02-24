@@ -3,12 +3,6 @@
 
 
 //Include files
-#include <stdio.h>
-#include <glm.hpp>
-#include <cmath>
-#include <iostream>
-#include <string>
-#include <vector>
 #include <SFML/Graphics.hpp>
 #include <mge/config.hpp>
 #include <mge/lua/lua.hpp>
@@ -40,14 +34,15 @@ class LuaParser : public JCPPEngine::AbstractListener
 		std::string _luaFile;
 		std::string _currentFunction;
 		bool _errorRaised = false;
+		bool _spacePress = false;
 		JCPPEngine::MouseEvent* _mouseEvent = nullptr;
 		std::vector <sf::Drawable*> _drawBuffer;
 		GameObject* _curScene = nullptr;
-		float _yieldTimer = -1;
+		float _yieldTimer = -0.1f;
 		void ProcessEvent (JCPPEngine::Event* pEvent) override;
 	private:
 		void cleanDrawBuffer ();
-		bool _startFrame;
+		bool _startFrame = false;
 		lua_State* _luaMain = nullptr;
 		lua_State* _lua = nullptr;
 		int _originalStatePointerValue;//Needed, becuase somehow lua corrupts the pointer on exit.

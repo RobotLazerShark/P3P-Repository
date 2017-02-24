@@ -54,8 +54,9 @@
   </object>
   <object id="10" gid="36" x="448" y="256" width="64" height="64">
    <properties>
-    <property name="Name" value="Item 2"/>
+    <property name="Name" value="Item 1"/>
     <property name="Type" value="0"/>
+    <property name="Text" value="This is a collectable too.|Note that dialog for either type of collectable is optional.|You can simply remove/not add the 'Text' property."/>
    </properties>
   </object>
   <object id="12" gid="8" x="704" y="1024" width="64" height="64">

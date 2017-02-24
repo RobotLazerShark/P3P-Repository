@@ -71,7 +71,7 @@ class GameObject
 		GameObject* getChildAt (int pIndex);
 	protected:
 		Collider* _collider = nullptr;
-		std::string _name;
+		std::string _name = "[X]";
 		glm::mat4 _transform;
 		GameObject* _parent = nullptr;
 		std::vector<GameObject*> _children;
@@ -82,7 +82,7 @@ class GameObject
 		void _innerAdd (GameObject* pChild);
 		void _innerRemove (GameObject* pChild);
 	    private:
-		mutable bool _dirtyWorldTransform;
+		mutable bool _dirtyWorldTransform = false;
 		bool _dirtyCollider = false;
 		mutable glm::mat4 _worldTransform;
 		bool _updateChildTransforms = false;

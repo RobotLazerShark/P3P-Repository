@@ -22,7 +22,6 @@ DoomSprite::DoomSprite (std::string pFilename) : DoomObject ()
 	}
 	else
 	{
-		std::cout << "[ERROR]: The file '" + pFilename + "' could not be loaded!" << std::endl;
 		_valid = false;
 	}
 	setMaterial ((AbstractMaterial*)(this));
@@ -46,7 +45,6 @@ DoomSprite::DoomSprite (glm::vec3 pPosition, std::string pFilename) : DoomObject
 	}
 	else
 	{
-		std::cout << "[ERROR]: The file '" + pFilename + "' could not be loaded!" << std::endl;
 		_valid = false;
 	}
 	setMaterial ((AbstractMaterial*)(this));

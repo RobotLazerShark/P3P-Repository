@@ -8,50 +8,32 @@
 DoomText::DoomText (std::string pText, std::string pFontFile, unsigned int pSize, glm::vec3 pColor) : DoomObject ()
 {
 	pFontFile = "fonts/" + pFontFile;
-	sf::Font* font = JCPPEngine::FontManager::GetFont (pFontFile);
-	if (font != nullptr)
-	{
-		_text = new sf::Text (pText, *font, pSize);
-		sf::FloatRect size = _text->getLocalBounds ();
-		_imageHalfSize = glm::vec2 (size.width * 0.5f, size.height * 0.5f);
-		_hitboxHalfSize = _imageHalfSize;
-		_hitboxOffset = glm::vec2 (0, 0);
-		_text->setOrigin (_hitboxHalfSize.x, _hitboxHalfSize.y);//Set origin at center - center
-		_screenPosition = glm::vec2 (AbstractGame::windowWidth * 0.5f, AbstractGame::windowHeight * 0.5f);
-		_text->setPosition (_screenPosition.x, _screenPosition.y);
-		_text->setFillColor (sf::Color ((int)(pColor.r * 255), (int)(pColor.g * 255), (int)(pColor.b * 255)));
-		_valid = true;
-	}
-	else
-	{
-		std::cout << "[ERROR]: The file '" + pFontFile + "' could not be loaded!" << std::endl;
-		_valid = false;
-	}
+	_text = new sf::Text (pText, *JCPPEngine::FontManager::GetFont (pFontFile), pSize);
+	sf::FloatRect size = _text->getLocalBounds ();
+	_imageHalfSize = glm::vec2 (size.width * 0.5f, size.height * 0.5f);
+	_hitboxHalfSize = _imageHalfSize;
+	_hitboxOffset = glm::vec2 (0, 0);
+	_text->setOrigin (_hitboxHalfSize.x, _hitboxHalfSize.y);//Set origin at center - center
+	_screenPosition = glm::vec2 (AbstractGame::windowWidth * 0.5f, AbstractGame::windowHeight * 0.5f);
+	_text->setPosition (_screenPosition.x, _screenPosition.y);
+	_text->setFillColor (sf::Color ((int)(pColor.r * 255), (int)(pColor.g * 255), (int)(pColor.b * 255)));
+	_valid = true;
 	setMaterial ((AbstractMaterial*)(this));
 }
 //Constructor for when we know the position
 DoomText::DoomText (std::string pText, std::string pFontFile, unsigned int pSize, glm::vec3 pPosition, glm::vec3 pColor) : DoomObject (pPosition)
 {
 	pFontFile = "fonts/" + pFontFile;
-	sf::Font* font = JCPPEngine::FontManager::GetFont (pFontFile);
-	if (font != nullptr)
-	{
-		_text = new sf::Text (pText, *font, pSize);
-		sf::FloatRect size = _text->getLocalBounds ();
-		_imageHalfSize = glm::vec2 (size.width * 0.5f, size.height * 0.5f);
-		_hitboxHalfSize = _imageHalfSize;
-		_hitboxOffset = glm::vec2 (0, 0);
-		_text->setOrigin (_hitboxHalfSize.x, size.height);//Set origin at center - bottom
-		_screenPosition = glm::vec2 (AbstractGame::windowWidth * 0.5f, AbstractGame::windowHeight * 0.5f);
-		_text->setPosition (_screenPosition.x, _screenPosition.y);
-		_text->setFillColor (sf::Color ((int)(pColor.r * 255), (int)(pColor.g * 255), (int)(pColor.b * 255)));
-		_valid = true;
-	}
-	else
-	{
-		std::cout << "[ERROR]: The file '" + pFontFile + "' could not be loaded!" << std::endl;
-		_valid = false;
-	}
+	_text = new sf::Text (pText, *JCPPEngine::FontManager::GetFont (pFontFile), pSize);
+	sf::FloatRect size = _text->getLocalBounds ();
+	_imageHalfSize = glm::vec2 (size.width * 0.5f, size.height * 0.5f);
+	_hitboxHalfSize = _imageHalfSize;
+	_hitboxOffset = glm::vec2 (0, 0);
+	_text->setOrigin (_hitboxHalfSize.x, size.height);//Set origin at center - bottom
+	_screenPosition = glm::vec2 (AbstractGame::windowWidth * 0.5f, AbstractGame::windowHeight * 0.5f);
+	_text->setPosition (_screenPosition.x, _screenPosition.y);
+	_text->setFillColor (sf::Color ((int)(pColor.r * 255), (int)(pColor.g * 255), (int)(pColor.b * 255)));
+	_valid = true;
 	setMaterial ((AbstractMaterial*)(this));
 }
 

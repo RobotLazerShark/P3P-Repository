@@ -149,7 +149,7 @@ LevelMap* LevelImporter::ReadFile (std::string pFilename)
 					while (line [strPos] != '"')
 					{
 						//If we haven't reached the end of the value, add the character to the value.
-						temp += line [strPos];
+						temp += (line [strPos] == '|') ? '\n' : line [strPos];
 						strPos ++;
 						if (strPos >= line.length ())
 						{

@@ -12,7 +12,6 @@ namespace JCPPEngine
 	{
 		public:
 			static sf::Font* GetFont (std::string pFontFile);
-			static void Clean ();
 	};
 }
 

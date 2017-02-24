@@ -6,7 +6,7 @@ namespace JCPPEngine
 {
 
 	//Static fields
-	static std::map <std::string, sf::SoundBuffer*> _buffers;
+	static std::map <std::string, sf::SoundBuffer> _buffers;
 	static std::vector <sf::Sound*> _sounds;
 	static std::vector <sf::Music*> _music;
 	static const int MAXLOOPING = 5;
@@ -19,15 +19,14 @@ namespace JCPPEngine
 	{
 		if (_buffers.count (pSoundFile) == 0)
 		{
-			sf::SoundBuffer* buffer = new sf::SoundBuffer ();
-			if (!buffer->loadFromFile (pSoundFile))
+			_buffers [pSoundFile] = sf::SoundBuffer ();
+			if (!_buffers [pSoundFile].loadFromFile (pSoundFile))
 			{
+				std::cout<<"[ERROR]: could not load the sound '"<<pSoundFile<<"'!"<<std::endl;
 				return nullptr;
 			}
-			_buffers [pSoundFile] = buffer;
-			return buffer;
 		}
-		return _buffers [pSoundFile];
+		return &_buffers [pSoundFile];
 	}
 
 
@@ -143,12 +142,6 @@ namespace JCPPEngine
 	//Clean out all used memory
 	void SoundManager::Clean ()
 	{
-		std::map <std::string, sf::SoundBuffer*>::iterator end = _buffers.end ();
-		for (std::map <std::string, sf::SoundBuffer*>::iterator itr = _buffers.begin (); itr != end; ++itr)
-		{
-			delete itr->second;
-		}
-		_buffers.clear ();
 		//Clear all non-looping audio
 		if (_sounds.size () > 0)
 		{

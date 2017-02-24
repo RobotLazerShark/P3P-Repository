@@ -1,5 +1,4 @@
 #include "AbstractListener.hpp"
-using namespace std;
 
 
 namespace JCPPEngine

@@ -27,7 +27,6 @@ DoomAnimation::DoomAnimation (std::string pFilename, int pFrameWidth, int pFrame
 	}
 	else
 	{
-		std::cout << "[ERROR]: The file '" + pFilename + "' could not be loaded!" << std::endl;
 		_valid = false;
 	}
 	setMaterial ((AbstractMaterial*)(this));
@@ -56,7 +55,6 @@ DoomAnimation::DoomAnimation (glm::vec3 pPosition, std::string pFilename, int pF
 	}
 	else
 	{
-		std::cout << "[ERROR]: The file '" + pFilename + "' could not be loaded!" << std::endl;
 		_valid = false;
 	}
 	setMaterial ((AbstractMaterial*)(this));
