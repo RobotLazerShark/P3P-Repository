@@ -22,9 +22,9 @@ Npc::Npc(int pX, int pZ) : GameObject()
 	singletonInstance = this;
 
 	//Set up model
-	_model = new GameObject("cube_flat.obj");
-	_model->setMaterial(new LitMaterial("Npc.jpg"));
-	_model->translate(glm::vec3(0, 0.5f, 0));
+	_model = new GameObject("PowerBox.obj");
+	_material = new GlitchMaterial("PowerBox.png");
+	_model->setMaterial(_material);
 	_model->setParent(this);
 	//Set up textbox
 	_textBox = new sf::Sprite (*JCPPEngine::TextureManager::GetTexture ("images/TextBox.png"));
@@ -51,6 +51,12 @@ Npc::~Npc ()
 //update npc
 void Npc::update (float pStep, bool pUpdateWorldTransform)
 {
+	_glitchIntensity -= pStep * 0.1f;
+	if (_glitchIntensity < 0)
+	{
+		_glitchIntensity = 0;
+	}
+	_material->SetGlitchIntensity (_glitchIntensity);
 	if (talking)
 	{
 		if (Player::singletonInstance->_currentTile [0] != _playerPosition [0] || Player::singletonInstance->_currentTile [1] != _playerPosition [1])

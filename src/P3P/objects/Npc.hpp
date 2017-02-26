@@ -3,7 +3,7 @@
 
 //Include files
 #include <mge/core/GameObject.hpp>
-#include <mge/materials/LitMaterial.hpp>
+#include <mge/materials/GlitchMaterial.hpp>
 #include <P3P/Quest.hpp>
 #include <SFML\Graphics.hpp>
 
@@ -26,6 +26,8 @@ public:
 	int position [2] = { 0, 0 };
 private:
 	GameObject* _model = nullptr;
+	GlitchMaterial* _material = nullptr;
+	float _glitchIntensity = 1;
 	int _playerPosition [2] = { -1, -1 };
 	sf::Sprite* _textBox = nullptr;
 	sf::Text* _text = nullptr;

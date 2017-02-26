@@ -11,7 +11,7 @@ out vec2 texCoord;
 
 void main (void)
 {
-	gl_Position = MVPmatrix * vec4 (vertex,1);//.x, vertex.y + (sin (time * 2 + length (vertex) * 2) * 0.05f + 0.05f), vertex.z, 1);
+	gl_Position = MVPmatrix * vec4 (vertex,1);
 	texCoord = uv * scale;
 	if (time > 0)
 	{
