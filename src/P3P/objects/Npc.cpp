@@ -51,12 +51,6 @@ Npc::~Npc ()
 //update npc
 void Npc::update (float pStep, bool pUpdateWorldTransform)
 {
-	_glitchIntensity -= pStep * 0.1f;
-	if (_glitchIntensity < 0)
-	{
-		_glitchIntensity = 0;
-	}
-	_material->SetGlitchIntensity (_glitchIntensity);
 	if (talking)
 	{
 		if (Player::singletonInstance->_currentTile [0] != _playerPosition [0] || Player::singletonInstance->_currentTile [1] != _playerPosition [1])
@@ -89,6 +83,8 @@ void Npc::talk()
 			{
 				if (quest->_goalItem == Player::singletonInstance->inventory[j])
 				{
+					_glitchIntensity -= quest->fixIntensity;
+					_material->SetGlitchIntensity (_glitchIntensity);
 					//The item will remain in the player's inventory, so in lua dialog can respond to the completion of this quest
 					delete quest;
 					activeQuests [i] = nullptr;
@@ -121,6 +117,8 @@ void Npc::displayDialog (std::string pText)
 			{
 				if (quest->_goalItem == Player::singletonInstance->inventory[j])
 				{
+					_glitchIntensity -= quest->fixIntensity;
+					_material->SetGlitchIntensity (_glitchIntensity);
 					//The item will remain in the player's inventory, so in lua dialog can respond to the completion of this quest
 					delete quest;
 					activeQuests [i] = nullptr;

@@ -2455,9 +2455,9 @@ int checkInventory (lua_State* pLua)
 //Give the player a quest. Before this quest can be completed, all previous quests have to be completed first.
 int giveQuest (lua_State* pLua)
 {
-	if (lua_isstring (pLua, -1) && Npc::singletonInstance != nullptr)
+	if (lua_isstring (pLua, -2) && lua_isnumber (pLua, -1) && Npc::singletonInstance != nullptr)
 	{
-		Npc::singletonInstance->addQuest (new Quest ("", lua_tostring (pLua, -1)));
+		Npc::singletonInstance->addQuest (new Quest ("", lua_tostring (pLua, -2), lua_tonumber (pLua, -1)));
 	}
 	lua_settop (pLua, 0);
 	return 0;

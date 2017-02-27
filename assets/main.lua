@@ -32,7 +32,7 @@ function explainControls ()
 	Npc.showDialog ("Hello!\nUse the arrowkeys or WASD to move around.\nPress R to restart at any time.\nPress SPACE to continue dialog.\n\t<[Press SPACE to continue]>")
 	Player.waitForKey ()--This will pause the lua program until SPACE has been pressed.
 	Npc.updateDialog ("I will now give you a quest.\nI need you to find an item for me.\nIt is a [visual description].\nIt's at the end of Level 2, but you\nwill need to go through level 1 first.\n\t<[Press SPACE to continue]>")
-	Player.giveQuest ("Item 1")
+	Player.giveQuest ("Item 1", 0.5)
 	Player.waitForKey ()
 	Npc.stopDialog ()--Hide the textbox and text
 	Player.lock (false);--The player is now allowed to move again
@@ -55,7 +55,7 @@ function explainQuest (pCurrentQuest, pGiveNewQuest)
 		Player.waitForKey ()
 		if pGiveNewQuest
 		then
-			Player.giveQuest ("Item 2")
+			Player.giveQuest ("Item 2", 0.5)
 		end
 		Npc.stopDialog ()
 		Player.lock (false)
