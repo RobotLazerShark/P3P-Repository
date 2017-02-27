@@ -26,6 +26,8 @@ class Level : public GameObject
 		std::vector<Quest*> _activeQuestsCopy;
 		int _questTalksCopy = 0;
 		bool _stop = false;
+		bool _reloading = false;
+		int _bossLevelNumber = 5;
 	public:
 		Level (int pLevelNumber);
 		~Level ();

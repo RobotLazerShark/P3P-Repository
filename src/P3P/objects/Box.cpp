@@ -67,7 +67,7 @@ void Box::stopAnimation ()
 
 
 //Move the box by a given amount of tiles
-void Box::moveBox (int pX, int pZ, bool pAnimate)
+bool Box::move (int pX, int pZ, bool pAnimate)
 {
     //update position
     _oldTile [0] = _currentTile [0];
@@ -106,4 +106,6 @@ void Box::moveBox (int pX, int pZ, bool pAnimate)
 		    boxSpot->taken = false;
 	    }
     }
+
+    return true;
 }

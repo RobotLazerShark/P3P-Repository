@@ -1,7 +1,7 @@
 #include "P3P/objects/Player.hpp"
 #include <P3P/objects/Npc.hpp>
 #include <P3P/Level.hpp>
-#include <P3P/objects/Box.hpp>
+#include <P3P/Moveable.hpp>
 #include <P3P/objects/Door.hpp>
 #include <P3P/objects/Collectable.hpp>
 #include <mge/materials/LitMaterial.hpp>
@@ -112,7 +112,7 @@ bool Player::movePlayer (int pX, int pZ, bool pAnimate)
     if (Level::map->objectTiles [_currentTile [0]] [_currentTile [1]] != (int)nullptr)
     {
         //Check if the new position contains a special object
-        Box* box = dynamic_cast <Box*> ((GameObject*)Level::map->objectTiles [_currentTile [0]] [_currentTile [1]]);
+        Moveable* box = dynamic_cast <Moveable*> ((GameObject*)Level::map->objectTiles [_currentTile [0]] [_currentTile [1]]);
         Door* door = dynamic_cast <Door*> ((GameObject*)Level::map->objectTiles [_currentTile [0]] [_currentTile [1]]);
 	Collectable* collectable = dynamic_cast <Collectable*> ((GameObject*)Level::map->objectTiles [_currentTile [0]] [_currentTile [1]]);
 	if (Npc::singletonInstance != nullptr && _currentTile [0] == Npc::singletonInstance->position [0] && _currentTile [1] == Npc::singletonInstance->position [1])
@@ -150,7 +150,13 @@ bool Player::movePlayer (int pX, int pZ, bool pAnimate)
 		)
 		{
 			//we can move the box
-			box->moveBox (pX, pZ);
+			if (!box->move (pX, pZ))
+			{
+				//the object is locked into place
+				_currentTile [0] = _oldTile [0];
+				_currentTile [1] = _oldTile [1];
+				return false;
+			}
 		}
 		else
 		{

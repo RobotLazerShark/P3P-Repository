@@ -6,17 +6,18 @@
 #include <mge/core/GameObject.hpp>
 #include <mge/materials/LitMaterial.hpp>
 #include <mge/behaviours/AnimationBehaviour.hpp>
+#include <P3P/Moveable.hpp>
 
 //Forward declarations
 class LevelMap;
 
 
-class Box : public GameObject
+class Box : public GameObject, public Moveable
 {
     public:
         Box (int pX, int pZ, bool pPowered);
-        void moveBox (int pX, int pZ, bool pAnimate = true);
-	void stopAnimation ();
+        bool move (int pX, int pZ, bool pAnimate = true) override;
+	void stopAnimation () override;
         //Preferably these variables would be private, but they are needed in a globalspace function
         //They use the private name conventions because they should be used as such
 	int _currentTile [2] = { 0, 0 };

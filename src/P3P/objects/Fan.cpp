@@ -1,6 +1,6 @@
 #include <P3P/objects/Fan.hpp>
 #include <P3P/Level.hpp>
-#include <P3P/objects/Box.hpp>
+#include <P3P/Moveable.hpp>
 #include <P3P/objects/Player.hpp>
 
 
@@ -152,7 +152,7 @@ bool Fan::checkForChanges() //return true if any changes found
 
 void Fan::push() //moves every box in vision by 1 tile if possible
 {
-	Box* box;
+	Moveable* box;
 	Player* player;
 	if (_changeIndex == _visibleAreaSize)
 	{
@@ -166,12 +166,12 @@ void Fan::push() //moves every box in vision by 1 tile if possible
 		}
 		if (_visibleArea [i+1] == (int)nullptr && _visibleArea [i] != (int)nullptr)
 		{
-			box = dynamic_cast <Box*> ((GameObject*)_visibleArea [i]);
+			box = dynamic_cast <Moveable*> ((GameObject*)_visibleArea [i]);
 			player = dynamic_cast <Player*> ((GameObject*)_visibleArea [i]);
 			if (box != nullptr)
 			{
 				box->stopAnimation ();
-				box->moveBox(_direction[0], _direction[1], (_visibleArea [i+1] == (_visibleAreaSize-1) || _visibleArea [i+2] != (int)nullptr));
+				box->move (_direction[0], _direction[1], (_visibleArea [i+1] == (_visibleAreaSize-1) || _visibleArea [i+2] != (int)nullptr));
 			}
 			else if (player != nullptr)
 			{
@@ -184,18 +184,18 @@ void Fan::push() //moves every box in vision by 1 tile if possible
 
 void Fan::pull()
 {
-	Box* box;
+	Moveable* box;
 	Player* player;
 	for (int i = 1; i <= _changeIndex; i ++)//Go through all positions that are affected by the change
 	{
 		if (_visibleArea[i - 1] == (int)nullptr)
 		{
-			box = dynamic_cast <Box*> ((GameObject*)_visibleArea [i]);
+			box = dynamic_cast <Moveable*> ((GameObject*)_visibleArea [i]);
 			player = dynamic_cast <Player*> ((GameObject*)_visibleArea [i]);
 			if (box != nullptr)
 			{
 				box->stopAnimation ();
-				box->moveBox(-_direction[0], -_direction[1], false);
+				box->move(-_direction[0], -_direction[1], false);
 			}
 			else if (player != nullptr)
 			{
