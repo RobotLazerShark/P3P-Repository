@@ -171,7 +171,8 @@ bool Level::setMap (int pLevelNumber)
 
 	if (_levelNumber == 0)
 	{
-		map = LevelImporter::ReadFile ("Hub.tmx");
+		//map = LevelImporter::ReadFile ("Hub.tmx");
+		map = LevelImporter::ReadFile("Level2.tmx");
 	}
 	else if (_levelNumber == _bossLevelNumber)
 	{
@@ -528,6 +529,13 @@ void Level::loadMap ()
 					{
 						map->objectTiles[x - 1][y] = (int)new GameObject();
 					}
+					break;
+				case 40:
+					temp = new GameObject("cube_flat.obj");
+					temp->setMaterial(new LitMaterial("Wall.jpg"));
+					temp->setParent(this);
+					temp->translate(glm::vec3(TILESIZE * x, 0.5f, TILESIZE * y));
+					map->objectTiles[x][y] = (int)temp;
 					break;
 				case 41: //Fan right
 					temp = new Fan(x, y, 1, 0, false);
