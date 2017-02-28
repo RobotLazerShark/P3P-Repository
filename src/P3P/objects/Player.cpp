@@ -55,8 +55,10 @@ Player::Player (int pX, int pZ, ProgressTracker* pProgressTracker, int pSkin) : 
 			"PlayerRotationUpLeft.txt","PlayerRotationUpRight.txt","PlayerRotationUpDown.txt",
 			"PlayerRotationLeftUp.txt","PlayerRotationLeftRight.txt","PlayerRotationLeftDown.txt",
 			"PlayerRotationRightUp.txt","PlayerRotationRightLeft.txt","PlayerRotationRightDown.txt",
-			"PlayerRotationDownUp.txt","PlayerRotationDownLeft.txt","PlayerRotationDownRight.txt"
-		});
+			"PlayerRotationDownUp.txt","PlayerRotationDownLeft.txt","PlayerRotationDownRight.txt",
+			"PlayerSpawn.txt"
+	});
+
 	_model->setBehaviour (_rotationAnimator);
 
 
@@ -65,6 +67,8 @@ Player::Player (int pX, int pZ, ProgressTracker* pProgressTracker, int pSkin) : 
 	_currentTile [1] = pZ;
 	_oldTile [0] = _currentTile [0];
 	_oldTile [1] = _currentTile [1];
+
+	_rotationAnimator->playAnimation(12);
 }
 
 //Destructor
