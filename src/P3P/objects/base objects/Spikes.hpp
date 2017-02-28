@@ -22,6 +22,8 @@ private:
 	bool _stopped = false;
 	bool _spikesUp = false;
 	const float SWITCH_TIME = 2.25f;
+
+	bool playerIsKilled = false;
 };
 
 #endif

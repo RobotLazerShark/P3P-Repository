@@ -808,7 +808,6 @@ void Level::clear ()
 	map->xmlObjects.clear ();
 
 	//Delete hints
-	hud->reset();
 	for (int i = 0, size = hints.size(); i < size; i++)
 	{
 		hints[i]->setParent(nullptr);

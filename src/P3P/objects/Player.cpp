@@ -379,6 +379,8 @@ void Player::die ()
 	{
 		return;
 	}
+
+	Level::singletonInstance->hud->reset();
 	_noMove = true;
 	_dead = true;
 	_shadow->setParent (nullptr);

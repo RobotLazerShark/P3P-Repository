@@ -31,7 +31,7 @@ class Level : public GameObject
 		bool _reloading = false;
 		int _bossLevelNumber = 5;
 		int _playerSkin = 1;
-		Hud * hud = nullptr;
+		
 	public:
 		Level (int pPlayerSkin);
 		~Level ();
@@ -52,6 +52,7 @@ class Level : public GameObject
 		void update (float pStep, bool pUpdateWorldTransform = false) override;
 		static void render (sf::RenderWindow* pWindow);
 
+		Hud * hud = nullptr;
 		std::vector<Hint*> hints;
 };
 

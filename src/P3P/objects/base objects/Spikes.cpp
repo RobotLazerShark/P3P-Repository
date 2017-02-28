@@ -73,9 +73,10 @@ void Spikes::update(float pStep, bool pUpdateWorldTransform)
 
 	if (_spikesUp)//check if player standing on spikes
 	{
-		if (Player::singletonInstance->_currentTile [0] == _position [0] && Player::singletonInstance->_currentTile [1] == _position [1])//If the player is on top of us, the player dies
+		if (Player::singletonInstance->_currentTile [0] == _position [0] && Player::singletonInstance->_currentTile [1] == _position [1] && !playerIsKilled)//If the player is on top of us, the player dies
 		{
-			//Kill the player
+			//Kill the playerplayerIsKilled
+			playerIsKilled = true;
 			Player::singletonInstance->die ();
 		}
 	}
