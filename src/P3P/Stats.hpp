@@ -17,6 +17,7 @@ struct Data
 	int hintsUsed;
 	int platformsBroke;
 	int socketsActivated;
+	int questsCompleted;
 };
 
 class Stats

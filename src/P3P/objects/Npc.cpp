@@ -91,6 +91,9 @@ void Npc::talk()
 					activeQuests.erase (activeQuests.begin () + i);
 					questTalks = 0;
 					completedQuests ++;
+
+					Stats::singletonInstance->data.questsCompleted = completedQuests;
+					Stats::singletonInstance->refreshText();
 					return;
 				}
 			}
@@ -125,6 +128,9 @@ void Npc::displayDialog (std::string pText)
 					activeQuests.erase (activeQuests.begin () + i);
 					questTalks = 0;
 					completedQuests ++;
+
+					Stats::singletonInstance->data.questsCompleted = completedQuests;
+					Stats::singletonInstance->refreshText();
 					return;
 				}
 			}

@@ -25,11 +25,14 @@ Stats::Stats()
 	_texts.push_back(new sf::Text("hintsUsed", *font));
 	_texts.push_back(new sf::Text("platformsBroke", *font));
 	_texts.push_back(new sf::Text("socketsActivated", *font));
+	_texts.push_back(new sf::Text("questsCompleted", *font));
 	for (int i = 0; i < _texts.size(); i++)
 	{
 		_texts[i]->setPosition(sf::Vector2f(190, 4 * 95 + 30 * i));
 	}
+	data.questsCompleted = 0;
 	refreshText();
+
 	setActive(false);
 }
 
@@ -119,6 +122,7 @@ void Stats::loadFromFile()
 	data.hintsUsed = fileData[3];
 	data.platformsBroke = fileData[4];
 	data.socketsActivated = fileData[5];
+	data.questsCompleted = fileData[6];
 }
 
 void Stats::saveToFile()
@@ -136,6 +140,8 @@ void Stats::saveToFile()
 	fileData += "/";
 	fileData += to_string(data.socketsActivated);
 	fileData += "/";
+	fileData += to_string(data.questsCompleted);
+	fileData += "/";
 	fileData += "*";
 
 	ofstream outputFile;
@@ -152,6 +158,7 @@ void Stats::refreshText()
 	_texts[3]->setString("hints used: " + to_string(data.hintsUsed));
 	_texts[4]->setString("platforms broke: " + to_string(data.platformsBroke));
 	_texts[5]->setString("sockets activated:" +to_string(data.socketsActivated));
+	_texts[6]->setString("quests completed:" + to_string(data.questsCompleted) + "/5");
 
 	saveToFile();
 }

@@ -6,6 +6,7 @@
 #include <mge/materials/GlitchMaterial.hpp>
 #include <P3P/Quest.hpp>
 #include <SFML\Graphics.hpp>
+#include <P3P/Stats.hpp>
 
 class Npc : public GameObject
 {
