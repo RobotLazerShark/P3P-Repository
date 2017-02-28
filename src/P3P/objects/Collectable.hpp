@@ -4,6 +4,7 @@
 //Include files
 #include <mge/core/GameObject.hpp>
 #include <JCPPEngine/AbstractListener.hpp>
+#include <P3P/Stats.hpp>
 
 //We can extend this class for different types of collectables if neccesary
 class Collectable : public GameObject, public JCPPEngine::AbstractListener

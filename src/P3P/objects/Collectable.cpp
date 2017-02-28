@@ -202,6 +202,9 @@ bool Collectable::collect (int pOldX, int pOldZ)
 		if (!alreadyInInventory)
 		{
 			Player::singletonInstance->inventory.push_back (_name);
+
+			Stats::singletonInstance->data.itemsCollected++;
+			Stats::singletonInstance->refreshText();
 		}
 	}
 	if (!_copyCollect)//Make object invisible/uninteractable

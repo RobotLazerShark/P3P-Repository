@@ -30,6 +30,7 @@ Stats::Stats()
 	{
 		_texts[i]->setPosition(sf::Vector2f(190, 4 * 95 + 30 * i));
 	}
+	data.itemsCollected = 0;
 	data.questsCompleted = 0;
 	refreshText();
 
