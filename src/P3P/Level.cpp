@@ -31,13 +31,16 @@ Level* Level::singletonInstance = nullptr;
 
 //Constructor
 Level::Level (int pLevelNumber)
-{
+{ 
 	if (singletonInstance != nullptr)
 	{
 		delete singletonInstance;
 	}
 	singletonInstance = this;
 	setParent (World::singletonInstance);
+
+	cout << "new level" << endl;
+	hud = new Hud();
 	setMap (pLevelNumber);
 	loadMap ();
 }
@@ -45,6 +48,7 @@ Level::Level (int pLevelNumber)
 Level::~Level ()
 {
 	delete map;
+	delete hud;
 	for (int i = 0, size = _activeQuestsCopy.size (); i < size; i ++)
 	{
 		if (_activeQuestsCopy [i] != nullptr)
@@ -77,6 +81,10 @@ void Level::update (float pStep, bool pUpdateWorldTransform)
 
 	//Remove items from drawbuffer
 	drawBuffer.clear();
+	for (sf::Drawable * drawable : hud->getAllDrawables())
+	{
+		drawBuffer.push_back(drawable);
+	}
 	GameObject::update(pStep, pUpdateWorldTransform);
 
 	//If we have to load a different level, do that here.
@@ -137,11 +145,15 @@ bool Level::setMap (int pLevelNumber)
 		{
 			_isHub = true;
 			levelCompleted = (_levelNumber == 0);
+
+			hud->setState(1);
 		}
 		else
 		{
 			_isHub = false;
 			levelCompleted = false;
+
+			hud->setState(2);
 		}
 	}
 
@@ -587,7 +599,7 @@ void Level::loadMap ()
 						World::singletonInstance->getMainCamera ()->setBehaviour (behaviour);
 						if (_reloading)
 						{
-							behaviour->startTransition (Player::singletonInstance->getLocalPosition (), 2.5f);
+							behaviour->startTransition (Player::singletonInstance->getLocalPosition (), 1.3f);
 						}
 						break;
 					case 2:
@@ -784,6 +796,7 @@ void Level::clear ()
 void Level::loadLevel (int pLevelNumber)
 {
 	_nextLevel = pLevelNumber;
+	
 }
 
 //Reload the current level
