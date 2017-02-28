@@ -41,10 +41,16 @@ Player::Player (int pX, int pZ, ProgressTracker* pProgressTracker) : GameObject 
 	GameObject* baseModel = new GameObject ("PlayerBase.obj");
 	baseModel->setParent (baseRotation);
 	baseModel->setMaterial (new LitMaterial ("PlayerBase"+to_string (JCPPEngine::Random::Range (1, 4))+".png"));
-	_wheelAnimator = new AnimationBehaviour ({ "PlayerWheel.txt", "PlayerWheelDestruct.txt" });
-	_baseAnimator = new AnimationBehaviour ({ "PlayerBase.txt", "PlayerBaseDestruct.txt" });
+	_wheelAnimator = new AnimationBehaviour ({ "PlayerWheel.txt", "PlayerWheelDestruct.txt","PlayerWheelFast.txt"  });
+	_baseAnimator = new AnimationBehaviour ({ "PlayerBase.txt", "PlayerBaseDestruct.txt", "PlayerBaseFast.txt" });
+
+	_rotationAnimator = new AnimationBehaviour({ "PlayerRotationUpLeft.txt","PlayerRotationUpRight.txt","PlayerRotationUpDown.txt",
+												"PlayerRotationLeftUp.txt","PlayerRotationLeftRight.txt","PlayerRotationLeftDown.txt",
+												"PlayerRotationRightUp.txt","PlayerRotationRightLeft.txt","PlayerRotationRightDown.txt",
+												"PlayerRotationDownUp.txt","PlayerRotationDownLeft.txt","PlayerRotationDownRight.txt" });
 	wheelModel->setBehaviour (_wheelAnimator);
 	baseModel->setBehaviour (_baseAnimator);
+	_model->setBehaviour(_rotationAnimator);
 
 	translate (glm::vec3 (pX * Level::TILESIZE, 0, pZ * Level::TILESIZE));
 	_currentTile [0] = pX;
@@ -77,6 +83,7 @@ void stopFunctionPlayer (int pAnimIndex, GameObject* pOwner)
 	Player* player = (Player*)pOwner;
 	switch (pAnimIndex)
 	{
+		case 2:
 		case 0:
 			player->_noMove = false;
 			player->setWorldPosition (glm::vec3 (player->_currentTile [0] * Level::TILESIZE, 0, player->_currentTile [1] * Level::TILESIZE));
@@ -101,7 +108,7 @@ void Player::stopAnimation ()
 
 //////////////////////////////|	UPDATING FUNCTIONS
 //Move the player by a given amount of tiles
-bool Player::movePlayer (int pX, int pZ, bool pAnimate)
+bool Player::movePlayer (int pX, int pZ, bool pAnimate, bool fast)
 {
     //update position
     _oldTile [0] = _currentTile [0];
@@ -114,7 +121,7 @@ bool Player::movePlayer (int pX, int pZ, bool pAnimate)
         //Check if the new position contains a special object
         Moveable* box = dynamic_cast <Moveable*> ((GameObject*)Level::map->objectTiles [_currentTile [0]] [_currentTile [1]]);
         Door* door = dynamic_cast <Door*> ((GameObject*)Level::map->objectTiles [_currentTile [0]] [_currentTile [1]]);
-	Collectable* collectable = dynamic_cast <Collectable*> ((GameObject*)Level::map->objectTiles [_currentTile [0]] [_currentTile [1]]);
+		Collectable* collectable = dynamic_cast <Collectable*> ((GameObject*)Level::map->objectTiles [_currentTile [0]] [_currentTile [1]]);
 	if (Npc::singletonInstance != nullptr && _currentTile [0] == Npc::singletonInstance->position [0] && _currentTile [1] == Npc::singletonInstance->position [1])
 	{
 		//we cannot move into the Npc's space
@@ -193,8 +200,17 @@ bool Player::movePlayer (int pX, int pZ, bool pAnimate)
     //move
     if (pAnimate)
     {
-	_wheelAnimator->playAnimation (0);
-	_baseAnimator->playAnimation (0, false, &stopFunctionPlayer, this);
+		if (!fast)
+		{
+			_wheelAnimator->playAnimation(0);
+			_baseAnimator->playAnimation(0, false, &stopFunctionPlayer, this);
+		}
+		else
+		{
+			_wheelAnimator->playAnimation(2);
+			_baseAnimator->playAnimation(2, false, &stopFunctionPlayer, this);
+		}
+	
     }
     else
     {
@@ -285,10 +301,76 @@ void Player::ProcessEvent (JCPPEngine::Event* pEvent)
 			temp *= movement [0] * -45;
 		}
 		_model->rotate (glm::vec3 (0, temp, 0) - _modelOrientation);
-		_modelOrientation.y = temp;
-		if (movePlayer (movement [0], movement [1], true))
+
+		//play rotation animation
+		switch ((int)_modelOrientation[1]){
+		case 0:
+			switch (temp){
+			case 90:
+				_rotationAnimator->playAnimation(0);
+				break;
+			case -90:
+				_rotationAnimator->playAnimation(1);
+				break;
+			case 180:
+				_rotationAnimator->playAnimation(2);
+				break;
+			}
+			break;
+		case 90:
+			switch (temp){
+			case 0:
+				_rotationAnimator->playAnimation(3);
+				break;
+			case -90:
+				_rotationAnimator->playAnimation(4);
+				break;
+			case 180:
+				_rotationAnimator->playAnimation(5);
+				break;
+			}
+			break;
+		case -90:
+			switch (temp){
+			case 0:
+				_rotationAnimator->playAnimation(6);
+				break;
+			case 90:
+				_rotationAnimator->playAnimation(7);
+				break;
+			case 180:
+				_rotationAnimator->playAnimation(8);
+				break;
+			}
+			break;
+		case 180:
+			switch (temp){
+			case 0:
+				_rotationAnimator->playAnimation(9);
+				break;
+			case 90:
+				_rotationAnimator->playAnimation(10);
+				break;
+			case -90:
+				_rotationAnimator->playAnimation(11);
+				break;
+			}
+			break;
+		}
+		
+		
+		if (_modelOrientation.y != temp) //have to rotate first
 		{
-			_noMove = true;
+			_modelOrientation.y = temp;
+			_movementToComplete[0] = movement[0];
+			_movementToComplete[1] = movement[1];
+		}
+		else //can move without rotation
+		{
+			if (movePlayer (movement [0], movement [1], true, false))
+			{
+				_noMove = true;
+			}
 		}
 	}
 }
@@ -304,4 +386,25 @@ bool Player::hasItem (std::string pItemName)
 		}
 	}
 	return false;
+}
+
+void Player::update(float pStep, bool pUpdateWorldTransform)
+{
+	GameObject::update(pStep, pUpdateWorldTransform);
+	
+	//dont allow to move if rotation animation is playing
+	if (_rotationAnimator->isPlaying() && !blockMovement)
+	{
+		blockMovement = true;
+	}
+
+	//if rotation animation finished playing movePlayer;
+	if(!_rotationAnimator->isPlaying() && blockMovement)
+	{
+		blockMovement = false;
+		if (movePlayer(_movementToComplete[0], _movementToComplete[1], true, true))
+		{
+			_noMove = true;
+		}
+	}
 }

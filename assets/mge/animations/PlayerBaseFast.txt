@@ -1,0 +1,10 @@
+time = 0
+-
+time = 0:05
+rotation = -10, 0, 0
+position = 0, 0, -0.333333
+-
+time = 0:14
+position = 0, 0, -1
+rotation = 0, 0, 0
+--

@@ -1,0 +1,16 @@
+time = 0
+position = 0, 0.5, 0
+rotation = 0, -90, 0
+-
+time = 0:8
+position = 0, 0.5, 0
+rotation = 0, -200, 0
+-
+time = 0:12
+position = 0, 0.5, 0
+rotation = 0, -170, 0
+-
+time = 0:15
+position = 0, 0.5, 0
+rotation = 0, -180, 0
+--
