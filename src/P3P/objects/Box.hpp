@@ -17,6 +17,7 @@ class Box : public GameObject, public Moveable
     public:
         Box (int pX, int pZ, bool pPowered);
         bool move (int pX, int pZ, bool pAnimate = true) override;
+        bool move (int pX, int pZ, bool pAnimate, void (*pFuncPtr) (int, GameObject*), GameObject* pFuncOwner) override;
 	void stopAnimation () override;
         //Preferably these variables would be private, but they are needed in a globalspace function
         //They use the private name conventions because they should be used as such

@@ -119,6 +119,11 @@ void AbstractGame::_initializeWindow() {
 //	_cursor->setOrigin (12, 12);
 	_luaParser = new LuaParser (_window);
 	_window->setVerticalSyncEnabled(true);
+
+	_window->pushGLStates ();
+	_window->draw (sf::Sprite (*JCPPEngine::TextureManager::GetTexture ("images/LoadingScreen.png")));
+	_window->popGLStates ();
+	_window->display ();
 }
 
 void AbstractGame::_printVersionInfo() {
@@ -209,7 +214,11 @@ void AbstractGame::run ()
 			if (timeSinceLastRender != 0) _fps = 1.0f / timeSinceLastRender;
 		}
 		JCPPEngine::EventHandler::ProcessEvents ();
-		if (JCPPEngine::InputManager::GetKeyDown (sf::Keyboard::Num1))
+		if (JCPPEngine::InputManager::GetKeyDown (sf::Keyboard::Escape))
+		{
+			Stop ();
+		}
+		else if (JCPPEngine::InputManager::GetKeyDown (sf::Keyboard::Num1))
 		{
 			_luaParser->Refresh ();
 		}

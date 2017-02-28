@@ -10,6 +10,11 @@ Door::Door (int pX, int pZ, int pNextLevelNumber, int pOrientation) : GameObject
 
 	//Set up model
 	_model = new GameObject ();
+	GameObject* shadow = new GameObject ("ShadowPlane.obj");
+	shadow->setMaterial (new TextureMaterial ("DoorShadow.png"));
+	shadow->badScale (glm::vec3 (1, 1, 2));
+	shadow->translate (glm::vec3 (0, 0.0f, 0.25f));
+	shadow->setParent (_model);
 	switch (pOrientation)
 	{
 		case 1:
@@ -31,8 +36,9 @@ Door::Door (int pX, int pZ, int pNextLevelNumber, int pOrientation) : GameObject
 	}
 	_orientation = pOrientation;
 	_model->setParent (this);
+	_model->translate(glm::vec3 (0,0.06f,0));
 	GameObject* backside = new GameObject ("plane.obj");
-	_portal = new TextureMaterial ("Portal.jpg", 1, true);
+	_portal = new TextureMaterial ("Portal.png", 1, true);
 	backside->setMaterial (_portal);
 	backside->rotate (glm::radians (90.0f), glm::vec3 (0, 1, 0));
 	backside->rotate (glm::radians (90.0f), glm::vec3 (1, 0, 0));

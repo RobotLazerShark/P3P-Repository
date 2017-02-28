@@ -31,7 +31,7 @@ void MGEDemo::_initializeScene()
 	_world->setMainCamera (camera);
 
 	//[TESTING]
-	Light* dirLight = new Light (glm::vec3 (1, 1, 1), 0.4f);
+	Light* dirLight = new Light (glm::vec3 (1, 1, 1), 0.45f);
 	dirLight->rotate (glm::radians (25.0f), glm::vec3 (0, 1, 0));
 	dirLight->rotate (glm::radians (45.0f), glm::vec3 (1, 0, 0));
 	dirLight->setParent (_world);
@@ -43,7 +43,7 @@ void MGEDemo::_initializeScene()
 	//camera->setBehaviour (new CameraOrbitBehaviour (10.0f, glm::radians (-60.0f), glm::radians (60.0f), 0.01f, _world));
 
 	//Set up P3P hub (starts the game)
-	_game = new Level (0);
+	_game = new Level (1);
 }
 
 MGEDemo::~MGEDemo()

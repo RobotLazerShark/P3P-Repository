@@ -6,7 +6,6 @@
 #include <SFML\Graphics.hpp>
 #include <mge/core/GameObject.hpp>
 #include <mge/util/LevelImporter.hpp>
-#include <P3P/Hud.hpp>
 
 class Quest;
 class Gate;
@@ -29,9 +28,9 @@ class Level : public GameObject
 		bool _stop = false;
 		bool _reloading = false;
 		int _bossLevelNumber = 5;
-		Hud * hud = nullptr;
+		int _playerSkin = 1;
 	public:
-		Level (int pLevelNumber);
+		Level (int pPlayerSkin);
 		~Level ();
 		void increaseLevelKey ();
 		int levelKey ();

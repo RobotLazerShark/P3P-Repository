@@ -40,6 +40,7 @@ Fan::Fan(int pX, int pZ, int pXDirection, int pYDirection, bool pReversed) : But
 	_direction[1] = pYDirection;
 
 	//save items in visible area
+	bool pathBlocked = false;
 	for (int i = 0; i < _visibleAreaSize; i++)
 	{
 		int tempX = _position[0] + _direction[0] * (i + 1);
@@ -47,6 +48,7 @@ Fan::Fan(int pX, int pZ, int pXDirection, int pYDirection, bool pReversed) : But
 		//if position of element in visible area isn't out of bounds
 		if
 		(
+			!pathBlocked &&
 			tempX >= 0 && tempX < Level::map->width &&
 			tempY >= 0 && tempY < Level::map->height &&
 			Level::map->baseTiles [tempX] [tempY] != (int)nullptr
@@ -58,6 +60,7 @@ Fan::Fan(int pX, int pZ, int pXDirection, int pYDirection, bool pReversed) : But
 		{
 			//Make sure fan doesn't push anything into this spot
 			_visibleArea [i] = -1;
+			pathBlocked = true;
 		}
 	}
 }
@@ -104,7 +107,7 @@ void Fan::update(float pStep, bool pUpdateWorldTransform)
 	GameObject::update(pStep, pUpdateWorldTransform);
 
 	//push if any changes registered
-	if (checkForChanges())
+	if (!_animating && checkForChanges())
 	{
 		if (!_reversed)
 		{
@@ -120,6 +123,8 @@ void Fan::update(float pStep, bool pUpdateWorldTransform)
 bool Fan::checkForChanges() //return true if any changes found
 {
 	bool changes = false;
+	bool pathBlocked = false;
+	_changeIndex = -1;
 	for (int i = 0; i < _visibleAreaSize; i++)
 	{
 		int tempX = _position[0] + _direction[0] * (i + 1);
@@ -127,6 +132,7 @@ bool Fan::checkForChanges() //return true if any changes found
 		//if position of element in visible area isn't out of bounds
 		if
 		(
+			!pathBlocked &&
 			tempX >= 0 && tempX < Level::map->width &&
 			tempY >= 0 && tempY < Level::map->height &&
 			Level::map->baseTiles [tempX] [tempY] != (int)nullptr
@@ -136,24 +142,51 @@ bool Fan::checkForChanges() //return true if any changes found
 			if (_visibleArea[i] != Level::map->objectTiles[tempX][tempY])
 			{
 				_visibleArea [i] = Level::map->objectTiles [tempX] [tempY];
-				_changeIndex = i;//Store the index of the changed item that is the furthest away
+				if (!_reversed || _changeIndex == -1)
+				{
+					_changeIndex = i;//Store the index of the changed item that is closest when pulling and farthest when pushing
+				}
 				changes = true;
 			}
 		}
 		else 
 		{
-			//Make sure fan doesn't push anything into this spot
+			//Make sure fan doesn't push/pull anything in(to) this spot and all further spots
 			_visibleArea [i] = -1;
-			return changes;
+			pathBlocked = true;
 		}
 	}
 	return changes;
+}
+
+//Function for correctly animating objects being pushed/pulled
+void stopFunctionFan (int pAnimIndex, GameObject* pOwner)
+{
+	Fan* fan = (Fan*)pOwner;
+	fan->_animating = false;
+	if (fan->_movingPlayer)
+	{
+		fan->_movingPlayer = false;
+		Player::singletonInstance->blockMovement = false;
+	}
+	if (fan->checkForChanges())
+	{
+		if (!fan->_reversed)
+		{
+			fan->push();
+		}
+		else
+		{
+			fan->pull();
+		}
+	}
 }
 
 void Fan::push() //moves every box in vision by 1 tile if possible
 {
 	Moveable* box;
 	Player* player;
+	bool changes = false;
 	if (_changeIndex == _visibleAreaSize)
 	{
 		_changeIndex --;
@@ -162,7 +195,7 @@ void Fan::push() //moves every box in vision by 1 tile if possible
 	{
 		if (_visibleArea[i] == -1)
 		{
-			return;
+			continue;
 		}
 		if (_visibleArea [i+1] == (int)nullptr && _visibleArea [i] != (int)nullptr)
 		{
@@ -171,12 +204,37 @@ void Fan::push() //moves every box in vision by 1 tile if possible
 			if (box != nullptr)
 			{
 				box->stopAnimation ();
-				box->move (_direction[0], _direction[1], (_visibleArea [i+1] == (_visibleAreaSize-1) || _visibleArea [i+2] != (int)nullptr));
+				if (!changes)
+				{
+					changes = true;
+					_animating = true;
+					box->move (_direction[0], _direction[1], true, &stopFunctionFan, this);
+				}
+				else
+				{
+					box->move (_direction[0], _direction[1], true);
+				}
 			}
 			else if (player != nullptr)
 			{
 				player->stopAnimation ();
-				player->movePlayer(_direction[0], _direction[1], ((_visibleArea [i+1] == (_visibleAreaSize-1)) ? _visibleArea [i+2] != (int)nullptr : false));
+				if (!changes)
+				{
+					changes = true;
+					_animating = true;
+					player->movePlayer(_direction[0], _direction[1], true, &stopFunctionFan, this);
+				}
+				else
+				{
+					player->movePlayer(_direction[0], _direction[1], true);
+				}
+				if (!_movingPlayer)
+				{
+					_movingPlayer = true;
+					Player::singletonInstance->blockMovement = true;
+					//Rotate model to the correct orientation
+					Player::singletonInstance->setDirection (_direction);
+				}
 			}
 		}
 	}
@@ -186,21 +244,56 @@ void Fan::pull()
 {
 	Moveable* box;
 	Player* player;
-	for (int i = 1; i <= _changeIndex; i ++)//Go through all positions that are affected by the change
+	bool changes = false;
+	if (_changeIndex == 0)
 	{
-		if (_visibleArea[i - 1] == (int)nullptr)
+		_changeIndex ++;
+	}
+	for (int i = _changeIndex - 1; i < _visibleAreaSize; i ++)//Go through all positions that are affected by the change
+	{
+		if (_visibleArea[i] == -1)
+		{
+			return;
+		}
+		if (_visibleArea[i - 1] == (int)nullptr && _visibleArea [i] != (int)nullptr)
 		{
 			box = dynamic_cast <Moveable*> ((GameObject*)_visibleArea [i]);
 			player = dynamic_cast <Player*> ((GameObject*)_visibleArea [i]);
 			if (box != nullptr)
 			{
 				box->stopAnimation ();
-				box->move(-_direction[0], -_direction[1], false);
+				if (!changes)
+				{
+					changes = true;
+					_animating = true;
+					box->move (-_direction[0], -_direction[1], true, &stopFunctionFan, this);
+				}
+				else
+				{
+					box->move (-_direction[0], -_direction[1], true);
+				}
 			}
 			else if (player != nullptr)
 			{
 				player->stopAnimation ();
-				player->movePlayer(-_direction[0], -_direction[1], false);
+				if (!changes)
+				{
+					changes = true;
+					_animating = true;
+					player->movePlayer(-_direction[0], -_direction[1], true, &stopFunctionFan, this);
+				}
+				else
+				{
+					player->movePlayer(-_direction[0], -_direction[1], true);
+				}
+				if (!_movingPlayer)
+				{
+					_movingPlayer = true;
+					Player::singletonInstance->blockMovement = true;
+					//Rotate model to the correct orientation
+					int revDirection [2] = { -_direction[0], -_direction[1] };
+					Player::singletonInstance->setDirection (revDirection);
+				}
 			}
 		}
 	}

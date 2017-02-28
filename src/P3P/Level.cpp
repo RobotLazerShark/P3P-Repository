@@ -21,6 +21,7 @@
 #include <mge/objects/Camera.hpp>
 #include <P3P/ProgressTracker.hpp>
 #include <mge/materials/LitMaterial.hpp>
+#include <mge/materials/TextureMaterial.hpp>
 
 
 //Static variables
@@ -30,25 +31,22 @@ Level* Level::singletonInstance = nullptr;
 
 
 //Constructor
-Level::Level (int pLevelNumber)
-{ 
+Level::Level (int pPlayerSkin)
+{
 	if (singletonInstance != nullptr)
 	{
 		delete singletonInstance;
 	}
 	singletonInstance = this;
+	_playerSkin = pPlayerSkin;
 	setParent (World::singletonInstance);
-
-	cout << "new level" << endl;
-	hud = new Hud();
-	setMap (pLevelNumber);
+	setMap (0);
 	loadMap ();
 }
 //Destructor
 Level::~Level ()
 {
 	delete map;
-	delete hud;
 	for (int i = 0, size = _activeQuestsCopy.size (); i < size; i ++)
 	{
 		if (_activeQuestsCopy [i] != nullptr)
@@ -81,10 +79,6 @@ void Level::update (float pStep, bool pUpdateWorldTransform)
 
 	//Remove items from drawbuffer
 	drawBuffer.clear();
-	for (sf::Drawable * drawable : hud->getAllDrawables())
-	{
-		drawBuffer.push_back(drawable);
-	}
 	GameObject::update(pStep, pUpdateWorldTransform);
 
 	//If we have to load a different level, do that here.
@@ -145,15 +139,11 @@ bool Level::setMap (int pLevelNumber)
 		{
 			_isHub = true;
 			levelCompleted = (_levelNumber == 0);
-
-			hud->setState(1);
 		}
 		else
 		{
 			_isHub = false;
 			levelCompleted = false;
-
-			hud->setState(2);
 		}
 	}
 
@@ -461,7 +451,7 @@ void Level::loadMap ()
 			{
 				case 33:
 					//Player
-					temp = new Player (x, y, progressTracker);
+					temp = new Player (x, y, progressTracker, _playerSkin);
 					temp->setParent (this);
 					map->objectTiles [x] [y] = (int)temp;
 					if (_inventoryCopy.size () > 0)
@@ -508,6 +498,12 @@ void Level::loadMap ()
 					temp = new GameObject("Lights.obj");
 					temp->setMaterial(new LitMaterial("Lights.png"));
 					temp->setParent(this);
+					temp2 = new GameObject ("ShadowPlane.obj");
+					temp2->setMaterial (new TextureMaterial ("LightsShadow.png"));
+					temp2->badScale (glm::vec3 (2, 1, 1));
+					temp2->rotate (glm::radians (180.0f), glm::vec3 (0,1,0));
+					temp2->translate (glm::vec3 (-0.25f, 0.08f, 0));
+					temp2->setParent (temp);
 					temp->translate(glm::vec3(TILESIZE * x, 0, TILESIZE * y));
 					temp->rotate(glm::radians(180.0f), glm::vec3(0, 1, 0));
 					map->objectTiles[x][y] = (int)temp;
@@ -599,7 +595,7 @@ void Level::loadMap ()
 						World::singletonInstance->getMainCamera ()->setBehaviour (behaviour);
 						if (_reloading)
 						{
-							behaviour->startTransition (Player::singletonInstance->getLocalPosition (), 1.3f);
+							behaviour->startTransition (Player::singletonInstance->getLocalPosition (), 1.0f);
 						}
 						break;
 					case 2:
@@ -796,7 +792,6 @@ void Level::clear ()
 void Level::loadLevel (int pLevelNumber)
 {
 	_nextLevel = pLevelNumber;
-	
 }
 
 //Reload the current level

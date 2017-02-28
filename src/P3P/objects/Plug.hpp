@@ -13,6 +13,7 @@ class Plug : public GameObject, public Moveable
 		Plug(int pX, int pZ, int pOrientation);
 		void update(float pStep, bool pUpdateWorldTransform = false) override;
 		bool move(int pX, int pZ, bool pAnimate = true) override;
+	          bool move (int pX, int pZ, bool pAnimate, void (*pFuncPtr) (int, GameObject*), GameObject* pFuncOwner) override;
 		void stopAnimation () override;
 
 		GameObject* _model = nullptr;

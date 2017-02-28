@@ -14,11 +14,18 @@ class Fan : public ButtonTarget
 		void update(float pStep, bool pUpdateWorldTransform = false) override;
 		void move(int pX, int pZ);
 		bool setActive (bool pActive);
+		//Preferably these variables would be private, but they are needed in a globalspace function
+		//They use the private name conventions because they should be used as such
+		bool _reversed = false;
+		bool _animating = false;
+		bool _movingPlayer = false;
+		bool checkForChanges();
+		void push();
+		void pull();
 	private:
 		GameObject* _model = nullptr;
 		int _position[2] = { 0, 0 };
 		int _direction[2] = { 0, 0 };
-		bool _reversed = false;
 		bool _active = false;
 		AnimationBehaviour* _animator = nullptr;
 		//_visibleArea size is bigger than actual visible area is
@@ -26,9 +33,6 @@ class Fan : public ButtonTarget
 		static const int _visibleAreaSize = 6;
 		int _visibleArea[_visibleAreaSize];
 		int _changeIndex;
-		bool checkForChanges();
-		void push();
-		void pull();
 };
 
 #endif
