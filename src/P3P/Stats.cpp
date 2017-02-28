@@ -22,8 +22,9 @@ Stats::Stats()
 	_texts.push_back(new sf::Text("deathCount", *font));
 	_texts.push_back(new sf::Text("metersWalked", *font));
 	_texts.push_back(new sf::Text("itemsCollected", *font));
-	_texts.push_back(new sf::Text("var4", *font));
-	_texts.push_back(new sf::Text("var5", *font));
+	_texts.push_back(new sf::Text("hintsUsed", *font));
+	_texts.push_back(new sf::Text("platformsBroke", *font));
+	_texts.push_back(new sf::Text("socketsActivated", *font));
 	for (int i = 0; i < _texts.size(); i++)
 	{
 		_texts[i]->setPosition(sf::Vector2f(190, 4 * 95 + 30 * i));
@@ -115,8 +116,9 @@ void Stats::loadFromFile()
 	data.deathCount = fileData[0];
 	data.metersWalked = fileData[1];
 	data.itemsCollected = fileData[2];
-	data.var4 = fileData[3];
-	data.var5 = fileData[4];
+	data.hintsUsed = fileData[3];
+	data.platformsBroke = fileData[4];
+	data.socketsActivated = fileData[5];
 }
 
 void Stats::saveToFile()
@@ -128,9 +130,11 @@ void Stats::saveToFile()
 	fileData += "/";
 	fileData += to_string(data.itemsCollected);
 	fileData += "/";
-	fileData += to_string(data.var4);
+	fileData += to_string(data.hintsUsed);
 	fileData += "/";
-	fileData += to_string(data.var5);
+	fileData += to_string(data.platformsBroke);
+	fileData += "/";
+	fileData += to_string(data.socketsActivated);
 	fileData += "/";
 	fileData += "*";
 
@@ -142,12 +146,12 @@ void Stats::saveToFile()
 
 void Stats::refreshText()
 {
-	cout << "refreshing" << endl;
 	_texts[0]->setString("deathcount: " + to_string(data.deathCount));
 	_texts[1]->setString("meters walked: " + to_string(data.metersWalked));
 	_texts[2]->setString("items colleced: " + to_string(data.itemsCollected) + "/10");
-	_texts[3]->setString(to_string(data.var4));
-	_texts[4]->setString(to_string(data.var5));
+	_texts[3]->setString("hints used: " + to_string(data.hintsUsed));
+	_texts[4]->setString("platforms broke: " + to_string(data.platformsBroke));
+	_texts[5]->setString("sockets activated:" +to_string(data.socketsActivated));
 
 	saveToFile();
 }

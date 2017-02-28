@@ -6,6 +6,7 @@
 #include <mge/materials/LitMaterial.hpp>
 #include <P3P/objects/Plug.hpp>
 #include <P3P/ButtonTarget.hpp>
+#include <P3P/Stats.hpp>
 
 class Socket : public GameObject
 {

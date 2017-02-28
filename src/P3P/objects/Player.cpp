@@ -401,8 +401,14 @@ void Player::die ()
 //Process input events
 void Player::ProcessEvent (JCPPEngine::Event* pEvent)
 {
+	//allow player to move after it finished playing spawning animation
+	if (!_rotationAnimator->isPlaying())
+	{
+		_spawned = true;
+	}
+
 	JCPPEngine::KeyEvent* keyDownEvent = (JCPPEngine::KeyEvent*)pEvent;
-	if (keyDownEvent == nullptr || keyDownEvent->keyState () != JCPPEngine::InputManager::KEY_DOWN || _noMove || blockMovement)
+	if (keyDownEvent == nullptr || keyDownEvent->keyState () != JCPPEngine::InputManager::KEY_DOWN || _noMove || blockMovement || !_spawned)
 	{
 		return;
 	}

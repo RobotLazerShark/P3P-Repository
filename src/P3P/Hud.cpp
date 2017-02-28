@@ -34,6 +34,8 @@ void hintFunction()
 	}
 	else
 	{
+		Stats::singletonInstance->data.hintsUsed++;
+		Stats::singletonInstance->refreshText();
 		Level::singletonInstance->hints[hintIndex]->setActive(true);
 	}
 }

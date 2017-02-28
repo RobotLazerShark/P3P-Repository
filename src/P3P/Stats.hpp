@@ -14,8 +14,9 @@ struct Data
 	int deathCount;
 	int metersWalked;
 	int itemsCollected;
-	int var4;
-	int var5;
+	int hintsUsed;
+	int platformsBroke;
+	int socketsActivated;
 };
 
 class Stats

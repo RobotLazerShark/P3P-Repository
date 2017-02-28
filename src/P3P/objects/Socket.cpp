@@ -84,6 +84,9 @@ void Socket::update(float pStep, bool pUpdateWorldTransform)
 				buttonTarget->setActive(true);
 			}
 			_model->setMaterial(onMaterial);
+
+			Stats::singletonInstance->data.socketsActivated++;
+			Stats::singletonInstance->refreshText();
 		}
 	}
 }

@@ -6,7 +6,7 @@
 #include <mge/core/GameObject.hpp>
 #include <mge/materials/LitMaterial.hpp>
 #include <mge/behaviours/AnimationBehaviour.hpp>
-
+#include <P3P/Stats.hpp>
 
 class BreakingBlock : public GameObject
 {
