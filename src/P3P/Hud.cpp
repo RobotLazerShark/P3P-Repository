@@ -14,6 +14,7 @@ void reloadFunction()
 }
 void quitToHudFunction()
 {
+	hintIndex = -1;
 	Level::singletonInstance->loadLevel(0);
 }
 void quitToMenuFunction()
