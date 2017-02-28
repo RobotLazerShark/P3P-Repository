@@ -11,12 +11,12 @@ using namespace std;
 
 struct Data
 {
-	int var1;
-	int var2;
-	int var3;
+	int deathCount;
+	int metersWalked;
+	int itemsCollected;
 	int var4;
 	int var5;
-}; 
+};
 
 class Stats
 {
@@ -24,15 +24,17 @@ public:
 	Stats();
 	~Stats();
 	void setActive(bool active);
-	void saveToFile();
-	std::vector<sf::Drawable*> getAllDrawables();
+	void refreshText();
 
+	std::vector<sf::Drawable*> getAllDrawables();
 	static Stats* singletonInstance;
 	sf::Sprite * _sprite = nullptr;
 	Data data;
+
 private:
 	std::vector<sf::Text *> _texts;
 	void loadFromFile();
+	void saveToFile();
 };
 
 #endif

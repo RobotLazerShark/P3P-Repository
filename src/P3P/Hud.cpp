@@ -6,6 +6,7 @@
 
 //---------------button press functions---------------------
 bool statsOn = false;
+int hintIndex = -1;
 
 void reloadFunction()
 {
@@ -21,7 +22,19 @@ void quitToMenuFunction()
 }
 void hintFunction()
 {
-
+	if (hintIndex != -1)
+	{
+		Level::singletonInstance->hints[hintIndex]->setActive(false);
+	}
+	hintIndex++;
+	if (hintIndex == Level::singletonInstance->hints.size())
+	{
+		hintIndex = -1;
+	}
+	else
+	{
+		Level::singletonInstance->hints[hintIndex]->setActive(true);
+	}
 }
 void statsFunction()
 {
@@ -80,7 +93,7 @@ void Hud::setState(int state)
 		buttons[0]->setActive(false);
 		buttons[1]->setActive(false);
 		buttons[2]->setActive(true);
-		buttons[3]->setActive(true);
+		buttons[3]->setActive(false);
 		buttons[4]->setActive(true);
 		break;
 	case 2: // normal level
@@ -136,5 +149,20 @@ std::vector<sf::Drawable*> Hud::getAllDrawables()
 			drawables.push_back(drawable);
 		}
 	}
+	//get hint info
+	if (hintIndex != -1)
+	{
+		drawables.push_back(Level::singletonInstance->hints[hintIndex]->_text);
+	}
 	return drawables;
+}
+
+void Hud::reset()
+{
+	statsOn = false;
+	if (Stats::singletonInstance != nullptr)
+	{
+		Stats::singletonInstance->setActive(statsOn);
+	}
+	hintIndex = -1;
 }

@@ -4,14 +4,6 @@
 //Static variables
 Stats* Stats::singletonInstance = nullptr;
 
-template <typename T>
-std::string to_string(T value)
-{
-	std::ostringstream oss;
-	oss << value;
-	return oss.str();
-}
-
 Stats::Stats()
 {
 	singletonInstance = this;
@@ -27,16 +19,16 @@ Stats::Stats()
 	loadFromFile();
 	sf::Font * font = new sf::Font();
 	font->loadFromFile("fonts/Font1.ttf");
-	_texts.push_back(new sf::Text(to_string(data.var1), *font));
-	_texts.push_back(new sf::Text(to_string(data.var2), *font));
-	_texts.push_back(new sf::Text(to_string(data.var3), *font));
-	_texts.push_back(new sf::Text(to_string(data.var4), *font));
-	_texts.push_back(new sf::Text(to_string(data.var5), *font));
+	_texts.push_back(new sf::Text("deathCount", *font));
+	_texts.push_back(new sf::Text("metersWalked", *font));
+	_texts.push_back(new sf::Text("itemsCollected", *font));
+	_texts.push_back(new sf::Text("var4", *font));
+	_texts.push_back(new sf::Text("var5", *font));
 	for (int i = 0; i < _texts.size(); i++)
 	{
-		_texts[i]->setPosition(sf::Vector2f(190, 4 * 95 + 30*i));
+		_texts[i]->setPosition(sf::Vector2f(190, 4 * 95 + 30 * i));
 	}
-
+	refreshText();
 	setActive(false);
 }
 
@@ -56,13 +48,6 @@ void Stats::setActive(bool active) //hide/show drawable stuff
 	if (active)
 	{
 		alpha = 255;
-		_texts[0]->setString(to_string(data.var1));
-		_texts[1]->setString(to_string(data.var2));
-		_texts[2]->setString(to_string(data.var3));
-		_texts[3]->setString(to_string(data.var4));
-		_texts[4]->setString(to_string(data.var5));
-
-		saveToFile();
 	}
 	else
 	{
@@ -93,7 +78,7 @@ void Stats::loadFromFile()
 
 	std::string filepath = "gameData/data.txt";
 	std::ifstream file(filepath, std::ios::in);
-	
+
 	if (file.is_open())
 	{
 		std::string line;
@@ -106,7 +91,7 @@ void Stats::loadFromFile()
 			if (line.find("*") != std::string::npos)
 			{
 				int stringSize = line.length();
-				strPos = (int)line.find("*")+1;
+				strPos = (int)line.find("*") + 1;
 				readString = "";
 				while (line[strPos] != '*' && strPos < stringSize)
 				{
@@ -125,11 +110,11 @@ void Stats::loadFromFile()
 				reading = false;
 			}
 		}
-		
+
 	}
-	data.var1 = fileData[0];
-	data.var2 = fileData[1];
-	data.var3 = fileData[2];
+	data.deathCount = fileData[0];
+	data.metersWalked = fileData[1];
+	data.itemsCollected = fileData[2];
 	data.var4 = fileData[3];
 	data.var5 = fileData[4];
 }
@@ -137,11 +122,11 @@ void Stats::loadFromFile()
 void Stats::saveToFile()
 {
 	std::string fileData = "*";
-	fileData += to_string(data.var1);
+	fileData += to_string(data.deathCount);
 	fileData += "/";
-	fileData += to_string(data.var2);
+	fileData += to_string(data.metersWalked);
 	fileData += "/";
-	fileData += to_string(data.var3);
+	fileData += to_string(data.itemsCollected);
 	fileData += "/";
 	fileData += to_string(data.var4);
 	fileData += "/";
@@ -153,4 +138,24 @@ void Stats::saveToFile()
 	outputFile.open("gameData/data.txt");
 	outputFile << fileData << endl;
 	outputFile.close();
+}
+
+void Stats::refreshText()
+{
+	cout << "refreshing" << endl;
+	_texts[0]->setString("deathcount: " + to_string(data.deathCount));
+	_texts[1]->setString("meters walked: " + to_string(data.metersWalked));
+	_texts[2]->setString("items colleced: " + to_string(data.itemsCollected) + "/10");
+	_texts[3]->setString(to_string(data.var4));
+	_texts[4]->setString(to_string(data.var5));
+
+	saveToFile();
+}
+
+template <typename T>
+std::string to_string(T value)
+{
+	std::ostringstream oss;
+	oss << value;
+	return oss.str();
 }

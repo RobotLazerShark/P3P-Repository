@@ -1,0 +1,20 @@
+time = 0
+-
+time = 0:10
+position = 0, -0.06, 0
+-
+time = 0:20
+position = 0, -0.24, 0
+-
+time = 0:30
+position = 0, -0.3, 0
+-
+time = 0:40
+position = 0, -0.24, 0
+-
+time = 0:50
+position = 0, -0.06, 0
+-
+time = 0:60
+position = 0, 0, 0
+--

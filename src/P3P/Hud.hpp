@@ -16,6 +16,7 @@ class Hud : public GameObject, public JCPPEngine::AbstractListener
 		void setState(int state);
 		void ProcessEvent(JCPPEngine::Event* pEvent) override;
 		std::vector<sf::Drawable*> getAllDrawables();
+		void reset();
 
 	private:
 		std::vector<HudButton*> buttons;

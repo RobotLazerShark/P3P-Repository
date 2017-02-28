@@ -6,6 +6,8 @@
 #include <SFML\Graphics.hpp>
 #include <mge/core/GameObject.hpp>
 #include <mge/util/LevelImporter.hpp>
+#include <P3P/Hud.hpp>
+#include <P3P/Hint.hpp>
 
 class Quest;
 class Gate;
@@ -29,6 +31,7 @@ class Level : public GameObject
 		bool _reloading = false;
 		int _bossLevelNumber = 5;
 		int _playerSkin = 1;
+		Hud * hud = nullptr;
 	public:
 		Level (int pPlayerSkin);
 		~Level ();
@@ -48,6 +51,8 @@ class Level : public GameObject
 		std::vector <Collectable*>deleteBuffer;
 		void update (float pStep, bool pUpdateWorldTransform = false) override;
 		static void render (sf::RenderWindow* pWindow);
+
+		std::vector<Hint*> hints;
 };
 
 #endif

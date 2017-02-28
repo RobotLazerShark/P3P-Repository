@@ -40,6 +40,8 @@ Level::Level (int pPlayerSkin)
 	singletonInstance = this;
 	_playerSkin = pPlayerSkin;
 	setParent (World::singletonInstance);
+
+	hud = new Hud();
 	setMap (0);
 	loadMap ();
 }
@@ -47,6 +49,13 @@ Level::Level (int pPlayerSkin)
 Level::~Level ()
 {
 	delete map;
+	delete hud;
+	//delete hints
+	for (Hint * hint : hints)
+	{
+		hint->setParent(nullptr);
+		delete hint;
+	}
 	for (int i = 0, size = _activeQuestsCopy.size (); i < size; i ++)
 	{
 		if (_activeQuestsCopy [i] != nullptr)
@@ -79,6 +88,10 @@ void Level::update (float pStep, bool pUpdateWorldTransform)
 
 	//Remove items from drawbuffer
 	drawBuffer.clear();
+	for (sf::Drawable * drawable : hud->getAllDrawables())
+	{
+		drawBuffer.push_back(drawable);
+	}
 	GameObject::update(pStep, pUpdateWorldTransform);
 
 	//If we have to load a different level, do that here.
@@ -139,11 +152,15 @@ bool Level::setMap (int pLevelNumber)
 		{
 			_isHub = true;
 			levelCompleted = (_levelNumber == 0);
+
+			hud->setState(1);
 		}
 		else
 		{
 			_isHub = false;
 			levelCompleted = false;
+
+			hud->setState(2);
 		}
 	}
 
@@ -696,6 +713,11 @@ void Level::loadMap ()
 				}
 				map->objectTiles[object->x][object->z] = (int)temp;
 				break;
+			case 65: //hints
+				temp = new Hint(object->x, object->z, object->properties[0]);
+				temp->setParent(this);
+				hints.push_back((Hint*)temp);
+				break;
 			default:
 				break;
 		}
@@ -784,6 +806,15 @@ void Level::clear ()
 		delete map->xmlObjects [i];
 	}
 	map->xmlObjects.clear ();
+
+	//Delete hints
+	hud->reset();
+	for (int i = 0, size = hints.size(); i < size; i++)
+	{
+		hints[i]->setParent(nullptr);
+		delete hints[i];
+	}
+	hints.clear();
 
 	World::singletonInstance->getMainCamera ()->setBehaviour (nullptr);
 }

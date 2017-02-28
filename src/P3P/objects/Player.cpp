@@ -244,11 +244,16 @@ bool Player::movePlayer (int pX, int pZ, bool pAnimate)
             Level::singletonInstance->increaseLevelKey ();
         }
     }
+
+	Stats::singletonInstance->data.metersWalked++;
+	Stats::singletonInstance->refreshText();
+
     return true;
 }
 //Move the player by a given amount of tiles, then call the given stop function
 bool Player::movePlayer (int pX, int pZ, bool pAnimate, void (*pFuncPtr) (int, GameObject*), GameObject* pFuncOwner)
 {
+
     //update position
     _oldTile [0] = _currentTile [0];
     _oldTile [1] = _currentTile [1];
@@ -358,6 +363,10 @@ bool Player::movePlayer (int pX, int pZ, bool pAnimate, void (*pFuncPtr) (int, G
             Level::singletonInstance->increaseLevelKey ();
         }
     }
+
+	Stats::singletonInstance->data.metersWalked++;
+	Stats::singletonInstance->refreshText();
+
     return true;
 }
 
@@ -378,6 +387,9 @@ void Player::die ()
 	_wheelAnimator->stopAnimation ();
 	_baseAnimator->playAnimation (1, false, false, &stopFunctionPlayer, this);
 	_wheelAnimator->playAnimation (1, false, false);
+
+	Stats::singletonInstance->data.deathCount++;
+	Stats::singletonInstance->refreshText();
 }
 
 //Process input events
