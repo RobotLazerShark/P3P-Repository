@@ -670,7 +670,7 @@ void Level::loadMap ()
 				progressTracker->doors.push_back ((Door*)temp);
 				break;
 			case 61: //Socket up
-				temp = new Socket(object->x, object->z, 1);
+				temp = new Socket(object->x, object->z, 1, std::stoi(object->properties[0]), std::stoi(object->properties[1]));
 				temp->setParent(this);
 				if (map->objectTiles[object->x][object->z] != (int)nullptr)
 				{
@@ -681,7 +681,7 @@ void Level::loadMap ()
 				map->objectTiles[object->x][object->z] = (int)temp;
 				break;
 			case 62: //Socket down
-				temp = new Socket(object->x, object->z, 2);
+				temp = new Socket(object->x, object->z, 2, std::stoi(object->properties[0]), std::stoi(object->properties[1]));
 				temp->setParent(this);
 				if (map->objectTiles[object->x][object->z] != (int)nullptr)
 				{
@@ -692,7 +692,7 @@ void Level::loadMap ()
 				map->objectTiles[object->x][object->z] = (int)temp;
 				break;
 			case 63: //Socket right
-				temp = new Socket(object->x, object->z, 3);
+				temp = new Socket(object->x, object->z, 3, std::stoi(object->properties[0]), std::stoi(object->properties[1]));
 				temp->setParent(this);
 				if (map->objectTiles[object->x][object->z] != (int)nullptr)
 				{
@@ -703,7 +703,7 @@ void Level::loadMap ()
 				map->objectTiles[object->x][object->z] = (int)temp;
 				break;
 			case 64: //Socket left
-				temp = new Socket(object->x, object->z, 4);
+				temp = new Socket(object->x, object->z, 4, std::stoi(object->properties[0]), std::stoi(object->properties[1]));
 				temp->setParent(this);
 				if (map->objectTiles[object->x][object->z] != (int)nullptr)
 				{
