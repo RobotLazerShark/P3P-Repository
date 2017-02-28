@@ -137,6 +137,7 @@ void Hud::ProcessEvent(JCPPEngine::Event* pEvent)
 std::vector<sf::Drawable*> Hud::getAllDrawables()
 {
 	std::vector<sf::Drawable*> drawables;
+	
 	//get all button sprites
 	for (HudButton * button : buttons)
 	{
@@ -151,19 +152,23 @@ std::vector<sf::Drawable*> Hud::getAllDrawables()
 		}
 	}
 	//get hint info
-	if (hintIndex != -1)
+	if (_active)
 	{
-		drawables.push_back(Level::singletonInstance->hints[hintIndex]->_text);
+		if (hintIndex != -1)
+		{
+			drawables.push_back(Level::singletonInstance->hints[hintIndex]->_text);
+		}
 	}
 	return drawables;
 }
 
-void Hud::reset()
+void Hud::disable()
 {
-	statsOn = false;
-	if (Stats::singletonInstance != nullptr)
-	{
-		Stats::singletonInstance->setActive(statsOn);
-	}
+	_active = false;
 	hintIndex = -1;
+}
+
+void Hud::enable()
+{
+	_active = true;
 }

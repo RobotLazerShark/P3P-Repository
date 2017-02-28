@@ -171,8 +171,8 @@ bool Level::setMap (int pLevelNumber)
 
 	if (_levelNumber == 0)
 	{
-		//map = LevelImporter::ReadFile ("Hub.tmx");
-		map = LevelImporter::ReadFile("Level2.tmx");
+		map = LevelImporter::ReadFile ("Hub.tmx");
+		//map = LevelImporter::ReadFile("Level2.tmx");
 	}
 	else if (_levelNumber == _bossLevelNumber)
 	{
@@ -730,6 +730,8 @@ void Level::loadMap ()
 				break;
 		}
 	}
+
+	hud->enable();
 }
 
 //Delete all objects in the level

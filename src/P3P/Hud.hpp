@@ -16,10 +16,11 @@ class Hud : public GameObject, public JCPPEngine::AbstractListener
 		void setState(int state);
 		void ProcessEvent(JCPPEngine::Event* pEvent) override;
 		std::vector<sf::Drawable*> getAllDrawables();
-		void reset();
-
+		void disable();
+		void enable();
 	private:
 		std::vector<HudButton*> buttons;
+		bool _active = true;
 };
 
 #endif

@@ -110,7 +110,7 @@ bool Door:: enter ()
 {
 	if (_open && !_barsLeftAnimator->isPlaying())
 	{
-		Level::singletonInstance->hud->reset();
+		Level::singletonInstance->hud->disable();
 	   Level::singletonInstance->loadLevel (_nextLevelNumber);
 	   return _open;
 	}
