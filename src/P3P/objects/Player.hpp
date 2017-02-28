@@ -34,6 +34,7 @@ class Player : public GameObject, public JCPPEngine::AbstractListener
 	int _oldTile[2];
 	GameObject* _funcOwner = nullptr;
 	void (*_stopFunc) (int, GameObject*) = nullptr;
+	int _movementToComplete [2] = { 0, 0 };
 	bool blockMovement = false;
     protected:
 
@@ -44,6 +45,7 @@ class Player : public GameObject, public JCPPEngine::AbstractListener
 	glm::vec3 _modelOrientation = glm::vec3 (0, 0, 0);
 	AnimationBehaviour* _wheelAnimator = nullptr;
 	AnimationBehaviour* _baseAnimator = nullptr;
+	AnimationBehaviour* _rotationAnimator = nullptr;
 
 };
 

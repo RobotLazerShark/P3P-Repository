@@ -50,6 +50,15 @@ Player::Player (int pX, int pZ, ProgressTracker* pProgressTracker, int pSkin) : 
 	_baseAnimator = new AnimationBehaviour ({ "PlayerBase.txt", "PlayerBaseDestruct.txt" });
 	wheelModel->setBehaviour (_wheelAnimator);
 	baseModel->setBehaviour (_baseAnimator);
+	_rotationAnimator = new AnimationBehaviour
+		({
+			"PlayerRotationUpLeft.txt","PlayerRotationUpRight.txt","PlayerRotationUpDown.txt",
+			"PlayerRotationLeftUp.txt","PlayerRotationLeftRight.txt","PlayerRotationLeftDown.txt",
+			"PlayerRotationRightUp.txt","PlayerRotationRightLeft.txt","PlayerRotationRightDown.txt",
+			"PlayerRotationDownUp.txt","PlayerRotationDownLeft.txt","PlayerRotationDownRight.txt"
+		});
+	_model->setBehaviour (_rotationAnimator);
+
 
 	translate (glm::vec3 (pX * Level::TILESIZE, 0, pZ * Level::TILESIZE));
 	_currentTile [0] = pX;
@@ -101,6 +110,18 @@ void stopFunctionPlayer (int pAnimIndex, GameObject* pOwner)
 			break;
 		default:
 			break;
+	}
+}
+void stopFunctionPlayerRotation (int pAnimIndex, GameObject* pOwner)
+{
+	Player* player = (Player*)pOwner;
+	if (player->movePlayer(player->_movementToComplete[0], player->_movementToComplete[1], true))
+	{
+		player->_noMove = true;
+	}
+	else
+	{
+		player->_noMove = false;
 	}
 }
 
@@ -414,10 +435,81 @@ void Player::ProcessEvent (JCPPEngine::Event* pEvent)
 			temp *= movement [0] * -45;
 		}
 		_model->rotate (glm::vec3 (0, temp, 0) - _modelOrientation);
-		_modelOrientation.y = temp;
-		if (movePlayer (movement [0], movement [1], true))
+
+		//play rotation animation
+		switch ((int)_modelOrientation[1])
+		{
+			case 0:
+				switch (temp)
+				{
+					case 90:
+						_rotationAnimator->playAnimation(0, false, &stopFunctionPlayerRotation, this);
+						break;
+					case -90:
+						_rotationAnimator->playAnimation(1, false, &stopFunctionPlayerRotation, this);
+						break;
+					case 180:
+						_rotationAnimator->playAnimation(2, false, &stopFunctionPlayerRotation, this);
+						break;
+				}
+				break;
+			case 90:
+				switch (temp)
+				{
+					case 0:
+						_rotationAnimator->playAnimation(3, false, &stopFunctionPlayerRotation, this);
+						break;
+					case -90:
+						_rotationAnimator->playAnimation(4, false, &stopFunctionPlayerRotation, this);
+						break;
+					case 180:
+						_rotationAnimator->playAnimation(5, false, &stopFunctionPlayerRotation, this);
+						break;
+				}
+				break;
+			case -90:
+				switch (temp)
+				{
+					case 0:
+						_rotationAnimator->playAnimation(6, false, &stopFunctionPlayerRotation, this);
+						break;
+					case 90:
+						_rotationAnimator->playAnimation(7, false, &stopFunctionPlayerRotation, this);
+						break;
+					case 180:
+						_rotationAnimator->playAnimation(8, false, &stopFunctionPlayerRotation, this);
+						break;
+				}
+				break;
+			case 180:
+				switch (temp)
+				{
+					case 0:
+						_rotationAnimator->playAnimation(9, false, &stopFunctionPlayerRotation, this);
+						break;
+					case 90:
+						_rotationAnimator->playAnimation(10, false, &stopFunctionPlayerRotation, this);
+						break;
+					case -90:
+						_rotationAnimator->playAnimation(11, false, &stopFunctionPlayerRotation, this);
+						break;
+				}
+				break;
+		}
+
+		if (_modelOrientation.y != temp) //have to rotate first
 		{
 			_noMove = true;
+			_modelOrientation.y = temp;
+			_movementToComplete[0] = movement[0];
+			_movementToComplete[1] = movement[1];
+		}
+		else //can move without rotation
+		{
+			if (movePlayer(movement[0], movement[1], true))
+			{
+				_noMove = true;
+			}
 		}
 	}
 }

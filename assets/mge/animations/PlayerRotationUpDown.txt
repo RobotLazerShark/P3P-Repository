@@ -2,15 +2,15 @@ time = 0
 position = 0, 0.5, 0
 rotation = 0, 0, 0
 -
-time = 0:13
+time = 0:7
 position = 0, 0.5, 0
-rotation = 0, 200, 0
+rotation = 0, 185, 0
 -
-time = 0:17
+time = 0:9
 position = 0, 0.5, 0
-rotation = 0, 170, 0
+rotation = 0, 175, 0
 -
-time = 0:20
+time = 0:10
 position = 0, 0.5, 0
 rotation = 0, 180, 0
 --
