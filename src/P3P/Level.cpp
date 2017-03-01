@@ -185,8 +185,7 @@ bool Level::setMap (int pLevelNumber)
 
 	if (_levelNumber == 0)
 	{
-		//map = LevelImporter::ReadFile ("Hub.tmx");
-		map = LevelImporter::ReadFile("BossLevel2.tmx");
+		map = LevelImporter::ReadFile ("Hub.tmx");
 	}
 	else if (_levelNumber == _bossLevelNumber)
 	{
