@@ -9,13 +9,17 @@ Plug::Plug(int pX, int pZ, int pOrientation) : GameObject()
 	//Set up model
 	_model = new GameObject();
 	_model->setParent(this);
-	_animator = new AnimationBehaviour({ "BoxLeft.txt", "BoxUp.txt", "BoxRight.txt", "BoxDown.txt","Plug.txt" });
+	_animator = new AnimationBehaviour({ "BoxLeft.txt", "BoxUp.txt", "BoxRight.txt", "BoxDown.txt" });
 	_model->setBehaviour(_animator);
 
-	GameObject * subModel = new GameObject("cube_flat.obj");
-	subModel->setMaterial(new LitMaterial("Plug.jpg"));
-	subModel->setParent(_model);
-	subModel->translate(glm::vec3(0, 0.5f, 0));
+	GameObject* rotationOffset = new GameObject ();
+	rotationOffset->setParent (_model);
+
+	GameObject * subModel = new GameObject("Plug.obj");
+	subModel->setMaterial(new LitMaterial("Plug.png"));
+	_subAnimator = new AnimationBehaviour ({ "Plug.txt" });
+	subModel->setBehaviour (_subAnimator);
+	subModel->setParent(rotationOffset);
 
 	translate(glm::vec3(pX * Level::TILESIZE, 0, pZ * Level::TILESIZE));
 
@@ -23,14 +27,14 @@ Plug::Plug(int pX, int pZ, int pOrientation) : GameObject()
 	_orientation = pOrientation;
 	switch (_orientation)
 	{
+	case 1:
+		rotationOffset->rotate (-M_PI / 2, glm::vec3(0, 1, 0));
+		break;
 	case 2:
-		subModel->rotate(M_PI, glm::vec3(0, 1, 0));
+		rotationOffset->rotate(M_PI / 2, glm::vec3(0, 1, 0));
 		break;
 	case 3:
-		subModel->rotate(-M_PI/2, glm::vec3(0, 1, 0));
-		break;
-	case 4:
-		subModel->rotate(M_PI/2, glm::vec3(0, 1, 0));
+		rotationOffset->rotate(-M_PI, glm::vec3(0, 1, 0));
 		break;
 	}
 
@@ -140,7 +144,7 @@ void Plug::update(float pStep, bool pUpdateWorldTransform)
 	GameObject::update(pStep, pUpdateWorldTransform);
 	if (plugged && !_animator->isPlaying() && !playedPluggingAnimation)
 	{
-		_animator-> playAnimation(4, false, false);
+		_subAnimator-> playAnimation(0, false, false);
 		playedPluggingAnimation = true;
 	}
 }

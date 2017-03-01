@@ -7,8 +7,7 @@
 Socket::Socket(int pX, int pZ, int pOrientation, int pTargetX, int pTargetY) : GameObject()
 {
 	//Set up model
-	_model = new GameObject("cube_flat.obj");
-	_model->translate(glm::vec3(0, 0.5f, 0));
+	_model = new GameObject("Socket.obj");
 	_model->setMaterial(offMaterial);
 	_model->setParent(this);
 	translate(glm::vec3(pX * Level::TILESIZE, 0, pZ * Level::TILESIZE));
@@ -17,14 +16,16 @@ Socket::Socket(int pX, int pZ, int pOrientation, int pTargetX, int pTargetY) : G
 	_orientation = pOrientation;
 	switch (_orientation)
 	{
+	case 1:
+		_model->rotate (-M_PI / 2, glm::vec3(0, 1, 0));
+		break;
 	case 2:
-		_model->rotate(M_PI, glm::vec3(0, 1, 0));
+		_model->rotate(M_PI / 2, glm::vec3(0, 1, 0));
 		break;
 	case 3:
-		_model->rotate(-M_PI / 2, glm::vec3(0, 1, 0));
+		_model->rotate(-M_PI, glm::vec3(0, 1, 0));
 		break;
 	case 4:
-		_model->rotate(M_PI / 2, glm::vec3(0, 1, 0));
 		break;
 	}
 
@@ -84,7 +85,6 @@ void Socket::update(float pStep, bool pUpdateWorldTransform)
 				buttonTarget->setActive(true);
 			}
 			_model->setMaterial(onMaterial);
-
 			Stats::singletonInstance->data.socketsActivated++;
 			Stats::singletonInstance->refreshText();
 		}

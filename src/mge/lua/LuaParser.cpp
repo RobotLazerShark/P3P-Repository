@@ -3093,7 +3093,7 @@ bool LuaParser::Update (float pStep)
 	{
 		_yieldTimer -= pStep;
 		//We're waiting for input
-		if (_spacePress || _yieldTimer < -30)//Make sure we don't wait infinitely
+		if (_spacePress || _yieldTimer < -300)//Make sure we don't wait infinitely
 		{
 			_yieldTimer = -0.1f;//Make sure floating-point errors won't result in a false positive
 			lua_settop (_lua, 0);//We were yielding, so we have to continue from where lua yielded

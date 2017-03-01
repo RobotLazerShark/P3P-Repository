@@ -22,7 +22,12 @@ void main (void)
 	fragUV = uv * texScale;
 	vec2 center = vec2 (0.5f, 0.5f);
 	fragUV = (fragUV - center) * (1 + sin (time * random2 [random1 [index1]] + length (vertex) * 2) * glitchIntensity) + center;
-	float tempScale = random2 [random1 [index2]] * glitchIntensity + (1 - glitchIntensity);//(sin (time * 2.5f + length (vertex)) * 0.5f + 0.5f) * 
+
+	float tempScale = 1;
+	if (index2 != random1 [index1] && index2 != random1 [index2] && index1 != random1 [index2] && index1 != random1 [index1] && index2 == index1)
+	{
+		tempScale = random2 [random1 [index2]] * glitchIntensity + (1 - glitchIntensity);
+	}
 	fragWorldPosition = modelMatrix * vec4 (vertex * tempScale, 1.0f);
 	gl_Position = MVPmatrix * vec4 (vertex * tempScale, 1.0f);
 }

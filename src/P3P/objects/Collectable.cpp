@@ -61,7 +61,7 @@ Collectable::Collectable(int pX, int pZ, std::string pName, std::string pDialog,
 
 	//Set up textbox (won't be visible yet)
 	_textBox = new sf::Sprite (*JCPPEngine::TextureManager::GetTexture ("images/TextBox.png"));
-	_text = new sf::Text (pDialog, *JCPPEngine::FontManager::GetFont ("fonts/Font1.ttf"), 30);
+	_text = new sf::Text (pDialog, *JCPPEngine::FontManager::GetFont ("fonts/Font1.ttf"), 20);
 	_text->setFillColor (sf::Color::White);
 	sf::FloatRect size = _text->getLocalBounds ();
 	_text->setOrigin (size.width * 0.5f, size.height * 0.5f);//Set origin at center
@@ -202,7 +202,6 @@ bool Collectable::collect (int pOldX, int pOldZ)
 		if (!alreadyInInventory)
 		{
 			Player::singletonInstance->inventory.push_back (_name);
-
 			Stats::singletonInstance->data.itemsCollected++;
 			Stats::singletonInstance->refreshText();
 		}

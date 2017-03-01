@@ -21,10 +21,10 @@ Floor::Floor (int pX, int pZ, int pType) : GameObject ()
 			_model = new GameObject ("Floor"+to_string (tile)+".obj");
 			_model->setMaterial (new LitMaterial ("Floor"+to_string (tile)+".png"));
 			_model->translate (glm::vec3 (0, -0.05f, 0));
-			_model->rotate (glm::radians (JCPPEngine::Random::Range (1, 3) * 90.0f), glm::vec3 (0, 1, 0));
 			break;
 	}
 	_model->setParent (this);
+	_model->rotate (glm::radians (JCPPEngine::Random::Range (0, 3) * 90.0f), glm::vec3 (0, 1, 0));
 
 	translate (glm::vec3 (pX * Level::TILESIZE, 0, pZ * Level::TILESIZE));
 }

@@ -51,24 +51,21 @@ Player::Player (int pX, int pZ, ProgressTracker* pProgressTracker, int pSkin) : 
 	wheelModel->setBehaviour (_wheelAnimator);
 	baseModel->setBehaviour (_baseAnimator);
 	_rotationAnimator = new AnimationBehaviour
-		({
-			"PlayerRotationUpLeft.txt","PlayerRotationUpRight.txt","PlayerRotationUpDown.txt",
-			"PlayerRotationLeftUp.txt","PlayerRotationLeftRight.txt","PlayerRotationLeftDown.txt",
-			"PlayerRotationRightUp.txt","PlayerRotationRightLeft.txt","PlayerRotationRightDown.txt",
-			"PlayerRotationDownUp.txt","PlayerRotationDownLeft.txt","PlayerRotationDownRight.txt",
-			"PlayerSpawn.txt", 
-			"PlayerFunUp.txt","PlayerFunDown.txt","PlayerFunRight.txt","PlayerFunLeft.txt"
+	({
+		"PlayerRotationUpLeft.txt","PlayerRotationUpRight.txt","PlayerRotationUpDown.txt",
+		"PlayerRotationLeftUp.txt","PlayerRotationLeftRight.txt","PlayerRotationLeftDown.txt",
+		"PlayerRotationRightUp.txt","PlayerRotationRightLeft.txt","PlayerRotationRightDown.txt",
+		"PlayerRotationDownUp.txt","PlayerRotationDownLeft.txt","PlayerRotationDownRight.txt",
+		"PlayerSpawn.txt", 
+		"PlayerFunUp.txt","PlayerFunDown.txt","PlayerFunRight.txt","PlayerFunLeft.txt"
 	});
-
 	_model->setBehaviour (_rotationAnimator);
-
 
 	translate (glm::vec3 (pX * Level::TILESIZE, 0, pZ * Level::TILESIZE));
 	_currentTile [0] = pX;
 	_currentTile [1] = pZ;
 	_oldTile [0] = _currentTile [0];
 	_oldTile [1] = _currentTile [1];
-
 	_rotationAnimator->playAnimation(12);
 }
 
@@ -112,6 +109,12 @@ void stopFunctionPlayer (int pAnimIndex, GameObject* pOwner)
 			player->_noMove = false;
 			player->_dead = false;
 			Level::singletonInstance->reloadLevel ();
+			break;
+		case 13:
+		case 14:
+		case 15:
+		case 16:
+			player->_noMove = false;
 			break;
 		default:
 			break;
@@ -249,16 +252,13 @@ bool Player::movePlayer (int pX, int pZ, bool pAnimate)
             Level::singletonInstance->increaseLevelKey ();
         }
     }
-
 	Stats::singletonInstance->data.metersWalked++;
 	Stats::singletonInstance->refreshText();
-
     return true;
 }
 //Move the player by a given amount of tiles, then call the given stop function
 bool Player::movePlayer (int pX, int pZ, bool pAnimate, void (*pFuncPtr) (int, GameObject*), GameObject* pFuncOwner)
 {
-
     //update position
     _oldTile [0] = _currentTile [0];
     _oldTile [1] = _currentTile [1];
@@ -368,10 +368,8 @@ bool Player::movePlayer (int pX, int pZ, bool pAnimate, void (*pFuncPtr) (int, G
             Level::singletonInstance->increaseLevelKey ();
         }
     }
-
 	Stats::singletonInstance->data.metersWalked++;
 	Stats::singletonInstance->refreshText();
-
     return true;
 }
 
@@ -384,7 +382,6 @@ void Player::die ()
 	{
 		return;
 	}
-
 	Level::singletonInstance->hud->disable();
 	_noMove = true;
 	_dead = true;
@@ -394,7 +391,6 @@ void Player::die ()
 	_wheelAnimator->stopAnimation ();
 	_baseAnimator->playAnimation (1, false, false, &stopFunctionPlayer, this);
 	_wheelAnimator->playAnimation (1, false, false);
-
 	Stats::singletonInstance->data.deathCount++;
 	Stats::singletonInstance->refreshText();
 }
@@ -402,18 +398,8 @@ void Player::die ()
 //Process input events
 void Player::ProcessEvent (JCPPEngine::Event* pEvent)
 {
-	//allow player to move after it finished playing spawning animation
-	if (_rotationAnimator->isPlaying())
-	{
-		_rotating = true;
-	}
-	else
-	{
-		_rotating = false;
-	}
-
 	JCPPEngine::KeyEvent* keyDownEvent = (JCPPEngine::KeyEvent*)pEvent;
-	if (keyDownEvent == nullptr || keyDownEvent->keyState () != JCPPEngine::InputManager::KEY_DOWN || _noMove || blockMovement || _rotating)
+	if (keyDownEvent == nullptr || keyDownEvent->keyState () != JCPPEngine::InputManager::KEY_DOWN || _noMove || blockMovement)
 	{
 		return;
 	}
@@ -444,16 +430,16 @@ void Player::ProcessEvent (JCPPEngine::Event* pEvent)
 			switch ((int)_modelOrientation[1])
 			{
 			case 0:
-				_rotationAnimator->playAnimation(13);
+				_rotationAnimator->playAnimation(13, false, &stopFunctionPlayer, this);
 				break;
 			case 180:
-				_rotationAnimator->playAnimation(14);
+				_rotationAnimator->playAnimation(14, false, &stopFunctionPlayer, this);
 				break;
 			case 90:
-				_rotationAnimator->playAnimation(15);
+				_rotationAnimator->playAnimation(15, false, &stopFunctionPlayer, this);
 				break;
 			case -90:
-				_rotationAnimator->playAnimation(16);
+				_rotationAnimator->playAnimation(16, false, &stopFunctionPlayer, this);
 				break;
 			}
 			return;

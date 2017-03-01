@@ -20,7 +20,7 @@ Box::Box (int pX, int pZ, bool pPowered) : GameObject ()
 		GameObject* subModel = new GameObject ("PowerBox.obj");
 		subModel->setMaterial (new LitMaterial ("PowerBox.png"));
 		subModel->setParent (_model);
-		subModel->rotate (glm::radians (JCPPEngine::Random::Range (1, 3) * 90.0f), glm::vec3 (0, 1, 0));
+		subModel->rotate (glm::radians (JCPPEngine::Random::Range (0, 3) * 90.0f), glm::vec3 (0, 1, 0));
 		shadowFile = "PowerBoxShadow.png";
 	}
 	else

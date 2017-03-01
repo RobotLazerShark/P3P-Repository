@@ -1,6 +1,7 @@
 #include "P3P/objects/base objects/Spikes.hpp"
 #include <P3P/Level.hpp>
 #include <P3P/objects/Player.hpp>
+#include <JCPPEngine/Random.hpp>
 
 
 //Constructor
@@ -11,6 +12,7 @@ Spikes::Spikes(int pX, int pZ) : GameObject()
 	_model->translate(glm::vec3(0, -0.05f, 0));
 	_model->setMaterial(new LitMaterial("SpikesFloor.png"));
 	_model->setParent(this);
+	_model->rotate (glm::radians (JCPPEngine::Random::Range (0, 3) * 90.0f), glm::vec3 (0, 1, 0));
 	GameObject* submodel = new GameObject ("Spikes.obj");
 	submodel->setMaterial (new LitMaterial ("Spikes.png"));
 	submodel->setParent (_model);
@@ -73,10 +75,9 @@ void Spikes::update(float pStep, bool pUpdateWorldTransform)
 
 	if (_spikesUp)//check if player standing on spikes
 	{
-		if (Player::singletonInstance->_currentTile [0] == _position [0] && Player::singletonInstance->_currentTile [1] == _position [1] && !playerIsKilled)//If the player is on top of us, the player dies
+		if (Player::singletonInstance->_currentTile [0] == _position [0] && Player::singletonInstance->_currentTile [1] == _position [1])//If the player is on top of us, the player dies
 		{
-			//Kill the playerplayerIsKilled
-			playerIsKilled = true;
+			//Kill the player
 			Player::singletonInstance->die ();
 		}
 	}

@@ -14,6 +14,7 @@ using namespace std;
 #include <JCPPEngine/InputManager.hpp>
 #include "mge/core/World.hpp"
 #include <P3P/Level.hpp>
+#include <P3P/Background.hpp>
 
 AbstractGame* AbstractGame::singletonInstance = nullptr;
 static float timeSinceProgramStart;
@@ -25,6 +26,13 @@ int AbstractGame::windowHalfHeight = AbstractGame::windowHeight * 0.5f;
 float AbstractGame::Time ()
 {
 	return timeSinceProgramStart;
+}
+void AbstractGame::showCursor (bool pShowCursor)
+{
+	if (_window != nullptr)
+	{
+		_window->setMouseCursorVisible (pShowCursor);
+	}
 }
 
 void AbstractGame::Stop ()
@@ -92,6 +100,12 @@ void AbstractGame::initialize() {
     _initializeGlew();
     _initializeRenderer();
     _initializeWorld();
+
+	_window->pushGLStates ();
+	_window->draw (sf::Sprite (*JCPPEngine::TextureManager::GetTexture ("images/LoadingScreen2.png")));
+	_window->popGLStates ();
+	_window->display ();
+
     _initializeScene();
 
 	//Set up the event handler
@@ -100,6 +114,7 @@ void AbstractGame::initialize() {
 	registerForEvent (sf::Event::Closed);
 	registerForEvent (sf::Event::Resized);
 	registerForEvent (sf::Event::KeyPressed);
+	_background = new Background ();
     cout << endl << "Engine initialized." << endl << endl;
 }
 
@@ -114,14 +129,14 @@ void AbstractGame::_initializeWindow() {
 //	_window = new sf::RenderWindow( videoMode, "« G1¡t©h/Fï× »", sf::Style::Default, sf::ContextSettings(24,8,0,3,3));//[TESTING]
 	windowWidth = videoMode.width;
 	windowHeight = videoMode.height;
-	_window->setMouseCursorVisible (true);
+	_window->setMouseCursorVisible (false);
 //	_cursor = new sf::Sprite (*JCPPEngine::TextureManager::GetTexture ("images/Crosshair.png"));
 //	_cursor->setOrigin (12, 12);
 	_luaParser = new LuaParser (_window);
 	_window->setVerticalSyncEnabled(true);
 
 	_window->pushGLStates ();
-	_window->draw (sf::Sprite (*JCPPEngine::TextureManager::GetTexture ("images/LoadingScreen.png")));
+	_window->draw (sf::Sprite (*JCPPEngine::TextureManager::GetTexture ("images/LoadingScreen1.png")));
 	_window->popGLStates ();
 	_window->display ();
 }
@@ -197,6 +212,7 @@ void AbstractGame::run ()
 				}
 			}
 			ShaderDataUtil::UpdateCameraInfo ();
+			_background->render (_window);
 			_render ();
 			Level::render (_window);
 			if (_luaParser != nullptr)

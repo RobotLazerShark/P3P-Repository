@@ -14,6 +14,7 @@ using namespace std;
 
 class World;
 class Renderer;
+class Background;
 
 /**
  * Defines the basic structure for a game, with defaults already filled in.
@@ -34,6 +35,7 @@ class AbstractGame : public JCPPEngine::AbstractListener
         virtual ~AbstractGame();
 
         static float Time ();
+	void showCursor (bool pShowCursor);
 	static int windowWidth;
 	static int windowHeight;
 	static int windowHalfWidth;
@@ -77,6 +79,7 @@ class AbstractGame : public JCPPEngine::AbstractListener
 		float _fps = 0;                 //stores the real fps
 
     private:
+	Background* _background = nullptr;
 	sf::Sprite* _cursor = nullptr;
 	LuaParser* _luaParser;
         AbstractGame(const AbstractGame&);

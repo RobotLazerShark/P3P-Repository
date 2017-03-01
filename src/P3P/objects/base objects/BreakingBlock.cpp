@@ -10,7 +10,7 @@ BreakingBlock::BreakingBlock(int pX, int pZ) : GameObject()
 	//Set up model
 	_model = new GameObject();
 	_model->translate(glm::vec3(0, -0.05f, 0));
-	_model->rotate (glm::radians (JCPPEngine::Random::Range (1, 3) * 90.0f), glm::vec3 (0, 1, 0));
+	_model->rotate (glm::radians (JCPPEngine::Random::Range (0, 3) * 90.0f), glm::vec3 (0, 1, 0));
 	_model->setParent(this);
 	GameObject* submodel = new GameObject ("FloorBroken.obj");
 	submodel->setMaterial(new LitMaterial("FloorBroken.png"));
