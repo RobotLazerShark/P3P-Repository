@@ -27,6 +27,13 @@ float AbstractGame::Time ()
 {
 	return timeSinceProgramStart;
 }
+void AbstractGame::showCursor (bool pShowCursor)
+{
+	if (_window != nullptr)
+	{
+		_window->setMouseCursorVisible (pShowCursor);
+	}
+}
 
 void AbstractGame::Stop ()
 {

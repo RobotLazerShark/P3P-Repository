@@ -32,6 +32,7 @@ class Level : public GameObject
 		int _bossLevelNumber = 5;
 		int _playerSkin = 1;
 		std::vector<ProgressTracker*> bossPuzzlesTrackers;
+		sf::Sprite* _hudOverlay = nullptr;
 	public:
 		Level (int pPlayerSkin);
 		~Level ();

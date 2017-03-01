@@ -106,7 +106,6 @@ void Stats::loadFromFile()
 					}
 					else //save number, reset readString
 					{
-						std::cout << readString << std::endl;
 						fileData.push_back(atoi(readString.c_str()));
 						readString = "";
 					}

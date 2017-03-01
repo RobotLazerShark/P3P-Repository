@@ -51,17 +51,15 @@ Player::Player (int pX, int pZ, ProgressTracker* pProgressTracker, int pSkin) : 
 	wheelModel->setBehaviour (_wheelAnimator);
 	baseModel->setBehaviour (_baseAnimator);
 	_rotationAnimator = new AnimationBehaviour
-		({
-			"PlayerRotationUpLeft.txt","PlayerRotationUpRight.txt","PlayerRotationUpDown.txt",
-			"PlayerRotationLeftUp.txt","PlayerRotationLeftRight.txt","PlayerRotationLeftDown.txt",
-			"PlayerRotationRightUp.txt","PlayerRotationRightLeft.txt","PlayerRotationRightDown.txt",
-			"PlayerRotationDownUp.txt","PlayerRotationDownLeft.txt","PlayerRotationDownRight.txt",
-			"PlayerSpawn.txt", 
-			"PlayerFunUp.txt","PlayerFunDown.txt","PlayerFunRight.txt","PlayerFunLeft.txt"
+	({
+		"PlayerRotationUpLeft.txt","PlayerRotationUpRight.txt","PlayerRotationUpDown.txt",
+		"PlayerRotationLeftUp.txt","PlayerRotationLeftRight.txt","PlayerRotationLeftDown.txt",
+		"PlayerRotationRightUp.txt","PlayerRotationRightLeft.txt","PlayerRotationRightDown.txt",
+		"PlayerRotationDownUp.txt","PlayerRotationDownLeft.txt","PlayerRotationDownRight.txt",
+		"PlayerSpawn.txt", 
+		"PlayerFunUp.txt","PlayerFunDown.txt","PlayerFunRight.txt","PlayerFunLeft.txt"
 	});
-
 	_model->setBehaviour (_rotationAnimator);
-
 
 	translate (glm::vec3 (pX * Level::TILESIZE, 0, pZ * Level::TILESIZE));
 	_currentTile [0] = pX;
@@ -111,6 +109,12 @@ void stopFunctionPlayer (int pAnimIndex, GameObject* pOwner)
 			player->_noMove = false;
 			player->_dead = false;
 			Level::singletonInstance->reloadLevel ();
+			break;
+		case 13:
+		case 14:
+		case 15:
+		case 16:
+			player->_noMove = false;
 			break;
 		default:
 			break;
@@ -426,16 +430,16 @@ void Player::ProcessEvent (JCPPEngine::Event* pEvent)
 			switch ((int)_modelOrientation[1])
 			{
 			case 0:
-				_rotationAnimator->playAnimation(13);
+				_rotationAnimator->playAnimation(13, false, &stopFunctionPlayer, this);
 				break;
 			case 180:
-				_rotationAnimator->playAnimation(14);
+				_rotationAnimator->playAnimation(14, false, &stopFunctionPlayer, this);
 				break;
 			case 90:
-				_rotationAnimator->playAnimation(15);
+				_rotationAnimator->playAnimation(15, false, &stopFunctionPlayer, this);
 				break;
 			case -90:
-				_rotationAnimator->playAnimation(16);
+				_rotationAnimator->playAnimation(16, false, &stopFunctionPlayer, this);
 				break;
 			}
 			return;

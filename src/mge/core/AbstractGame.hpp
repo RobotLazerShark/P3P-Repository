@@ -35,6 +35,7 @@ class AbstractGame : public JCPPEngine::AbstractListener
         virtual ~AbstractGame();
 
         static float Time ();
+	void showCursor (bool pShowCursor);
 	static int windowWidth;
 	static int windowHeight;
 	static int windowHalfWidth;

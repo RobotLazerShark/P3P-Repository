@@ -103,6 +103,7 @@ void Door::update (float pStep, bool pUpdateWorldTransform)
 void stopFunctionDoor (int pAnimIndex, GameObject* pOwner)
 {
 	Door* door = (Door*)pOwner;
+	Level::singletonInstance->hud->disable();
 }
 
 //Load the level this door leads to
@@ -110,10 +111,9 @@ bool Door:: enter ()
 {
 	if (_open)
 	{
-		Level::singletonInstance->hud->disable();
-	   Level::singletonInstance->loadLevel (_nextLevelNumber);
+		Level::singletonInstance->loadLevel (_nextLevelNumber);
 	}
-    return _open;
+	return _open;
 }
 
 //Open the door
