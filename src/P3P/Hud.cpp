@@ -122,16 +122,19 @@ void Hud::ProcessEvent(JCPPEngine::Event* pEvent)
 	}
 	
 	sf::Vector2i mousePos = mouseDownEvent->position();
-	
-	for (HudButton * button : buttons)
+
+	if (_active)
 	{
-		sf::Sprite * sprite = button->_sprite;
-		//if mouse is on top of a button
-		if (mousePos.x >= sprite->getPosition().x && mousePos.x <= sprite->getPosition().x + sprite->getTextureRect().width
-			&&mousePos.y >= sprite->getPosition().y && mousePos.y <= sprite->getPosition().y + sprite->getTextureRect().height)
+		for (HudButton * button : buttons)
 		{
-			//press button
-			button->press();
+			sf::Sprite * sprite = button->_sprite;
+			//if mouse is on top of a button
+			if (mousePos.x >= sprite->getPosition().x && mousePos.x <= sprite->getPosition().x + sprite->getTextureRect().width
+				&&mousePos.y >= sprite->getPosition().y && mousePos.y <= sprite->getPosition().y + sprite->getTextureRect().height)
+			{
+				//press button
+				button->press();
+			}
 		}
 	}
 }
