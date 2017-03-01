@@ -10,8 +10,7 @@
 class Boss : public GameObject
 {
 	public:
-		
-		//static Boss* singletonInstance; //causing crash on boss deletion
+		static Boss* singletonInstance;
 		Boss(int pX, int pZ);
 		~Boss();
 		void update(float pStep, bool pUpdateWorldTransform = false) override;

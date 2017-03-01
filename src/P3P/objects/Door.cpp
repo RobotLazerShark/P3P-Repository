@@ -108,16 +108,12 @@ void stopFunctionDoor (int pAnimIndex, GameObject* pOwner)
 //Load the level this door leads to
 bool Door:: enter ()
 {
-	if (_open && !_barsLeftAnimator->isPlaying())
+	if (_open)
 	{
 		Level::singletonInstance->hud->disable();
 	   Level::singletonInstance->loadLevel (_nextLevelNumber);
-	   return _open;
 	}
-	else
-	{
-		return false;
-	}
+    return _open;
 }
 
 //Open the door

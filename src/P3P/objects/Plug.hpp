@@ -18,6 +18,7 @@ class Plug : public GameObject, public Moveable
 
 		GameObject* _model = nullptr;
 		AnimationBehaviour* _animator = nullptr;
+		AnimationBehaviour* _subAnimator = nullptr;
 		int _orientation = 0;
 		int _currentTile[2] = { 0, 0 };
 		int _oldTile[2] = { 0, 0 };

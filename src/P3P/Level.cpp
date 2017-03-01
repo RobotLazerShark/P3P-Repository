@@ -19,8 +19,11 @@
 #include <mge/behaviours/FollowBehaviour.hpp>
 #include <mge/behaviours/ThirdPersonCameraBehaviour.hpp>
 #include <mge/objects/Camera.hpp>
+#include <P3P/ProgressTracker.hpp>
 #include <mge/materials/LitMaterial.hpp>
 #include <mge/materials/TextureMaterial.hpp>
+#include <JCPPEngine/Random.hpp>
+#include <JCPPEngine/TextureManager.hpp>
 
 
 //Static variables
@@ -37,6 +40,7 @@ Level::Level (int pPlayerSkin)
 		delete singletonInstance;
 	}
 	singletonInstance = this;
+	_hudOverlay = new sf::Sprite (*JCPPEngine::TextureManager::GetTexture ("images/Hud.png"));
 	_playerSkin = pPlayerSkin;
 	setParent (World::singletonInstance);
 
@@ -106,6 +110,7 @@ void Level::update (float pStep, bool pUpdateWorldTransform)
 	{
 		drawBuffer.push_back(drawable);
 	}
+	drawBuffer.push_back (_hudOverlay);
 	GameObject::update(pStep, pUpdateWorldTransform);
 
 	//If we have to load a different level, do that here.
@@ -166,14 +171,12 @@ bool Level::setMap (int pLevelNumber)
 		{
 			_isHub = true;
 			levelCompleted = (_levelNumber == 0);
-
 			hud->setState(1);
 		}
 		else
 		{
 			_isHub = false;
 			levelCompleted = false;
-
 			hud->setState(2);
 		}
 	}
@@ -545,10 +548,12 @@ void Level::loadMap ()
 					}
 					break;
 				case 40:
-					temp = new GameObject("cube_flat.obj");
-					temp->setMaterial(new LitMaterial("Wall.jpg"));
-					temp->setParent(this);
-					temp->translate(glm::vec3(TILESIZE * x, 0.5f, TILESIZE * y));
+					//Wall block
+					temp = new GameObject ("cube_flat.obj");
+					temp->setMaterial (new LitMaterial ("White.png"));
+					temp->setParent (this);
+					temp->translate(glm::vec3(TILESIZE * x, 0, TILESIZE * y));
+					temp->rotate (glm::radians (JCPPEngine::Random::Range (0, 3) * 90.0f), glm::vec3 (0, 1, 0));
 					map->objectTiles[x][y] = (int)temp;
 					break;
 				case 41: //Fan right
@@ -796,12 +801,10 @@ void Level::clear ()
 			_activeQuestsCopy = std::vector <Quest*> (Npc::singletonInstance->activeQuests);
 		}
 	}
-
-	//causing crash on boss deletion
-	//if (Boss::singletonInstance != nullptr)
-	//{
-	//	delete Boss::singletonInstance;
-	//}
+	if (Boss::singletonInstance != nullptr)
+	{
+		delete Boss::singletonInstance;
+	}
 
 	//Delete gates
 	for (Gate* gate : _gates)

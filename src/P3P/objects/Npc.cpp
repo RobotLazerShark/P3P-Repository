@@ -5,6 +5,7 @@
 #include <mge/core/AbstractGame.hpp>
 #include <JCPPEngine/TextureManager.hpp>
 #include <JCPPEngine/FontManager.hpp>
+#include <mge/materials/LitMaterial.hpp>
 
 
 //Static variables
@@ -20,15 +21,22 @@ Npc::Npc(int pX, int pZ) : GameObject()
 		delete singletonInstance;
 	}
 	singletonInstance = this;
+	Level::map->objectTiles [pX-1] [pZ-1] = (int)this;
+	Level::map->objectTiles [pX-1] [pZ] = (int)this;
+	Level::map->objectTiles [pX] [pZ-1] = (int)this;
 
 	//Set up model
-	_model = new GameObject("PowerBox.obj");
-	_material = new GlitchMaterial("PowerBox.png");
-	_model->setMaterial(_material);
+	_model = new GameObject("BossBrokenBase.obj");
+	_model->setMaterial (new LitMaterial ("Default.png"));
+	GameObject* subModel = new GameObject ("BossBroken.obj");
+	_material = new GlitchMaterial("Default.png");
+	subModel->translate (glm::vec3 (-0.486f, 0.816f, -0.41f));
+	subModel->setMaterial(_material);
+	subModel->setParent (_model);
 	_model->setParent(this);
 	//Set up textbox
 	_textBox = new sf::Sprite (*JCPPEngine::TextureManager::GetTexture ("images/TextBox.png"));
-	_text = new sf::Text ("...", *JCPPEngine::FontManager::GetFont ("fonts/Font1.ttf"), 30);
+	_text = new sf::Text ("...", *JCPPEngine::FontManager::GetFont ("fonts/Font1.ttf"), 20);
 	_text->setFillColor (sf::Color::White);
 	sf::FloatRect size = _text->getLocalBounds ();
 	_text->setOrigin (size.width * 0.5f, size.height * 0.5f);//Set origin at center
@@ -43,6 +51,10 @@ Npc::~Npc ()
 {
 	singletonInstance->setParent (nullptr);
 	singletonInstance = nullptr;
+	Level::map->objectTiles [position [0]-1] [position[1] -1] = (int)nullptr;
+	Level::map->objectTiles [position[0] -1] [position[1]] = (int)nullptr;
+	Level::map->objectTiles [position[0]] [position[1] -1] = (int)nullptr;
+	Level::map->objectTiles [position[0]] [position[1]] = (int)nullptr;
 	delete _textBox;
 	delete _text;
 }
@@ -91,7 +103,6 @@ void Npc::talk()
 					activeQuests.erase (activeQuests.begin () + i);
 					questTalks = 0;
 					completedQuests ++;
-
 					Stats::singletonInstance->data.questsCompleted = completedQuests;
 					Stats::singletonInstance->refreshText();
 					return;
@@ -128,7 +139,6 @@ void Npc::displayDialog (std::string pText)
 					activeQuests.erase (activeQuests.begin () + i);
 					questTalks = 0;
 					completedQuests ++;
-
 					Stats::singletonInstance->data.questsCompleted = completedQuests;
 					Stats::singletonInstance->refreshText();
 					return;

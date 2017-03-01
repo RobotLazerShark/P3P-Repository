@@ -68,7 +68,6 @@ Player::Player (int pX, int pZ, ProgressTracker* pProgressTracker, int pSkin) : 
 	_currentTile [1] = pZ;
 	_oldTile [0] = _currentTile [0];
 	_oldTile [1] = _currentTile [1];
-
 	_rotationAnimator->playAnimation(12);
 }
 
@@ -249,16 +248,13 @@ bool Player::movePlayer (int pX, int pZ, bool pAnimate)
             Level::singletonInstance->increaseLevelKey ();
         }
     }
-
 	Stats::singletonInstance->data.metersWalked++;
 	Stats::singletonInstance->refreshText();
-
     return true;
 }
 //Move the player by a given amount of tiles, then call the given stop function
 bool Player::movePlayer (int pX, int pZ, bool pAnimate, void (*pFuncPtr) (int, GameObject*), GameObject* pFuncOwner)
 {
-
     //update position
     _oldTile [0] = _currentTile [0];
     _oldTile [1] = _currentTile [1];
@@ -368,10 +364,8 @@ bool Player::movePlayer (int pX, int pZ, bool pAnimate, void (*pFuncPtr) (int, G
             Level::singletonInstance->increaseLevelKey ();
         }
     }
-
 	Stats::singletonInstance->data.metersWalked++;
 	Stats::singletonInstance->refreshText();
-
     return true;
 }
 
@@ -384,7 +378,6 @@ void Player::die ()
 	{
 		return;
 	}
-
 	Level::singletonInstance->hud->disable();
 	_noMove = true;
 	_dead = true;
@@ -394,7 +387,6 @@ void Player::die ()
 	_wheelAnimator->stopAnimation ();
 	_baseAnimator->playAnimation (1, false, false, &stopFunctionPlayer, this);
 	_wheelAnimator->playAnimation (1, false, false);
-
 	Stats::singletonInstance->data.deathCount++;
 	Stats::singletonInstance->refreshText();
 }
@@ -402,18 +394,8 @@ void Player::die ()
 //Process input events
 void Player::ProcessEvent (JCPPEngine::Event* pEvent)
 {
-	//allow player to move after it finished playing spawning animation
-	if (_rotationAnimator->isPlaying())
-	{
-		_rotating = true;
-	}
-	else
-	{
-		_rotating = false;
-	}
-
 	JCPPEngine::KeyEvent* keyDownEvent = (JCPPEngine::KeyEvent*)pEvent;
-	if (keyDownEvent == nullptr || keyDownEvent->keyState () != JCPPEngine::InputManager::KEY_DOWN || _noMove || blockMovement || _rotating)
+	if (keyDownEvent == nullptr || keyDownEvent->keyState () != JCPPEngine::InputManager::KEY_DOWN || _noMove || blockMovement)
 	{
 		return;
 	}

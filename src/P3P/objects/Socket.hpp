@@ -17,8 +17,8 @@ class Socket : public GameObject
 		GameObject* _model = nullptr;
 
 	private:
-		LitMaterial * offMaterial = new LitMaterial("Socket.jpg");
-		LitMaterial * onMaterial = new LitMaterial("SocketOn.jpg");
+		LitMaterial * offMaterial = new LitMaterial("Socket.png");
+		LitMaterial * onMaterial = new LitMaterial("SocketOn.png");
 		int _orientation = 0;
 		int _currentTile[2] = { 0, 0 };
 		bool activated = false;

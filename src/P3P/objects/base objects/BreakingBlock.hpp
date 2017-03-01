@@ -8,6 +8,7 @@
 #include <mge/behaviours/AnimationBehaviour.hpp>
 #include <P3P/Stats.hpp>
 
+
 class BreakingBlock : public GameObject
 {
 public:
