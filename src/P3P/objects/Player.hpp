@@ -46,8 +46,7 @@ class Player : public GameObject, public JCPPEngine::AbstractListener
 		AnimationBehaviour* _wheelAnimator = nullptr;
 		AnimationBehaviour* _baseAnimator = nullptr;
 		AnimationBehaviour* _rotationAnimator = nullptr;
-		bool _spawned = false;
-
+		bool _rotating = false;
 };
 
 #endif // PLAYER_H

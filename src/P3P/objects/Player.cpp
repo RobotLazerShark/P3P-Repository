@@ -56,7 +56,8 @@ Player::Player (int pX, int pZ, ProgressTracker* pProgressTracker, int pSkin) : 
 			"PlayerRotationLeftUp.txt","PlayerRotationLeftRight.txt","PlayerRotationLeftDown.txt",
 			"PlayerRotationRightUp.txt","PlayerRotationRightLeft.txt","PlayerRotationRightDown.txt",
 			"PlayerRotationDownUp.txt","PlayerRotationDownLeft.txt","PlayerRotationDownRight.txt",
-			"PlayerSpawn.txt"
+			"PlayerSpawn.txt", 
+			"PlayerFunUp.txt","PlayerFunDown.txt","PlayerFunRight.txt","PlayerFunLeft.txt"
 	});
 
 	_model->setBehaviour (_rotationAnimator);
@@ -402,13 +403,17 @@ void Player::die ()
 void Player::ProcessEvent (JCPPEngine::Event* pEvent)
 {
 	//allow player to move after it finished playing spawning animation
-	if (!_rotationAnimator->isPlaying())
+	if (_rotationAnimator->isPlaying())
 	{
-		_spawned = true;
+		_rotating = true;
+	}
+	else
+	{
+		_rotating = false;
 	}
 
 	JCPPEngine::KeyEvent* keyDownEvent = (JCPPEngine::KeyEvent*)pEvent;
-	if (keyDownEvent == nullptr || keyDownEvent->keyState () != JCPPEngine::InputManager::KEY_DOWN || _noMove || blockMovement || !_spawned)
+	if (keyDownEvent == nullptr || keyDownEvent->keyState () != JCPPEngine::InputManager::KEY_DOWN || _noMove || blockMovement || _rotating)
 	{
 		return;
 	}
@@ -434,6 +439,23 @@ void Player::ProcessEvent (JCPPEngine::Event* pEvent)
 			break;
 		case sf::Keyboard::Key::R:
 			die ();
+			return;
+		case sf::Keyboard::Key::F:
+			switch ((int)_modelOrientation[1])
+			{
+			case 0:
+				_rotationAnimator->playAnimation(13);
+				break;
+			case 180:
+				_rotationAnimator->playAnimation(14);
+				break;
+			case 90:
+				_rotationAnimator->playAnimation(15);
+				break;
+			case -90:
+				_rotationAnimator->playAnimation(16);
+				break;
+			}
 			return;
 		default:
 			break;
