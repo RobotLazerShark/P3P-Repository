@@ -8,11 +8,11 @@
 #include <mge/util/LevelImporter.hpp>
 #include <P3P/Hud.hpp>
 #include <P3P/Hint.hpp>
+#include <P3P/ProgressTracker.hpp>
 
 class Quest;
 class Gate;
 class Collectable;
-
 
 
 class Level : public GameObject
@@ -31,7 +31,8 @@ class Level : public GameObject
 		bool _reloading = false;
 		int _bossLevelNumber = 5;
 		int _playerSkin = 1;
-		
+		std::vector<ProgressTracker*> bossPuzzlesTrackers;
+
 	public:
 		Level (int pPlayerSkin);
 		~Level ();

@@ -5,16 +5,21 @@
 #include <mge/core/GameObject.hpp>
 #include <mge/materials/LitMaterial.hpp>
 #include <P3P/ButtonTarget.hpp>
+#include <mge/behaviours/AnimationBehaviour.hpp>
 
 class Mirror : public ButtonTarget
 {
 	public:
 		Mirror(int pX, int pZ);
 		bool setActive(bool pActive);
-		bool up = true;
+		bool up = false;
+		bool broken = false;
 
 	private:
 		GameObject* _model = nullptr;
+		bool _active = false;
+		AnimationBehaviour* _animator = nullptr;
+		
 };
 
 #endif

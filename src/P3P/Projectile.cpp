@@ -67,8 +67,10 @@ void Projectile::update(float pStep, bool pUpdateWorldTransform)
 		{
 			Mirror* mirror = dynamic_cast <Mirror*> ((GameObject*)Level::map->baseTiles[_targetTile[0]][_targetTile[1]]);
 			//if reached mirror
-			if (mirror != nullptr && mirror->up)
+			if (mirror != nullptr && mirror->up && !mirror->broken)
 			{
+				mirror->broken = true;
+				mirror->setActive(false);
 				_target = _startPosition;
 				reflected = true;
 			}

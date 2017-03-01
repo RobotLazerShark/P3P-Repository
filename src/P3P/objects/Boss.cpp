@@ -2,15 +2,16 @@
 #include <P3P/Level.hpp>
 
 //Static fields
-Boss* Boss::singletonInstance = nullptr;
+//Boss* Boss::singletonInstance = nullptr;
 
 Boss::Boss(int pX, int pZ) : GameObject()
 {
-	if (singletonInstance != nullptr)
-	{
-		delete singletonInstance;
-	}
-	singletonInstance = this;
+	//causing crash on boss deletion
+	//if (singletonInstance != nullptr)
+	//{
+	//	delete singletonInstance;
+	//}
+	//singletonInstance = this;
 
 	//Set up model
 	_model = new GameObject("cube_flat.obj");
@@ -31,18 +32,22 @@ Boss::~Boss()
 		proj->stopUpdating = true;
 	}
 	projectiles.clear();
+
+	GameObject::~GameObject();
 }
 
 void Boss::update(float pStep, bool pUpdateWorldTransform)
 {
 	GameObject::update(pStep, pUpdateWorldTransform);
 
+	
 	_timer += pStep;
 	if (_timer >= SHOOTING_FREQUENCY) 
 	{
 		_timer -= SHOOTING_FREQUENCY;
 		shoot();
 	}	
+	
 }
 
 void Boss::shoot()

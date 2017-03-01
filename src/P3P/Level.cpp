@@ -19,7 +19,6 @@
 #include <mge/behaviours/FollowBehaviour.hpp>
 #include <mge/behaviours/ThirdPersonCameraBehaviour.hpp>
 #include <mge/objects/Camera.hpp>
-#include <P3P/ProgressTracker.hpp>
 #include <mge/materials/LitMaterial.hpp>
 #include <mge/materials/TextureMaterial.hpp>
 
@@ -50,6 +49,11 @@ Level::~Level ()
 {
 	delete map;
 	delete hud;
+	//delete bossPuzzletracker
+	for (ProgressTracker * bossPuzzleTracker : bossPuzzlesTrackers)
+	{
+		delete bossPuzzleTracker;
+	}
 	//delete hints
 	for (Hint * hint : hints)
 	{
@@ -84,6 +88,16 @@ void Level::update (float pStep, bool pUpdateWorldTransform)
 	if (_stop)
 	{
 		return;
+	}
+
+	//if it's boss level check mini puzzles
+	//cout << bossPuzzlesTrackers.size() << endl;
+	for (int i = 0; i < bossPuzzlesTrackers.size(); i++)
+	{
+		if (bossPuzzlesTrackers[i]->checkWin())
+		{
+			
+		}
 	}
 
 	//Remove items from drawbuffer
@@ -171,8 +185,8 @@ bool Level::setMap (int pLevelNumber)
 
 	if (_levelNumber == 0)
 	{
-		map = LevelImporter::ReadFile ("Hub.tmx");
-		//map = LevelImporter::ReadFile("Level2.tmx");
+		//map = LevelImporter::ReadFile ("Hub.tmx");
+		map = LevelImporter::ReadFile("BossLevel2.tmx");
 	}
 	else if (_levelNumber == _bossLevelNumber)
 	{
@@ -196,6 +210,7 @@ void Level::loadMap ()
 	ProgressTracker* progressTracker = new ProgressTracker ();
 	GameObject* temp = nullptr;
 	GameObject* temp2 = nullptr;
+	ProgressTracker * bossPuzzleTracker = nullptr;
 
 	//Build all base tiles
 	for (int x = 0; x < map->width; x++)
@@ -726,6 +741,36 @@ void Level::loadMap ()
 				temp->setParent(this);
 				hints.push_back((Hint*)temp);
 				break;
+			case 66: //prgress tracker for mini puzzle in boss level
+				bossPuzzleTracker = new ProgressTracker();
+				if (dynamic_cast <Mirror*> ((GameObject*)map->baseTiles[object->x][object->z]) != nullptr)
+				{
+					bossPuzzleTracker->_targetMirror = dynamic_cast <Mirror*> ((GameObject*)map->baseTiles[object->x][object->z]);
+				}
+				else
+				{
+					std::cout <<"cant find mirror" << endl;
+				}
+				for (int i = 0; i < object->properties.size(); i += 2)
+				{
+					if (i + 1 < object->properties.size())
+					{
+						BoxSpot * boxSpot = dynamic_cast <BoxSpot*> ((GameObject*)map->baseTiles[std::stoi(object->properties[i])][std::stoi(object->properties[i + 1])]);
+						
+						if (boxSpot != nullptr)
+						{
+							bossPuzzleTracker->boxSpots.push_back(boxSpot);
+						}
+						else
+						{
+							std::cout << "cant find boxspot "<< i/2 << endl;
+						}
+					}
+				}
+				
+				std::cout << "created boss puzzle tracker with " << bossPuzzleTracker->boxSpots.size() << " targets" << endl;
+				bossPuzzlesTrackers.push_back(bossPuzzleTracker);
+				break;
 			default:
 				break;
 		}
@@ -752,10 +797,12 @@ void Level::clear ()
 			_activeQuestsCopy = std::vector <Quest*> (Npc::singletonInstance->activeQuests);
 		}
 	}
-	if (Boss::singletonInstance != nullptr)
-	{
-		delete Boss::singletonInstance;
-	}
+
+	//causing crash on boss deletion
+	//if (Boss::singletonInstance != nullptr)
+	//{
+	//	delete Boss::singletonInstance;
+	//}
 
 	//Delete gates
 	for (Gate* gate : _gates)
@@ -824,6 +871,13 @@ void Level::clear ()
 		delete hints[i];
 	}
 	hints.clear();
+
+	//Delete bossPuzzleTrackers
+	for (ProgressTracker * bossPuzzleTracker : bossPuzzlesTrackers)
+	{
+		delete bossPuzzleTracker;
+	}
+	bossPuzzlesTrackers.clear();
 
 	World::singletonInstance->getMainCamera ()->setBehaviour (nullptr);
 }

@@ -21,13 +21,21 @@ bool ProgressTracker::checkWin()
             win = false;
         }
     }
+	if (boxSpots.size() == 0)
+	{
+		win = false;
+	}
 
     if (win)
     {
-	for (int i = 0, size = doors.size (); i < size; i ++)
-	{
-		doors [i]->open ();
-	}
+		if (_targetMirror != nullptr)
+		{
+			_targetMirror->setActive(true);
+		}
+		for (int i = 0, size = doors.size (); i < size; i ++)
+		{
+			doors [i]->open ();
+		}
     }
     return win;
 }
