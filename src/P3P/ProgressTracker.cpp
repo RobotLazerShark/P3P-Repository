@@ -21,10 +21,6 @@ bool ProgressTracker::checkWin()
             win = false;
         }
     }
-	if (boxSpots.size() == 0)
-	{
-		win = false;
-	}
 
     if (win)
     {
