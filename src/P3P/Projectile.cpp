@@ -35,14 +35,13 @@ Projectile::Projectile(glm::vec3 pos, int targetX, int targetZ, Boss * pOwner) :
 
 void Projectile::update(float pStep, bool pUpdateWorldTransform)
 {
+	GameObject::update(pStep, pUpdateWorldTransform);
 	if (stopUpdating)
 	{
 		explode();
 	}
 	else
 	{
-		GameObject::update(pStep, pUpdateWorldTransform);
-
 		//if distance to target bigger than step
 		if (glm::distance(getWorldPosition(), _target) >= SPEED*pStep)
 		{
@@ -56,8 +55,8 @@ void Projectile::update(float pStep, bool pUpdateWorldTransform)
 				//if reached boss
 				if (glm::distance(getWorldPosition(), _target) < 1)
 				{
-					_owner->damage();
 					explode();
+					_owner->damage();
 				}
 				//move to owner
 				translate(glm::vec3(0, 0, -SPEED*pStep));
@@ -77,8 +76,8 @@ void Projectile::update(float pStep, bool pUpdateWorldTransform)
 			//if reached player
 			else if (Player::singletonInstance->_currentTile[0] == _targetTile[0] && Player::singletonInstance->_currentTile[1] == _targetTile[1])
 			{
-				Player::singletonInstance->die();
 				explode();
+				Player::singletonInstance->die();
 			}
 			//if reached empty floor
 			else
@@ -91,6 +90,7 @@ void Projectile::update(float pStep, bool pUpdateWorldTransform)
 
 void Projectile::explode()
 {
+	_owner->removeProjectile (this);
 	setParent(nullptr);
 	delete this;
 }

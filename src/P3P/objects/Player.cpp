@@ -14,6 +14,63 @@
 //Static variables
 Player* Player::singletonInstance = nullptr;
 
+
+//////////////////////////////|	ANIMATION
+//Function to be called when animations are stopped. It has to be in global space, or we have to pass our object type as well.
+void stopFunctionPlayer (int pAnimIndex, GameObject* pOwner)
+{
+	Player* player = (Player*)pOwner;
+	switch (pAnimIndex)
+	{
+		case 0:
+			player->_noMove = false;
+			player->setWorldPosition (glm::vec3 (player->_currentTile [0] * Level::TILESIZE, 0, player->_currentTile [1] * Level::TILESIZE));
+			if (player->_funcOwner != nullptr)
+			{
+				GameObject* tempOwner = player->_funcOwner;
+				void (*tempFunc) (int, GameObject*) = player->_stopFunc;
+				player->_funcOwner = nullptr;
+				player->_stopFunc = nullptr;
+				tempFunc (pAnimIndex, tempOwner);
+			}
+			break;
+		case 1:
+			player->_noMove = false;
+			Level::singletonInstance->reloadLevel ();
+			break;
+		case 12:
+			player->_noMove = false;
+			break;
+		case 13:
+		case 14:
+		case 15:
+		case 16:
+			player->_noMove = false;
+			break;
+		default:
+			break;
+	}
+}
+void stopFunctionPlayerRotation (int pAnimIndex, GameObject* pOwner)
+{
+	Player* player = (Player*)pOwner;
+	if (player->movePlayer(player->_movementToComplete[0], player->_movementToComplete[1], true))
+	{
+		player->_noMove = true;
+	}
+	else
+	{
+		player->_noMove = false;
+	}
+}
+
+//Stop any playing animations
+void Player::stopAnimation ()
+{
+	_wheelAnimator->stopAnimation ();
+	_baseAnimator->stopAnimation ();
+}
+
 //////////////////////////////|	INSTANCE MANAGEMENT
 //Constructor
 Player::Player (int pX, int pZ, ProgressTracker* pProgressTracker, int pSkin) : GameObject ()
@@ -66,7 +123,7 @@ Player::Player (int pX, int pZ, ProgressTracker* pProgressTracker, int pSkin) : 
 	_currentTile [1] = pZ;
 	_oldTile [0] = _currentTile [0];
 	_oldTile [1] = _currentTile [1];
-	_rotationAnimator->playAnimation(12);
+	_rotationAnimator->playAnimation(12, false, &stopFunctionPlayer, this);
 }
 
 //Destructor
@@ -83,61 +140,6 @@ Player::~Player ()
 	_wheelAnimator = nullptr;
 	_baseAnimator = nullptr;
 	GameObject::~GameObject ();
-}
-
-
-//////////////////////////////|	ANIMATION
-//Function to be called when animations are stopped. It has to be in global space, or we have to pass our object type as well.
-void stopFunctionPlayer (int pAnimIndex, GameObject* pOwner)
-{
-	Player* player = (Player*)pOwner;
-	switch (pAnimIndex)
-	{
-		case 0:
-			player->_noMove = false;
-			player->setWorldPosition (glm::vec3 (player->_currentTile [0] * Level::TILESIZE, 0, player->_currentTile [1] * Level::TILESIZE));
-			if (player->_funcOwner != nullptr)
-			{
-				GameObject* tempOwner = player->_funcOwner;
-				void (*tempFunc) (int, GameObject*) = player->_stopFunc;
-				player->_funcOwner = nullptr;
-				player->_stopFunc = nullptr;
-				tempFunc (pAnimIndex, tempOwner);
-			}
-			break;
-		case 1:
-			player->_noMove = false;
-			player->_dead = false;
-			Level::singletonInstance->reloadLevel ();
-			break;
-		case 13:
-		case 14:
-		case 15:
-		case 16:
-			player->_noMove = false;
-			break;
-		default:
-			break;
-	}
-}
-void stopFunctionPlayerRotation (int pAnimIndex, GameObject* pOwner)
-{
-	Player* player = (Player*)pOwner;
-	if (player->movePlayer(player->_movementToComplete[0], player->_movementToComplete[1], true))
-	{
-		player->_noMove = true;
-	}
-	else
-	{
-		player->_noMove = false;
-	}
-}
-
-//Stop any playing animations
-void Player::stopAnimation ()
-{
-	_wheelAnimator->stopAnimation ();
-	_baseAnimator->stopAnimation ();
 }
 
 
@@ -383,16 +385,16 @@ void Player::die ()
 		return;
 	}
 	Level::singletonInstance->hud->disable();
+	Stats::singletonInstance->data.deathCount++;
+	Stats::singletonInstance->refreshText();
 	_noMove = true;
 	_dead = true;
 	_shadow->setParent (nullptr);
 	delete _shadow;
 	_baseAnimator->stopAnimation ();
 	_wheelAnimator->stopAnimation ();
-	_baseAnimator->playAnimation (1, false, false, &stopFunctionPlayer, this);
 	_wheelAnimator->playAnimation (1, false, false);
-	Stats::singletonInstance->data.deathCount++;
-	Stats::singletonInstance->refreshText();
+	_baseAnimator->playAnimation (1, false, false, &stopFunctionPlayer, this);
 }
 
 //Process input events
@@ -431,15 +433,19 @@ void Player::ProcessEvent (JCPPEngine::Event* pEvent)
 			{
 			case 0:
 				_rotationAnimator->playAnimation(13, false, &stopFunctionPlayer, this);
+				_noMove = true;
 				break;
 			case 180:
 				_rotationAnimator->playAnimation(14, false, &stopFunctionPlayer, this);
+				_noMove = true;
 				break;
 			case 90:
 				_rotationAnimator->playAnimation(15, false, &stopFunctionPlayer, this);
+				_noMove = true;
 				break;
 			case -90:
 				_rotationAnimator->playAnimation(16, false, &stopFunctionPlayer, this);
+				_noMove = true;
 				break;
 			}
 			return;

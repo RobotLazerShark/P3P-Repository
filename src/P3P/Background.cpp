@@ -10,6 +10,10 @@ Background::Background ()
 	_text->setFillColor (sf::Color (0, 255, 0, 60));
 	randomize ();
 }
+Background::~Background ()
+{
+	delete _text;
+}
 
 //Randomize matrix
 void Background::randomize ()

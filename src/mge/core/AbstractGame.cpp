@@ -9,6 +9,7 @@ using namespace std;
 #include <mge/materials/LitMaterial.hpp>
 #include <mge/materials/TerrainMaterial.hpp>
 #include <mge/materials/WobbleMaterial.hpp>
+#include <mge/materials/GlitchMaterial.hpp>
 #include <JCPPEngine/TextureManager.hpp>
 #include <JCPPEngine/FontManager.hpp>
 #include <JCPPEngine/InputManager.hpp>
@@ -69,6 +70,8 @@ AbstractGame::AbstractGame():_window(NULL),_renderer(NULL),_world(NULL), _fps(0)
 AbstractGame::~AbstractGame()
 {
     //dtor
+	singletonInstance = nullptr;
+	delete _background;
     if (_luaParser != nullptr)
     {
 	_luaParser->Clean ();
@@ -90,6 +93,7 @@ AbstractGame::~AbstractGame()
     LitMaterial::clearShaderProgram();
     TerrainMaterial::clearShaderProgram();
     WobbleMaterial::clearShaderProgram();
+    GlitchMaterial::clearShaderProgram ();
 }
 
 void AbstractGame::initialize() {

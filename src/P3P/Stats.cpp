@@ -1,5 +1,7 @@
 #include <P3P/Stats.hpp>
 #include <sstream>
+#include <JCPPEngine/FontManager.hpp>
+#include <JCPPEngine/TextureManager.hpp>
 
 //Static variables
 Stats* Stats::singletonInstance = nullptr;
@@ -9,23 +11,18 @@ Stats::Stats()
 	singletonInstance = this;
 
 	//set sprite
-	sf::Texture * texture = new sf::Texture();
-	texture->loadFromFile("mge/textures/Stats.png");
-	_sprite = new sf::Sprite();
-	_sprite->setTexture(*texture);
+	_sprite = new sf::Sprite(*JCPPEngine::TextureManager::GetTexture ("mge/textures/Stats.png"));
 	_sprite->setPosition(sf::Vector2f(190, 4 * 95));
 
 	//set all texts
 	loadFromFile();
-	sf::Font * font = new sf::Font();
-	font->loadFromFile("fonts/Font1.ttf");
-	_texts.push_back(new sf::Text("deathCount", *font));
-	_texts.push_back(new sf::Text("metersWalked", *font));
-	_texts.push_back(new sf::Text("itemsCollected", *font));
-	_texts.push_back(new sf::Text("hintsUsed", *font));
-	_texts.push_back(new sf::Text("platformsBroke", *font));
-	_texts.push_back(new sf::Text("socketsActivated", *font));
-	_texts.push_back(new sf::Text("questsCompleted", *font));
+	_texts.push_back(new sf::Text("deathCount", *JCPPEngine::FontManager::GetFont("fonts/Font1.ttf")));
+	_texts.push_back(new sf::Text("metersWalked", *JCPPEngine::FontManager::GetFont("fonts/Font1.ttf")));
+	_texts.push_back(new sf::Text("itemsCollected", *JCPPEngine::FontManager::GetFont("fonts/Font1.ttf")));
+	_texts.push_back(new sf::Text("hintsUsed", *JCPPEngine::FontManager::GetFont("fonts/Font1.ttf")));
+	_texts.push_back(new sf::Text("platformsBroke", *JCPPEngine::FontManager::GetFont("fonts/Font1.ttf")));
+	_texts.push_back(new sf::Text("socketsActivated", *JCPPEngine::FontManager::GetFont("fonts/Font1.ttf")));
+	_texts.push_back(new sf::Text("questsCompleted", *JCPPEngine::FontManager::GetFont("fonts/Font1.ttf")));
 	for (int i = 0; i < _texts.size(); i++)
 	{
 		_texts[i]->setPosition(sf::Vector2f(190, 4 * 95 + 30 * i));
@@ -44,6 +41,7 @@ Stats::~Stats()
 	{
 		delete text;
 	}
+	_texts.clear ();
 	delete _sprite;
 }
 

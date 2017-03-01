@@ -13,7 +13,7 @@ Door::Door (int pX, int pZ, int pNextLevelNumber, int pOrientation) : GameObject
 	GameObject* shadow = new GameObject ("ShadowPlane.obj");
 	shadow->setMaterial (new TextureMaterial ("DoorShadow.png"));
 	shadow->badScale (glm::vec3 (1, 1, 2));
-	shadow->translate (glm::vec3 (0, 0.0f, 0.25f));
+	shadow->translate (glm::vec3 (0, 0, 0.25f));
 	shadow->setParent (_model);
 	switch (pOrientation)
 	{

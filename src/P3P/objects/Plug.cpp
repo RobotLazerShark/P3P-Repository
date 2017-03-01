@@ -1,6 +1,6 @@
 #include <P3P/objects/Plug.hpp>
 #include <P3P/Level.hpp>
-
+#include <mge/materials/TextureMaterial.hpp>
 #define _USE_MATH_DEFINES
 #include <math.h>
 
@@ -11,6 +11,10 @@ Plug::Plug(int pX, int pZ, int pOrientation) : GameObject()
 	_model->setParent(this);
 	_animator = new AnimationBehaviour({ "BoxLeft.txt", "BoxUp.txt", "BoxRight.txt", "BoxDown.txt" });
 	_model->setBehaviour(_animator);
+	GameObject* shadow = new GameObject ("ShadowPlane.obj");
+	shadow->setMaterial (new TextureMaterial ("PlugShadow.png"));
+	shadow->translate (glm::vec3 (0, 0.1f, 0));
+	shadow->setParent (_model);
 
 	GameObject* rotationOffset = new GameObject ();
 	rotationOffset->setParent (_model);

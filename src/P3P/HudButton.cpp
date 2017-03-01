@@ -1,12 +1,9 @@
 #include  <P3P/HudButton.hpp>
+#include <JCPPEngine/TextureManager.hpp>
 
 HudButton::HudButton(std::string path, sf::Vector2f pos, void(*function)())
 {
-	sf::Texture * texture = new sf::Texture();
-	texture->loadFromFile(path);
-
-	_sprite = new sf::Sprite();
-	_sprite->setTexture(*texture);
+	_sprite = new sf::Sprite(*JCPPEngine::TextureManager::GetTexture (path));
 	_sprite->setPosition(pos);
 
 	pressFunction = function;

@@ -53,6 +53,7 @@ Level::~Level ()
 {
 	delete map;
 	delete hud;
+	delete _hudOverlay;
 	//delete bossPuzzletracker
 	for (ProgressTracker * bossPuzzleTracker : bossPuzzlesTrackers)
 	{
@@ -106,11 +107,11 @@ void Level::update (float pStep, bool pUpdateWorldTransform)
 
 	//Remove items from drawbuffer
 	drawBuffer.clear();
+	drawBuffer.push_back (_hudOverlay);
 	for (sf::Drawable * drawable : hud->getAllDrawables())
 	{
 		drawBuffer.push_back(drawable);
 	}
-	drawBuffer.push_back (_hudOverlay);
 	GameObject::update(pStep, pUpdateWorldTransform);
 
 	//If we have to load a different level, do that here.
@@ -135,6 +136,10 @@ void Level::render (sf::RenderWindow* pWindow)
 {
 	for (int i = 0, size = Level::singletonInstance->drawBuffer.size(); i < size; i++)
 	{
+		if (Level::singletonInstance->drawBuffer [i] == nullptr)
+		{
+			continue;
+		}
 		//Draw item in drawbuffer
 		pWindow->pushGLStates ();
 		pWindow->draw (*Level::singletonInstance->drawBuffer [i]);
@@ -526,7 +531,7 @@ void Level::loadMap ()
 				case 38: //Boss
 					temp = new Boss(x, y);
 					temp->setParent(this);
-					map->objectTiles[x][y] = (int)temp;
+					map->objectTiles [x] [y] = (int)nullptr;
 					break;
 				case 39:
 					//Lights
@@ -550,9 +555,9 @@ void Level::loadMap ()
 				case 40:
 					//Wall block
 					temp = new GameObject ("cube_flat.obj");
-					temp->setMaterial (new LitMaterial ("White.png"));
+					temp->setMaterial (new LitMaterial ("WallBlock.jpg"));
 					temp->setParent (this);
-					temp->translate(glm::vec3(TILESIZE * x, 0, TILESIZE * y));
+					temp->translate(glm::vec3(TILESIZE * x, 0.5f, TILESIZE * y));
 					temp->rotate (glm::radians (JCPPEngine::Random::Range (0, 3) * 90.0f), glm::vec3 (0, 1, 0));
 					map->objectTiles[x][y] = (int)temp;
 					break;
@@ -882,6 +887,7 @@ void Level::clear ()
 	bossPuzzlesTrackers.clear();
 
 	World::singletonInstance->getMainCamera ()->setBehaviour (nullptr);
+	drawBuffer.clear ();
 }
 
 //Clear everything in the level, and build a new level

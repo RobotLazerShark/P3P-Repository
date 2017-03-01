@@ -23,6 +23,7 @@ class Background
 		void moveLines ();
 	public:
 		Background ();
+		~Background ();
 		void render (sf::RenderWindow* pWindow);
 };
 

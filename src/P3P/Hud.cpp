@@ -73,6 +73,11 @@ Hud::~Hud()
 	{
 		delete button;
 	}
+	if (Stats::singletonInstance != nullptr)
+	{
+		delete Stats::singletonInstance;
+		Stats::singletonInstance = nullptr;
+	}
 	GameObject::~GameObject();
 }
 

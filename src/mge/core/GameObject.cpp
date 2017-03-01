@@ -90,6 +90,11 @@ GameObject::~GameObject()
 		child = nullptr;
 	}
 	_children.clear ();
+
+	if (_parent != nullptr)
+	{
+		_parent->remove (this);
+	}
 }
 
 //////////////////////////////|	COLLISIONS
