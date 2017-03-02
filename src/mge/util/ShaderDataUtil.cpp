@@ -5,8 +5,8 @@
 
 //Static fields
 static Camera* _camera = nullptr;
-static glm::vec4 _cameraWorldPosition;
-static glm::vec3 _ambientColor;						//Light class properties	->	Shader properties
+static glm::vec4 _cameraWorldPosition = glm::vec4 (0,0,0,0);
+static glm::vec3 _ambientColor = glm::vec3 (0,0,0);			//Light class properties	->	Shader properties
 static std::vector <Light*> _directionalLights;//color, intensity, direction			->	color, normal
 static std::vector <Light*> _pointLights;//color, intensity, position, falloff			->	color, position, falloff
 static std::vector <Light*> _spotLights;//color, intensity, position, direction, angle, falloff	->	color, position, normal, angledot, falloff

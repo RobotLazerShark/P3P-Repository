@@ -56,10 +56,10 @@ class LitMaterial : public AbstractMaterial
 		static GLint _spotAngledotsLoc;
 		static GLint _spotFalloffsLoc;
 		static ShaderProgram* _shaderProgram;
-		bool _useTexture;
-		float _shininess;
-		glm::vec3 _specularColor;
-		glm::vec3 _color;
+		bool _useTexture = false;
+		float _shininess = 0;
+		glm::vec3 _specularColor = glm::vec3 (1,1,1);
+		glm::vec3 _color = glm::vec3 (1,1,1);
 		Texture* _texture = nullptr;
 		float _texScale = 1;
 		static void initializeShader ();
