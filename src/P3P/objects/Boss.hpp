@@ -17,6 +17,9 @@ class Boss : public GameObject
 		void update(float pStep, bool pUpdateWorldTransform = false) override;
 		void damage();
 		void removeProjectile (Projectile* pProjectile);
+		//Preferably these variables would be private, but they are needed in a globalspace function
+		//They use the private name conventions because they should be used as such
+		bool _noFire = false;
 	private:
 		GameObject* _model = nullptr;
 		LitMaterial* _faceMaterial = nullptr;

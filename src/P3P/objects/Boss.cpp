@@ -5,6 +5,23 @@
 //Static fields
 Boss* Boss::singletonInstance = nullptr;
 
+
+//////////////////////////////|	ANIMATION
+//Stop function you can pass in when playing an animation, that will then be called when the animation finishes playing
+void stopFunctionBoss (int pAnimIndex, GameObject* pOwner)
+{
+	Boss* boss = (Boss*)pOwner;
+	switch (pAnimIndex)
+	{
+		case 0:
+		case 1:
+			boss->_noFire = false;
+			break;
+		default:
+			break;
+	}
+}
+
 Boss::Boss(int pX, int pZ) : GameObject()
 {
 	if (singletonInstance != nullptr)
@@ -33,7 +50,7 @@ Boss::Boss(int pX, int pZ) : GameObject()
 	barrel1Model->setBehaviour (_barrel1Animator);
 	GameObject* barrel2Model = new GameObject ("BossBarrelEnd.obj");
 	barrel2Model->setMaterial (new LitMaterial ("BossBarrelEnd.png"));
-	barrel2Model->setParent (_model);
+	barrel2Model->setParent (barrel1Model);
 	_barrel2Animator = new AnimationBehaviour ({ "Barrel2Open.txt", "Barrel2Fire.txt" });
 	barrel2Model->setBehaviour (_barrel2Animator);
 	translate(glm::vec3(pX * Level::TILESIZE, 0, pZ * Level::TILESIZE));
@@ -41,6 +58,11 @@ Boss::Boss(int pX, int pZ) : GameObject()
 	//save position
 	_position[0] = pX;
 	_position[1] = pZ;
+
+	//Play startup animation, put guns out
+	_barrel1Animator->playAnimation (0, false, false);
+	_barrel2Animator->playAnimation (0, false, false, &stopFunctionBoss, this);
+	_noFire = true;
 }
 
 Boss::~Boss()
@@ -73,11 +95,14 @@ void Boss::update(float pStep, bool pUpdateWorldTransform)
 {
 	GameObject::update(pStep, pUpdateWorldTransform);
 
-	_timer += pStep;
-	if (_timer >= SHOOTING_FREQUENCY) 
+	if (!_noFire)
 	{
-		_timer -= SHOOTING_FREQUENCY;
-		shoot();
+		_timer += pStep;
+		if (_timer >= SHOOTING_FREQUENCY)
+		{
+			_timer -= SHOOTING_FREQUENCY;
+			shoot();
+		}
 	}	
 }
 
@@ -86,6 +111,10 @@ void Boss::shoot()
 	Projectile * proj = new Projectile(getWorldPosition(), Player::singletonInstance->_currentTile[0], Player::singletonInstance->_currentTile[1], this);
 	proj->setParent(Level::singletonInstance);
 	projectiles.push_back(proj);
+	//Play shooting animation
+	_barrel1Animator->playAnimation (1, false, false);
+	_barrel2Animator->playAnimation (1, false, false, &stopFunctionBoss, this);
+	_noFire = true;
 }
 
 void Boss::damage()

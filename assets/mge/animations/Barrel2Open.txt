@@ -1,0 +1,7 @@
+time = 0
+-
+time = 0:50
+-
+time = 1:30
+position = 0, 0, -0.3
+--
