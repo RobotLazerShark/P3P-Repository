@@ -123,7 +123,7 @@ void Door::open ()
     {
 	return;
     }
-    if (Level::singletonInstance->levelKey () >= _nextLevelNumber && Level::singletonInstance->levelCompleted)
+    if (Level::singletonInstance->levelKey () >= _nextLevelNumber)
     {
 	_barsLeftAnimator->playAnimation (0);
 	_barsRightAnimator->playAnimation (0);

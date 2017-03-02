@@ -27,24 +27,30 @@ Npc::Npc(int pX, int pZ) : GameObject()
 
 	//Set up model
 	_model = new GameObject("BossBrokenBase.obj");
-	_model->setMaterial (new LitMaterial ("Default.png"));
+	_model->setMaterial (new LitMaterial ("BossBrokenBase.png"));
+	_model->setParent(this);
+	GameObject* boxes = new GameObject ("BossBrokenBoxes.obj");
+	boxes->setMaterial (new LitMaterial ("BossBrokenBoxes.png"));
+	boxes->setParent (_model);
 	GameObject* subModel = new GameObject ("BossBroken.obj");
-	_material = new GlitchMaterial("Default.png");
+	_material = new GlitchMaterial("BossBroken.png");
 	subModel->translate (glm::vec3 (-0.486f, 0.816f, -0.41f));
 	subModel->setMaterial(_material);
 	subModel->setParent (_model);
-	_model->setParent(this);
 	//Set up textbox
 	_textBox = new sf::Sprite (*JCPPEngine::TextureManager::GetTexture ("images/TextBox.png"));
 	_text = new sf::Text ("...", *JCPPEngine::FontManager::GetFont ("fonts/Font1.ttf"), 20);
 	_text->setFillColor (sf::Color::White);
 	sf::FloatRect size = _text->getLocalBounds ();
-	_text->setOrigin (size.width * 0.5f, size.height * 0.5f);//Set origin at center
-	_text->setPosition (AbstractGame::windowHalfWidth, AbstractGame::windowHalfHeight);
+	_text->setOrigin (0, size.height * 0.5f);//Set origin at center
+	_text->setPosition (AbstractGame::windowHalfWidth*0.6f, AbstractGame::windowHalfHeight);
 
 	translate(glm::vec3(pX * Level::TILESIZE, 0, pZ * Level::TILESIZE));
 	position [0] = pX;
 	position [1] = pZ;
+
+	_glitchIntensity = 0;
+	_material->SetGlitchIntensity (0);
 }
 //Destructor
 Npc::~Npc ()
@@ -119,7 +125,7 @@ void Npc::displayDialog (std::string pText)
 	_playerPosition [1] = Player::singletonInstance->_currentTile [1];
 	_text->setString (pText);
 	sf::FloatRect size = _text->getLocalBounds ();
-	_text->setOrigin (size.width * 0.5f, size.height * 0.5f);//Set origin at center
+	_text->setOrigin (0, size.height * 0.5f);//Set origin at center
 	questTalks ++;
 	//check if quests are completed
 	for (int i = 0, size = activeQuests.size (); i < size; i ++)
@@ -152,7 +158,7 @@ void Npc::updateDialog (std::string pText)
 {
 	_text->setString (pText);
 	sf::FloatRect size = _text->getLocalBounds ();
-	_text->setOrigin (size.width * 0.5f, size.height * 0.5f);//Set origin at center
+	_text->setOrigin (0, size.height * 0.5f);//Set origin at center
 }
 //Stop showing npc dialog
 void Npc::stopDialog ()

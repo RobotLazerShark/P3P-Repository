@@ -29,11 +29,11 @@ class Level : public GameObject
 		int _questTalksCopy = 0;
 		bool _stop = false;
 		bool _reloading = false;
-		int _bossLevelNumber = 5;
 		int _playerSkin = 1;
 		std::vector<ProgressTracker*> bossPuzzlesTrackers;
 		sf::Sprite* _hudOverlay = nullptr;
 	public:
+		int _bossLevelNumber = 5;
 		Level (int pPlayerSkin);
 		~Level ();
 		void increaseLevelKey ();

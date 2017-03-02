@@ -2508,6 +2508,12 @@ int isHub (lua_State* pLua)
 	lua_pushboolean (pLua, Level::singletonInstance->isHub ());
 	return 1;
 }
+//Load the boss level
+int loadBossLevel (lua_State* pLua)
+{
+	Level::singletonInstance->loadLevel (Level::singletonInstance->_bossLevelNumber);
+	return 0;
+}
 
 
 ////////////////////|	FLOW CONTROL
@@ -2902,6 +2908,9 @@ int open_levellib (lua_State* pLua)
 	lua_newtable (pLua);
 	lua_pushstring (pLua, "isHub");
 	lua_pushcfunction (pLua, &isHub);
+	lua_settable (pLua, -3);
+	lua_pushstring (pLua, "loadBossLevel");
+	lua_pushcfunction (pLua, &loadBossLevel);
 	lua_settable (pLua, -3);
 	lua_setglobal (pLua, "Level");//Name newly made library
 	return 1;

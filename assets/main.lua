@@ -28,61 +28,96 @@ end
 
 --explain to the player how the controls work, and give the first questTalks
 function explainControls ()
-	local text = "REBOOTING"
-	local pause = 0.3
+	text = "Memory reset completed."
+	pause = 0.3
 	Player.lock (true);--Prevent the player from moving about while we're talking
+	Lua.wait (1.5)--wait for everything to get set up, and for the player to get used to what (s)he's seeing.
 	Npc.showDialog (text)
 	Lua.wait (pause)
-	text = text.."."
-	Npc.showDialog (text)
+	text = text.."\n\tNo backups found."
+	Npc.updateDialog (text)
+	Lua.wait (pause + 0.6)
+	text = "REBOOTING"
+	Npc.updateDialog (text)
 	Lua.wait (pause)
 	text = text.."."
-	Npc.showDialog (text)
+	Npc.updateDialog (text)
 	Lua.wait (pause)
 	text = text.."."
-	Npc.showDialog (text)
+	Npc.updateDialog (text)
+	Lua.wait (pause)
+	text = text.."."
+	Npc.updateDialog (text)
 	Lua.wait (pause)
 	text = text.."\nRestarting controller module."
-	Npc.showDialog (text)
+	Npc.updateDialog (text)
 	Lua.wait (pause)
 	text = text.."\n\tLoading commands:"
-	Npc.showDialog (text)
+	Npc.updateDialog (text)
 	Lua.wait (pause)
 	text = text.."\n\tMove, Direction = Left, A/LeftArrow"
-	Npc.showDialog (text)
+	Npc.updateDialog (text)
 	Lua.wait (pause)
 	text = text.."\n\tMove, Direction = Right, D/RightArrow"
-	Npc.showDialog (text)
+	Npc.updateDialog (text)
 	Lua.wait (pause)
 	text = text.."\n\tMove, Direction = Forward, W/UpArrow"
-	Npc.showDialog (text)
+	Npc.updateDialog (text)
 	Lua.wait (pause)
 	text = text.."\n\tMove, Direction = Backward, S/DownArrow"
-	Npc.showDialog (text)
+	Npc.updateDialog (text)
+	Lua.wait (pause)
+	text = text.."\n\tRefresh unit existence, R"
+	Npc.updateDialog (text)
 	Lua.wait (pause)
 	text = text.."\nController module restarted."
-	Npc.showDialog (text)
+	Npc.updateDialog (text)
 	Lua.wait (pause)
 	text = text.."\nRestarting all other systems"
-	Npc.showDialog (text)
+	Npc.updateDialog (text)
 	Lua.wait (pause)
 	text = text.."."
-	Npc.showDialog (text)
+	Npc.updateDialog (text)
 	Lua.wait (pause)
 	text = text.."."
-	Npc.showDialog (text)
+	Npc.updateDialog (text)
 	Lua.wait (pause)
 	text = text.."."
-	Npc.showDialog (text)
+	Npc.updateDialog (text)
 	Lua.wait (pause)
-	text = text.."\nREBOOT DONE.\n"
-	Npc.showDialog (text)
+	text = text.."\nREBOOT DONE."
+	Npc.updateDialog (text)
+	Lua.wait (pause)
+	text = text.."\n"
+	Npc.updateDialog (text)
 	Lua.wait (pause)
 	text = text.."\n<space = continue>"
-	Npc.showDialog (text)
+	Npc.updateDialog (text)
 	Player.waitForKey ()--This will pause the lua program until SPACE has been pressed.
-	Npc.updateDialog ("G|¡t©h:\nWäkE up! I neED y0uR hE|p!\n|'m verY unsTABle r¡ght ñ0w, as yOU ©àn see.\nI nEEd yoü To gET the yel|ow blõCk ¡ñ roóm A2.\nìt sHoú1d FïX My ©oms.\nI'll opEn thE dóor for y0u.")
-	Player.giveQuest ("Item 1", 0.5)
+	text = "G|¡t©h:"
+	Npc.updateDialog (text)
+	Lua.wait (pause)
+	text = text.."\nWäkE up! I neED y0uR hE|p!"
+	Npc.updateDialog (text)
+	Lua.wait (pause)
+	text = text.."\n|'m verY unsTABle r¡ght ñ0w, as yOU ©àn see."
+	Npc.updateDialog (text)
+	Lua.wait (pause)
+	text = text.."\nI nEEd yoü To gET the yel|ow blõCk ¡ñ roóm A2."
+	Npc.updateDialog (text)
+	Lua.wait (pause)
+	text = text.."\nìt sHoú1d Fï× My ©oms."
+	Npc.updateDialog (text)
+	Lua.wait (pause)
+	text = text.."\nI'll opEn thE dóor for y0u."
+	Npc.updateDialog (text)
+	Lua.wait (pause)
+	text = text.."\n"
+	Npc.updateDialog (text)
+	Lua.wait (pause)
+	text = text.."\n|f you sEÈ à c0MpuTéR, wa|k úP to ït ANd 1'll çõnta©T you."
+	Npc.updateDialog (text)
+	Player.giveQuest ("QuestItem1", 0.5)
 	Player.waitForKey ()
 	Npc.stopDialog ()--Hide the textbox and text
 	Player.lock (false);--The player is now allowed to move again
@@ -94,14 +129,34 @@ function explainQuest (pCurrentQuest, pGiveNewQuest)
 	if pCurrentQuest == 1--Quest 1 is explained and given when the controls are explained
 	then
 		Player.lock (true)
-		Npc.showDialog ("G|¡t©h:\nP1éãSe, g0 gët thE pARt!")
+		text = "G|¡t©hèd B0t:"
+		Npc.showDialog (text)
+		Lua.wait (pause)
+		text = text.."\nP1éãSe, g0 gët thE pARt | nEÈd!"
+		Npc.updateDialog (text)
 		Player.waitForKey ()
 		Npc.stopDialog ()
 		Player.lock (false)
 	elseif pCurrentQuest == 2
 	then
 		Player.lock (true)
-		Npc.showDialog ("G|¡t©h:\nThanks, my coms are fully functional now!\nNow I need you to find the next part...\nI opened the door for you, its on the right.")
+		text = "Glitched Bot:"
+		Npc.showDialog (text)
+		Lua.wait (pause)
+		text = text.."\nThanks, my coms are fully functional now!"
+		Npc.updateDialog (text)
+		Lua.wait (pause)
+		text = text.."\nNow I need you to find the next part, so I can patch my..."
+		Npc.updateDialog (text)
+		Lua.wait (pause)
+		text = text.."\ncleanup protocols."
+		Npc.updateDialog (text)
+		Lua.wait (pause)
+		text = text.."\n"
+		Npc.updateDialog (text)
+		Lua.wait (pause)
+		text = text.."\nI opened the door for you, its on the right."
+		Npc.updateDialog (text)
 		Player.waitForKey ()
 		if pGiveNewQuest
 		then
@@ -113,10 +168,18 @@ function explainQuest (pCurrentQuest, pGiveNewQuest)
 	then
 		--The last quest has been completed
 		Player.lock (true)
-		Npc.showDialog ("Finally, I am whole again!\n*Ominous laughter*")
+		text = "Evil Bot:"
+		Npc.showDialog (text)
+		Lua.wait (pause)
+		text = text.."Finally, I am whole again!\n"
+		Npc.updateDialog (text)
+		Lua.wait (pause)
+		text = text.."*Ominous laughter*"
+		Npc.updateDialog (text)
 		Player.waitForKey ()
 		Npc.stopDialog ()
 		Player.lock (false)
+		loadBossLevel ()
 	end
 end
 

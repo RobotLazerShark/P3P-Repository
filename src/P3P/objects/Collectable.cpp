@@ -8,27 +8,17 @@
 #include <JCPPEngine/FontManager.hpp>
 
 //Constructor
-Collectable::Collectable(int pX, int pZ, std::string pName) : GameObject()
+Collectable::Collectable(int pX, int pZ, std::string pName) : GameObject()//Quest collectable
 {
 	_name = pName;
 	_hasDialog = false;
 	_copyCollect = false;
 
 	//Set up model
-	if (_copyCollect)
-	{
-		_model = new GameObject ("Computer.obj");
-		_model->setMaterial (new LitMaterial ("Computer.png"));
-		_model->translate (glm::vec3 (0, 0.05f, 0));
-		_model->rotate (glm::radians (-90.0f), glm::vec3 (0, 1, 0));
-	}
-	else
-	{
-		_model = new GameObject ("cube_flat.obj");
-		_model->setMaterial(new LitMaterial(glm::vec3(0.6f,0.6f,0)));
-		_model->translate(glm::vec3(0, 0.5f, 0));
-		_model->scale(0.5f);
-	}
+	_model = new GameObject ("cube_flat.obj");
+	_model->setMaterial(new LitMaterial(glm::vec3(0.6f,0.6f,0)));
+	_model->translate(glm::vec3(0, 0.5f, 0));
+	_model->scale(0.5f);
 	_model->setParent (this);
 
 	translate(glm::vec3(pX * Level::TILESIZE, 0, pZ * Level::TILESIZE));
@@ -43,14 +33,14 @@ Collectable::Collectable(int pX, int pZ, std::string pName, std::string pDialog,
 	registerForEvent (JCPPEngine::Event::EventType::KeyDown);
 
 	//Set up model
-	if (_copyCollect)
+	if (_copyCollect)//Tutorial computer
 	{
 		_model = new GameObject ("Computer.obj");
 		_model->setMaterial (new LitMaterial ("Computer.png"));
 		_model->translate (glm::vec3 (0, 0.05f, 0));
 		_model->rotate (glm::radians (-90.0f), glm::vec3 (0, 1, 0));
 	}
-	else
+	else//Story collectable
 	{
 		_model = new GameObject ("cube_flat.obj");
 		_model->setMaterial(new LitMaterial(glm::vec3(0.6f,0.6f,0)));
@@ -61,11 +51,11 @@ Collectable::Collectable(int pX, int pZ, std::string pName, std::string pDialog,
 
 	//Set up textbox (won't be visible yet)
 	_textBox = new sf::Sprite (*JCPPEngine::TextureManager::GetTexture ("images/TextBox.png"));
-	_text = new sf::Text (pDialog, *JCPPEngine::FontManager::GetFont ("fonts/Font1.ttf"), 20);
+	_text = new sf::Text (pDialog, *JCPPEngine::FontManager::GetFont ("fonts/Font2.ttf"), 25);
 	_text->setFillColor (sf::Color::White);
 	sf::FloatRect size = _text->getLocalBounds ();
-	_text->setOrigin (size.width * 0.5f, size.height * 0.5f);//Set origin at center
-	_text->setPosition (AbstractGame::windowHalfWidth, AbstractGame::windowHalfHeight);
+	_text->setOrigin (0, size.height * 0.5f);//Set origin at center
+	_text->setPosition (AbstractGame::windowHalfWidth * 0.6f, AbstractGame::windowHalfHeight);
 
 	translate(glm::vec3(pX * Level::TILESIZE, 0, pZ * Level::TILESIZE));
 	_position [0] = pX;

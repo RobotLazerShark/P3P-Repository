@@ -6,6 +6,7 @@
 #include <mge/objects/Light.hpp>
 //[TESTING]
 #include <mge/behaviours/CameraOrbitBehaviour.hpp>
+#include <JCPPEngine/Random.hpp>
 
 
 //construct the game class into _window and _renderer (other parts are initialized by build)
@@ -43,7 +44,7 @@ void MGEDemo::_initializeScene()
 	//camera->setBehaviour (new CameraOrbitBehaviour (10.0f, glm::radians (-60.0f), glm::radians (60.0f), 0.01f, _world));
 
 	//Set up P3P hub (starts the game)
-	_game = new Level (1);
+	_game = new Level (JCPPEngine::Random::Range (1, 4));
 }
 
 MGEDemo::~MGEDemo()

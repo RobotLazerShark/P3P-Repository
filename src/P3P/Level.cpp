@@ -554,10 +554,10 @@ void Level::loadMap ()
 					break;
 				case 40:
 					//Wall block
-					temp = new GameObject ("cube_flat.obj");
-					temp->setMaterial (new LitMaterial ("WallBlock.jpg"));
+					temp = new GameObject ("ServerRack.obj");
+					temp->setMaterial (new LitMaterial ("ServerRack.png"));
 					temp->setParent (this);
-					temp->translate(glm::vec3(TILESIZE * x, 0.5f, TILESIZE * y));
+					temp->translate(glm::vec3(TILESIZE * x, 0, TILESIZE * y));
 					temp->rotate (glm::radians (JCPPEngine::Random::Range (0, 3) * 90.0f), glm::vec3 (0, 1, 0));
 					map->objectTiles[x][y] = (int)temp;
 					break;
