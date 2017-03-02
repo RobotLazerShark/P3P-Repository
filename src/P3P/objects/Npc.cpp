@@ -48,9 +48,6 @@ Npc::Npc(int pX, int pZ) : GameObject()
 	translate(glm::vec3(pX * Level::TILESIZE, 0, pZ * Level::TILESIZE));
 	position [0] = pX;
 	position [1] = pZ;
-
-	_glitchIntensity = 0;
-	_material->SetGlitchIntensity (0);
 }
 //Destructor
 Npc::~Npc ()

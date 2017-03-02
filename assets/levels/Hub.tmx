@@ -48,31 +48,31 @@
  <objectgroup name="Object Layer 1">
   <object id="15" gid="57" x="256" y="192" width="64" height="64">
    <properties>
-    <property name="LevelNumber" value="6"/>
+    <property name="LevelNumber" value="10"/>
     <property name="Orientation" value="1"/>
    </properties>
   </object>
   <object id="16" gid="57" x="256" y="384" width="64" height="64">
    <properties>
-    <property name="LevelNumber" value="4"/>
+    <property name="LevelNumber" value="10"/>
     <property name="Orientation" value="1"/>
    </properties>
   </object>
   <object id="17" gid="57" x="256" y="576" width="64" height="64">
    <properties>
-    <property name="LevelNumber" value="2"/>
+    <property name="LevelNumber" value="3"/>
     <property name="Orientation" value="1"/>
    </properties>
   </object>
   <object id="18" gid="57" x="896" y="256" width="64" height="64">
    <properties>
-    <property name="LevelNumber" value="5"/>
+    <property name="LevelNumber" value="10"/>
     <property name="Orientation" value="3"/>
    </properties>
   </object>
   <object id="19" gid="57" x="896" y="448" width="64" height="64">
    <properties>
-    <property name="LevelNumber" value="3"/>
+    <property name="LevelNumber" value="10"/>
     <property name="Orientation" value="3"/>
    </properties>
   </object>

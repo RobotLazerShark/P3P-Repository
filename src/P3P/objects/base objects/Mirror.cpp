@@ -4,10 +4,19 @@
 Mirror::Mirror(int pX, int pZ) : ButtonTarget()
 {
 	//Set up model
-	_model = new GameObject("cube_flat.obj");
-	_model->setMaterial(new LitMaterial("Mirror.jpg"));
+	_model = new GameObject("MirrorBase.obj");
+	_model->setMaterial(new LitMaterial("MirrorBase.png"));
 	_model->setParent(this);
-	translate(glm::vec3(pX * Level::TILESIZE, -0.3f, pZ * Level::TILESIZE));
+	GameObject* mirrorTop = new GameObject ("MirrorTop.obj");
+	mirrorTop->setMaterial (new LitMaterial ("MirrorBase.png"));
+	mirrorTop->setParent (_model);
+	GameObject* mirrorOffset = new GameObject ();
+	mirrorOffset->setParent (mirrorTop);
+	mirrorOffset->translate (glm::vec3 (0, 0.6f, 0));
+	GameObject* mirror = new GameObject ("Mirror.obj");
+	mirror->setMaterial (new LitMaterial ("Mirror.png", 250));
+	mirror->setParent (mirrorOffset);
+	translate(glm::vec3(pX * Level::TILESIZE, 0, pZ * Level::TILESIZE));
 
 	//animator
 	_animator = new AnimationBehaviour({ "MirrorUp.txt","MirrorDown.txt" });

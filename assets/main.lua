@@ -103,7 +103,7 @@ function explainControls ()
 	text = text.."\n|'m verY unsTABle r¡ght ñ0w, as yOU ©àn see."
 	Npc.updateDialog (text)
 	Lua.wait (pause)
-	text = text.."\nI nEEd yoü To gET the yel|ow blõCk ¡ñ roóm A2."
+	text = text.."\nI nEEd yoü To gET a pUñctúàt¡0n CHïp frõm roóm A2."
 	Npc.updateDialog (text)
 	Lua.wait (pause)
 	text = text.."\nìt sHoú1d Fï× My ©oms."
@@ -155,7 +155,7 @@ function explainQuest (pCurrentQuest, pGiveNewQuest)
 		text = text.."\n"
 		Npc.updateDialog (text)
 		Lua.wait (pause)
-		text = text.."\nI opened the door for you, its on the right."
+		text = text.."\nI opened the door for you, its on the left.\n[NOTE: level not actually build yet!]"
 		Npc.updateDialog (text)
 		Player.waitForKey ()
 		if pGiveNewQuest

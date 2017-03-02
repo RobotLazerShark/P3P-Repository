@@ -12,8 +12,8 @@ out vec2 fragUV;
 
 void main (void)
 {
-	fragWorldNormal = normalize (modelMatrix * vec4 (normal, 0.0f));
-	gl_Position = MVPmatrix * vec4 (vertex, 1.0f);
+	fragWorldNormal = normalize (modelMatrix * vec4 (normal, 0));
+	gl_Position = MVPmatrix * vec4 (vertex, 1);
 	fragUV = uv * texScale;
-	fragWorldPosition = modelMatrix * vec4 (vertex, 1.0f);
+	fragWorldPosition = modelMatrix * vec4 (vertex, 1);
 }

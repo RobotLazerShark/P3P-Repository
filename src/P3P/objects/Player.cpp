@@ -159,7 +159,7 @@ bool Player::movePlayer (int pX, int pZ, bool pAnimate)
         Moveable* box = dynamic_cast <Moveable*> ((GameObject*)Level::map->objectTiles [_currentTile [0]] [_currentTile [1]]);
         Door* door = dynamic_cast <Door*> ((GameObject*)Level::map->objectTiles [_currentTile [0]] [_currentTile [1]]);
 	Collectable* collectable = dynamic_cast <Collectable*> ((GameObject*)Level::map->objectTiles [_currentTile [0]] [_currentTile [1]]);
-	if (Npc::singletonInstance != nullptr && _currentTile [0] == Npc::singletonInstance->position [0] && _currentTile [1] == Npc::singletonInstance->position [1])
+	if (Npc::singletonInstance != nullptr && ((int)Npc::singletonInstance) == ((int)Level::map->objectTiles [_currentTile [0]] [_currentTile [1]]))
 	{
 		//we cannot move into the Npc's space
 		_currentTile [0] = _oldTile [0];
@@ -273,7 +273,7 @@ bool Player::movePlayer (int pX, int pZ, bool pAnimate, void (*pFuncPtr) (int, G
         Moveable* box = dynamic_cast <Moveable*> ((GameObject*)Level::map->objectTiles [_currentTile [0]] [_currentTile [1]]);
         Door* door = dynamic_cast <Door*> ((GameObject*)Level::map->objectTiles [_currentTile [0]] [_currentTile [1]]);
 	Collectable* collectable = dynamic_cast <Collectable*> ((GameObject*)Level::map->objectTiles [_currentTile [0]] [_currentTile [1]]);
-	if (Npc::singletonInstance != nullptr && _currentTile [0] == Npc::singletonInstance->position [0] && _currentTile [1] == Npc::singletonInstance->position [1])
+	if (Npc::singletonInstance != nullptr && ((int)Npc::singletonInstance) == ((int)Level::map->objectTiles [_currentTile [0]] [_currentTile [1]]))
 	{
 		//we cannot move into the Npc's space
 		_currentTile [0] = _oldTile [0];
