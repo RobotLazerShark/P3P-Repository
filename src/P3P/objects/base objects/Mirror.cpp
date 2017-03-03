@@ -12,26 +12,30 @@ Mirror::Mirror(int pX, int pZ) : ButtonTarget()
 	mirrorTop->setParent (_model);
 	GameObject* mirrorOffset = new GameObject ();
 	mirrorOffset->setParent (mirrorTop);
-	mirrorOffset->translate (glm::vec3 (0, 0.6f, 0));
+	mirrorOffset->translate (glm::vec3 (0, 0.7f, 0));
 	GameObject* mirror = new GameObject ("Mirror.obj");
 	mirror->setMaterial (new LitMaterial ("Mirror.png", 250));
 	mirror->setParent (mirrorOffset);
+	mirror->translate (glm::vec3 (0, -0.55f, 0));
+	mirror->rotate (glm::radians (-90.0f), glm::vec3 (0, 0, 1));
 	translate(glm::vec3(pX * Level::TILESIZE, 0, pZ * Level::TILESIZE));
 
 	//animator
 	_animator = new AnimationBehaviour({ "MirrorUp.txt","MirrorDown.txt" });
-	_model->setBehaviour(_animator);
+	mirror->setBehaviour(_animator);
 }
 
-void animationEndFunctionUp(int pAnimIndex, GameObject* pOwner)
+void animationEndFunction(int pAnimIndex, GameObject* pOwner)
 {
 	Mirror* mirror = (Mirror*)pOwner;
-	mirror->translate(glm::vec3(0, 0.8f, 0));
-}
-void animationEndFunctionDown(int pAnimIndex, GameObject* pOwner)
-{
-	Mirror* mirror = (Mirror*)pOwner;
-	mirror->translate(glm::vec3(0, -1, 0));
+	switch (pAnimIndex)
+	{
+		case 1:
+			mirror->up = false;
+			break;
+		default:
+			break;
+	}
 }
 
 bool Mirror::setActive(bool pActive)
@@ -40,11 +44,11 @@ bool Mirror::setActive(bool pActive)
 	if (_active && !up && !broken)
 	{
 		up = true;
-		_animator->playAnimation(0, false, &animationEndFunctionUp, this);
+		_animator->playAnimation(0, false, false, &animationEndFunction, this);
 	}
 	if (!_active)
 	{
-		_animator->playAnimation(1, false, &animationEndFunctionDown, this);
+		_animator->playAnimation(1, false, false, &animationEndFunction, this);
 	}
 	return true;
 }

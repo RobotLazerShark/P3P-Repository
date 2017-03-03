@@ -6,6 +6,8 @@
 #include <JCPPEngine/TextureManager.hpp>
 #include <JCPPEngine/FontManager.hpp>
 #include <mge/materials/LitMaterial.hpp>
+#include <mge/objects/Light.hpp>
+#include <mge/materials/TextureMaterial.hpp>
 
 
 //Static variables
@@ -29,6 +31,11 @@ Npc::Npc(int pX, int pZ) : GameObject()
 	_model = new GameObject("BossBrokenBase.obj");
 	_model->setMaterial (new LitMaterial ("BossBrokenBase.png"));
 	_model->setParent(this);
+	GameObject* shadow = new GameObject ("ShadowPlane.obj");
+	shadow->badScale (glm::vec3 (2, 1, 2));
+	shadow->setMaterial (new TextureMaterial ("BossBrokenShadow.png"));
+	shadow->translate (glm::vec3 (-0.3f, 0.33f, -0.25f));
+	shadow->setParent (_model);
 	GameObject* boxes = new GameObject ("BossBrokenBoxes.obj");
 	boxes->setMaterial (new LitMaterial ("BossBrokenBoxes.png"));
 	boxes->setParent (_model);
@@ -48,6 +55,9 @@ Npc::Npc(int pX, int pZ) : GameObject()
 	translate(glm::vec3(pX * Level::TILESIZE, 0, pZ * Level::TILESIZE));
 	position [0] = pX;
 	position [1] = pZ;
+
+	Light* light = new Light(glm::vec3(1, 1, 0.8f), 10, glm::vec3(-0.5f, 2.5f, -0.5f), glm::radians (60.0f), glm::vec2 (0.25f, 0.75f));
+	light->setParent(this);
 }
 //Destructor
 Npc::~Npc ()

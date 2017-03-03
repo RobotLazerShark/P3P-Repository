@@ -21,9 +21,10 @@ class Boss : public GameObject
 		//They use the private name conventions because they should be used as such
 		bool _noFire = false;
 	private:
+		bool _dead = false;
 		GameObject* _model = nullptr;
 		LitMaterial* _faceMaterial = nullptr;
-		int liveCount = 5;
+		int liveCount = 1;
 		int _position[2] = { 0, 0 };
 		float _timer = 0;
 		const float SHOOTING_FREQUENCY = 1;

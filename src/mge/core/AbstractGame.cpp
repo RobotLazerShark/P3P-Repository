@@ -124,7 +124,7 @@ void AbstractGame::initialize() {
 
 ///SETUP
 
-void AbstractGame::_initializeWindow() {
+void AbstractGame::_initializeWindow() {//FADE TOP ROW OF WALLS ALPHA TO 0
 	sf::VideoMode videoMode = sf::VideoMode::getFullscreenModes () [0];
 		//sf::VideoMode(1400,800);//[TESTING]
 	windowWidth = videoMode.width;

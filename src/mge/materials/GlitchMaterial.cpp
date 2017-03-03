@@ -190,7 +190,7 @@ void GlitchMaterial::render (Mesh* pMesh, const glm::mat4& pModelMatrix, const g
 		_random2Array [i] = JCPPEngine::Random::Value ();
 	}
 	glUniform1fv (_random2Loc, 15, &_random2Array [0]);
-	glUniform1f (_glitchIntensityLoc, _glitchIntensity);
+	glUniform1f (_glitchIntensityLoc, _glitchIntensity * 0.5f);
 	glm::mat4 MVPmatrix = pProjectionMatrix * pViewMatrix * pModelMatrix;
 	glUniformMatrix4fv (_MVPmatrixLoc, 1, GL_FALSE, glm::value_ptr (MVPmatrix));
 	glUniformMatrix4fv (_modelMatrixLoc, 1, GL_FALSE, glm::value_ptr (pModelMatrix));

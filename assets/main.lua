@@ -36,7 +36,7 @@ function explainControls ()
 	Lua.wait (pause)
 	text = text.."\n\tNo backups found."
 	Npc.updateDialog (text)
-	Lua.wait (pause + 0.6)
+	Lua.wait (pause + 0.65)
 	text = "REBOOTING"
 	Npc.updateDialog (text)
 	Lua.wait (pause)
@@ -67,7 +67,7 @@ function explainControls ()
 	text = text.."\n\tMove, Direction = Backward, S/DownArrow"
 	Npc.updateDialog (text)
 	Lua.wait (pause)
-	text = text.."\n\tRefresh unit existence, R"
+	text = text.."\n\tRebuild, Time = Reversed, R"
 	Npc.updateDialog (text)
 	Lua.wait (pause)
 	text = text.."\nController module restarted."
@@ -115,7 +115,10 @@ function explainControls ()
 	text = text.."\n"
 	Npc.updateDialog (text)
 	Lua.wait (pause)
-	text = text.."\n|f you sEÈ à c0MpuTéR, wa|k úP to ït ANd 1'll çõnta©T you."
+	text = text.."\n|f you sEÈ à c0MpuTéR, wa|k úP to ït ANd 1'll çõnta©T you"
+	Npc.updateDialog (text)
+	Lua.wait (pause)
+	text = text.."\nW¡tH fùrhTËr íñstRüçti0ns. Yoú'l1 nëEd tHe he|p."
 	Npc.updateDialog (text)
 	Player.giveQuest ("QuestItem1", 0.5)
 	Player.waitForKey ()
@@ -191,6 +194,9 @@ function getAnnoyed (pTalksHad)
 		explainQuest (Player.completedQuests () + 1, false)
 	else
 		Player.lock (true)
+		text = "Glitched Bot:"
+		Npc.showDialog (text)
+		Lua.wait (pause)
 		Npc.showDialog ("Come on, I already told you what to do 3 times!")
 		Player.waitForKey ()
 		Npc.stopDialog ()

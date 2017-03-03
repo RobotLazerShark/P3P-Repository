@@ -1,5 +1,8 @@
 #version 330
 
+uniform bool fade;
+uniform float fadeMin;
+uniform float fadeMax;
 uniform sampler2D texture;
 uniform vec3 color;
 uniform bool useTexture;
@@ -76,6 +79,20 @@ vec3 getSpotContribution (vec3 pColor, vec4 pPosition, vec4 pNormal, float pAngl
 //Vertex shader
 void main (void)
 {
+	float alpha = 1;
+	if (fade)
+	{
+		if (fragWorldPosition.y < fadeMin || fragWorldPosition.y > fadeMax)
+		{
+			fragment_color = vec4 (0,0,0,0);
+			return;
+		}
+		else
+		{
+			alpha = 1 - (fragWorldPosition.y - fadeMin) / (fadeMax - fadeMin);
+		}
+	}
+
 	if (useTexture)
 	{
 		baseColor = texture2D (texture, fragUV).rgb;
@@ -109,5 +126,5 @@ void main (void)
 	}
 
 	//Calculate the final color
-	fragment_color = vec4 (ambientColor + directionalFactor + pointFactor + spotFactor, 1.0f);
+	fragment_color = vec4 (ambientColor + directionalFactor + pointFactor + spotFactor, alpha);
 }

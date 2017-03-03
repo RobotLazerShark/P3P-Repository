@@ -51,7 +51,7 @@ Collectable::Collectable(int pX, int pZ, std::string pName, std::string pDialog,
 
 	//Set up textbox (won't be visible yet)
 	_textBox = new sf::Sprite (*JCPPEngine::TextureManager::GetTexture ("images/TextBox.png"));
-	_text = new sf::Text (pDialog, *JCPPEngine::FontManager::GetFont ("fonts/Font2.ttf"), 25);
+	_text = new sf::Text (pDialog, *JCPPEngine::FontManager::GetFont ("fonts/Font2.ttf"), 35);
 	_text->setFillColor (sf::Color::White);
 	sf::FloatRect size = _text->getLocalBounds ();
 	_text->setOrigin (0, size.height * 0.5f);//Set origin at center

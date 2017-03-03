@@ -55,8 +55,10 @@ void Projectile::update(float pStep, bool pUpdateWorldTransform)
 				//if reached boss
 				if (glm::distance(getWorldPosition(), _target) < 1)
 				{
-					explode();
+					_owner->removeProjectile (this);
 					_owner->damage();
+					setParent(nullptr);
+					delete this;
 				}
 				//move to owner
 				translate(glm::vec3(0, 0, -SPEED*pStep));

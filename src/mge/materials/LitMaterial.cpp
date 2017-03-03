@@ -32,6 +32,9 @@ GLint LitMaterial::_spotPositionsLoc = 0;
 GLint LitMaterial::_spotNormalsLoc = 0;
 GLint LitMaterial::_spotAngledotsLoc = 0;
 GLint LitMaterial::_spotFalloffsLoc = 0;
+GLint LitMaterial::_fadeLoc = 0;
+GLint LitMaterial::_fadeMinLoc = 0;
+GLint LitMaterial::_fadeMaxLoc = 0;
 ShaderProgram* LitMaterial::_shaderProgram = nullptr;
 
 
@@ -113,6 +116,9 @@ void LitMaterial::initializeShader ()
 	_spotNormalsLoc = _shaderProgram->getUniformLocation ("spotNormals");
 	_spotAngledotsLoc = _shaderProgram->getUniformLocation ("spotAngledots");
 	_spotFalloffsLoc = _shaderProgram->getUniformLocation ("spotFalloffs");
+	_fadeLoc = _shaderProgram->getUniformLocation ("fade");
+	_fadeMinLoc = _shaderProgram->getUniformLocation ("fadeMin");
+	_fadeMaxLoc = _shaderProgram->getUniformLocation ("fadeMax");
 }
 
 
@@ -144,6 +150,12 @@ void LitMaterial::SetSpecularColor (glm::vec3 pColor)
 {
 	_specularColor = pColor;
 }
+void LitMaterial::SetFade (bool pFade, float pFadeMin, float pFadeMax)
+{
+	_fade = pFade;
+	_fadeMin = pFadeMin;
+	_fadeMax = pFadeMax;
+}
 
 
 //////////////////////////////|	RENDERING
@@ -153,11 +165,17 @@ void LitMaterial::render (Mesh* pMesh, const glm::mat4& pModelMatrix, const glm:
 	_shaderProgram->use ();
 
 	//Send texture/color to the shader
-	glActiveTexture (GL_TEXTURE0);
-	glBindTexture (GL_TEXTURE_2D, _texture->getId ());
-	glUniform1i (_textureLoc, 0);
-	glUniform1f (_texScaleLoc, _texScale);
-	glUniform3fv (_colorLoc, 1, glm::value_ptr (_color));
+	if (_useTexture)
+	{
+		glActiveTexture (GL_TEXTURE0);
+		glBindTexture (GL_TEXTURE_2D, _texture->getId ());
+		glUniform1i (_textureLoc, 0);
+		glUniform1f (_texScaleLoc, _texScale);
+	}
+	else
+	{
+		glUniform3fv (_colorLoc, 1, glm::value_ptr (_color));
+	}
 
 	//Send uniform data to shaderprogram
 	glm::mat4 MVPmatrix = pProjectionMatrix * pViewMatrix * pModelMatrix;
@@ -165,6 +183,9 @@ void LitMaterial::render (Mesh* pMesh, const glm::mat4& pModelMatrix, const glm:
 	glUniformMatrix4fv (_modelMatrixLoc, 1, GL_FALSE, glm::value_ptr (pModelMatrix));
 	glUniform1i (_useTextureLoc, _useTexture);
 	glUniform1f (_shininessLoc, _shininess);
+	glUniform1i (_fadeLoc, _fade);
+	glUniform1f (_fadeMinLoc, _fadeMin);
+	glUniform1f (_fadeMaxLoc, _fadeMax);
 	glUniform3fv (_specularColorLoc, 1, glm::value_ptr (_specularColor));
 	glUniform4fv (_cameraPositionLoc, 1, glm::value_ptr (ShaderDataUtil::GetCameraWorldPosition ()));
 	glUniform3fv (_ambientColorLoc, 1, glm::value_ptr (ShaderDataUtil::GetAmbientColor ()));
@@ -211,6 +232,7 @@ void LitMaterial::render (Mesh* pMesh, const glm::mat4& pModelMatrix, const glm:
 		glUniform1fv(_spotAngledotsLoc, 0, nullptr);
 		glUniform2fv(_spotFalloffsLoc, 0, nullptr);
 	}
+	glUniform1i (_spotCountLoc, spotCount);
 
 	//Send basic vertex data to shader
 	pMesh->streamToOpenGL (_vertexLoc, _normalLoc, _uvLoc);

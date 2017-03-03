@@ -27,6 +27,7 @@ class LitMaterial : public AbstractMaterial
 		void SetTextureScale (float pScale);
 		void SetShininess (float pShininess);
 		void SetSpecularColor (glm::vec3 pColor);
+		void SetFade (bool pFade, float pFadeMin = 0, float pFadeMax = 1);
 		void render (Mesh* pMesh, const glm::mat4& pModelMatrix, const glm::mat4& pViewMatrix, const glm::mat4& pProjectionMatrix) override;
 	private:
 		static GLint _MVPmatrixLoc;
@@ -55,9 +56,15 @@ class LitMaterial : public AbstractMaterial
 		static GLint _spotNormalsLoc;
 		static GLint _spotAngledotsLoc;
 		static GLint _spotFalloffsLoc;
+		static GLint _fadeLoc;
+		static GLint _fadeMinLoc;
+		static GLint _fadeMaxLoc;
 		static ShaderProgram* _shaderProgram;
 		bool _useTexture = false;
 		float _shininess = 0;
+		bool _fade = false;
+		float _fadeMin = 0;
+		float _fadeMax = 1;
 		glm::vec3 _specularColor = glm::vec3 (1,1,1);
 		glm::vec3 _color = glm::vec3 (1,1,1);
 		Texture* _texture = nullptr;

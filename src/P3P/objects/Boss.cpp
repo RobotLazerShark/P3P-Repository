@@ -95,6 +95,12 @@ void Boss::update(float pStep, bool pUpdateWorldTransform)
 {
 	GameObject::update(pStep, pUpdateWorldTransform);
 
+	if (_dead)
+	{
+		setParent (nullptr);
+		delete this;
+	}
+
 	if (!_noFire)
 	{
 		_timer += pStep;
@@ -103,7 +109,7 @@ void Boss::update(float pStep, bool pUpdateWorldTransform)
 			_timer -= SHOOTING_FREQUENCY;
 			shoot();
 		}
-	}	
+	}
 }
 
 void Boss::shoot()
@@ -123,7 +129,6 @@ void Boss::damage()
 	if (liveCount <= 0)
 	{
 		singletonInstance = nullptr;
-		setParent(nullptr);
-		delete this;
+		_dead = true;
 	}
 }

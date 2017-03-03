@@ -109,5 +109,5 @@ void main (void)
 	}
 
 	//Calculate the final color
-	fragment_color = vec4 (ambientColor + directionalFactor + pointFactor + spotFactor, 1.0f);
+	fragment_color = vec4 (ambientColor + directionalFactor + pointFactor + spotFactor, 1);
 }

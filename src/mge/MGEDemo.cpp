@@ -4,6 +4,7 @@
 #include "mge/core/World.hpp"
 #include "mge/objects/Camera.hpp"
 #include <mge/objects/Light.hpp>
+#include <mge/core/Mesh.hpp>
 //[TESTING]
 #include <mge/behaviours/CameraOrbitBehaviour.hpp>
 #include <JCPPEngine/Random.hpp>
@@ -23,6 +24,11 @@ void MGEDemo::initialize() {
 void MGEDemo::_initializeScene()
 {
 	_renderer->setClearColor (0,0,0);
+	//Load large meshes not in hub
+	Mesh::load(config::MGE_MODEL_PATH + "ServerRack.obj");
+	Mesh::load(config::MGE_MODEL_PATH + "Fan.obj");
+	Mesh::load(config::MGE_MODEL_PATH + "PowerBox.obj");
+	Mesh::load(config::MGE_MODEL_PATH + "BoxSpot.obj");
 
 	//add camera first (it will be updated last)
 	Camera* camera = new Camera ();

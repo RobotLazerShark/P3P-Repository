@@ -123,6 +123,7 @@ Player::Player (int pX, int pZ, ProgressTracker* pProgressTracker, int pSkin) : 
 	_currentTile [1] = pZ;
 	_oldTile [0] = _currentTile [0];
 	_oldTile [1] = _currentTile [1];
+	_noMove = true;
 	_rotationAnimator->playAnimation(12, false, &stopFunctionPlayer, this);
 }
 

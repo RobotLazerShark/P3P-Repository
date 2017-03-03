@@ -16,8 +16,7 @@ class Light : public GameObject
 		float _intensity;
 		glm::vec4 _normal;
 		float _angle;
-		glm::vec2 _falloff;
-		ColorMaterial* _colorMaterial = nullptr;//For visualising the light
+		glm::vec2 _falloff;//x = linear, y = exponential factor. total = 1.
 	public:
 		//Properties
 		enum Shapes { Directional, Point, Spot };

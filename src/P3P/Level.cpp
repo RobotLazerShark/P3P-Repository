@@ -218,6 +218,7 @@ void Level::loadMap ()
 	GameObject* temp = nullptr;
 	GameObject* temp2 = nullptr;
 	ProgressTracker * bossPuzzleTracker = nullptr;
+	LitMaterial* mat = nullptr;
 
 	//Build all base tiles
 	for (int x = 0; x < map->width; x++)
@@ -268,7 +269,9 @@ void Level::loadMap ()
 					temp2->translate (glm::vec3 (-1, 1.55f, 0));
 					temp2->setParent (temp);
 					temp2 = new GameObject ("Wall.obj");
-					temp2->setMaterial (new LitMaterial ("Wall.png"));
+					mat = new LitMaterial ("Wall.png");
+					mat->SetFade (true, 2, 3);
+					temp2->setMaterial (mat);
 					temp2->translate (glm::vec3 (-1, 2.55f, 0));
 					temp2->setParent (temp);
 					temp->setParent (this);
@@ -293,11 +296,15 @@ void Level::loadMap ()
 					temp2->rotate (glm::radians (-90.0f), glm::vec3 (0, 1, 0));
 					temp2->setParent (temp);
 					temp2 = new GameObject ("Wall.obj");
-					temp2->setMaterial (new LitMaterial ("Wall.png"));
+					mat = new LitMaterial ("Wall.png");
+					mat->SetFade (true, 2, 3);
+					temp2->setMaterial (mat);
 					temp2->translate (glm::vec3 (-1, 2.55f, 0));
 					temp2->setParent (temp);
 					temp2 = new GameObject ("Wall.obj");
-					temp2->setMaterial (new LitMaterial ("Wall.png"));
+					mat = new LitMaterial ("Wall.png");
+					mat->SetFade (true, 2, 3);
+					temp2->setMaterial (mat);
 					temp2->translate (glm::vec3 (0, 2.55f, -1));
 					temp2->rotate (glm::radians (-90.0f), glm::vec3 (0, 1, 0));
 					temp2->setParent (temp);
@@ -318,7 +325,9 @@ void Level::loadMap ()
 					temp2->translate(glm::vec3(0, 1, 0));
 					temp2->setParent(temp);
 					temp2 = new GameObject("Wall.obj");
-					temp2->setMaterial(new LitMaterial("Wall.png"));
+					mat = new LitMaterial ("Wall.png");
+					mat->SetFade (true, 2, 3);
+					temp2->setMaterial (mat);
 					temp2->translate(glm::vec3(0, 2, 0));
 					temp2->setParent(temp);
 					temp2 = new GameObject("Wall.obj");
@@ -332,7 +341,9 @@ void Level::loadMap ()
 					temp2->rotate(glm::radians(-90.0f), glm::vec3(0, 1, 0));
 					temp2->setParent(temp);
 					temp2 = new GameObject("Wall.obj");
-					temp2->setMaterial(new LitMaterial("Wall.png"));
+					mat = new LitMaterial ("Wall.png");
+					mat->SetFade (true, 2, 3);
+					temp2->setMaterial (mat);
 					temp2->translate(glm::vec3(1, 2, -1));
 					temp2->rotate(glm::radians(-90.0f), glm::vec3(0, 1, 0));
 					temp2->setParent(temp);
@@ -356,7 +367,9 @@ void Level::loadMap ()
 					temp2->translate(glm::vec3(-1, 1, 1));
 					temp2->setParent(temp);
 					temp2 = new GameObject("Wall.obj");
-					temp2->setMaterial(new LitMaterial("Wall.png"));
+					mat = new LitMaterial ("Wall.png");
+					mat->SetFade (true, 2, 3);
+					temp2->setMaterial (mat);
 					temp2->translate(glm::vec3(-1, 2, 1));
 					temp2->setParent(temp);
 					temp2 = new GameObject("Wall.obj");
@@ -370,7 +383,9 @@ void Level::loadMap ()
 					temp2->rotate(glm::radians(-90.0f), glm::vec3(0, 1, 0));
 					temp2->setParent(temp);
 					temp2 = new GameObject("Wall.obj");
-					temp2->setMaterial(new LitMaterial("Wall.png"));
+					mat = new LitMaterial ("Wall.png");
+					mat->SetFade (true, 2, 3);
+					temp2->setMaterial (mat);
 					temp2->translate(glm::vec3(0, 2, 0));
 					temp2->rotate(glm::radians(-90.0f), glm::vec3(0, 1, 0));
 					temp2->setParent(temp);
@@ -394,7 +409,9 @@ void Level::loadMap ()
 					temp2->translate (glm::vec3 (0, 1, 0));
 					temp2->setParent (temp);
 					temp2 = new GameObject ("Wall.obj");
-					temp2->setMaterial (new LitMaterial ("Wall.png"));
+					mat = new LitMaterial ("Wall.png");
+					mat->SetFade (true, 2, 3);
+					temp2->setMaterial (mat);
 					temp2->translate (glm::vec3 (0, 2, 0));
 					temp2->setParent (temp);
 					temp->setParent (this);
@@ -421,11 +438,15 @@ void Level::loadMap ()
 					temp2->rotate (glm::radians (-90.0f), glm::vec3 (0, 1, 0));
 					temp2->setParent (temp);
 					temp2 = new GameObject ("Wall.obj");
-					temp2->setMaterial (new LitMaterial ("Wall.png"));
+					mat = new LitMaterial ("Wall.png");
+					mat->SetFade (true, 2, 3);
+					temp2->setMaterial (mat);
 					temp2->translate (glm::vec3 (-1, 2.55f, 0));
 					temp2->setParent (temp);
 					temp2 = new GameObject ("Wall.obj");
-					temp2->setMaterial (new LitMaterial ("Wall.png"));
+					mat = new LitMaterial ("Wall.png");
+					mat->SetFade (true, 2, 3);
+					temp2->setMaterial (mat);
 					temp2->translate (glm::vec3 (0, 2.55f, -1));
 					temp2->rotate (glm::radians (-90.0f), glm::vec3 (0, 1, 0));
 					temp2->setParent (temp);
@@ -451,11 +472,15 @@ void Level::loadMap ()
 					temp2->rotate (glm::radians (-90.0f), glm::vec3 (0, 1, 0));
 					temp2->setParent (temp);
 					temp2 = new GameObject ("Wall.obj");
-					temp2->setMaterial (new LitMaterial ("Wall.png"));
+					mat = new LitMaterial ("Wall.png");
+					mat->SetFade (true, 2, 3);
+					temp2->setMaterial (mat);
 					temp2->translate (glm::vec3 (-1, 2.55f, 0));
 					temp2->setParent (temp);
 					temp2 = new GameObject ("WallPipeL.obj");
-					temp2->setMaterial (new LitMaterial ("WallPipeL.png"));
+					mat = new LitMaterial ("WallPipeL.png");
+					mat->SetFade (true, 2, 3);
+					temp2->setMaterial (mat);
 					temp2->translate (glm::vec3 (0, 2.55f, -1));
 					temp2->rotate (glm::radians (-90.0f), glm::vec3 (0, 1, 0));
 					temp2->setParent (temp);
@@ -656,7 +681,14 @@ void Level::loadMap ()
 				break;
 			case 60:
 				//Button: property = x & y of the object it (de)activates
-				temp = new Button (object->x, object->z, (ButtonTarget*)map->objectTiles [std::stoi (object->properties [0])] [std::stoi (object->properties [1])]);
+				if (std::stoi (object->properties [0]) > 0)
+				{
+					temp = new Button (object->x, object->z, (ButtonTarget*)map->objectTiles [std::stoi (object->properties [1])] [std::stoi (object->properties [2])]);
+				}
+				else
+				{
+					temp = new Button (object->x, object->z, (ButtonTarget*)map->baseTiles [std::stoi (object->properties [1])] [std::stoi (object->properties [2])]);
+				}
 				temp->setParent (this);
 				//If there is an object already in this place, delete it.
 				if (map->baseTiles [object->x] [object->z] != (int)nullptr)
@@ -772,12 +804,10 @@ void Level::loadMap ()
 						}
 						else
 						{
-							std::cout << "cant find boxspot "<< i/2 << endl;
+							std::cout << "cant find boxspot "<< i/2 <<"at"<<object->x<<", "<<object->z<<std::endl;
 						}
 					}
 				}
-				
-				std::cout << "created boss puzzle tracker with " << bossPuzzleTracker->boxSpots.size() << " targets" << endl;
 				bossPuzzlesTrackers.push_back(bossPuzzleTracker);
 				break;
 			default:
