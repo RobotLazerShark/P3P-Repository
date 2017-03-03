@@ -31,6 +31,7 @@ class Boss : public GameObject
 		std::vector<Projectile*> projectiles;
 		AnimationBehaviour* _barrel1Animator = nullptr;
 		AnimationBehaviour* _barrel2Animator = nullptr;
+		AnimationBehaviour* _bodyAnimator = nullptr;
 		void shoot();
 };
 

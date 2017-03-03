@@ -35,6 +35,10 @@ Boss::Boss(int pX, int pZ) : GameObject()
 	_model->translate(glm::vec3(0, 2, 0));
 	_model->setMaterial(new LitMaterial("Boss.jpg"));
 	_model->setParent(this);
+	_bodyAnimator = new AnimationBehaviour({ "BossFloat.txt" });
+	_model->setBehaviour(_bodyAnimator);
+	_bodyAnimator->playAnimation(0, true);
+
 	GameObject* shadow = new GameObject ("ShadowPlane.obj");
 	shadow->setMaterial (new TextureMaterial ("BossShadow.png"));
 	shadow->setParent (_model);
