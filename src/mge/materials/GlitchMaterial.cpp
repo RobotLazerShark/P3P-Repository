@@ -48,6 +48,7 @@ GlitchMaterial::GlitchMaterial(glm::vec3 pColor, float pShininess, glm::vec3 pSp
 	_specularColor = pSpecularColor;
 	_color = pColor;
 	_useTexture = false;
+	_texture = Texture::load (config::MGE_TEXTURE_PATH + "White.png");
 	if (_shaderProgram == nullptr)//If the shader is not already loaded, load it.
 	{
 		initializeShader ();
@@ -58,6 +59,7 @@ GlitchMaterial::GlitchMaterial (std::string pFilename, float pShininess, glm::ve
 {
 	_shininess = pShininess;
 	_specularColor = pSpecularColor;
+	_useTexture = true;
 	_texture = Texture::load (config::MGE_TEXTURE_PATH + pFilename);
 	if (_texture == nullptr)
 	{

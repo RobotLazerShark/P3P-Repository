@@ -171,25 +171,46 @@ void LitMaterial::render (Mesh* pMesh, const glm::mat4& pModelMatrix, const glm:
 	int dirCount = ShaderDataUtil::GetDirectionalLightCount ();
 	int pointCount = ShaderDataUtil::GetPointLightCount ();
 	int spotCount = ShaderDataUtil::GetSpotLightCount ();
-
-	//Send directional light data (if there are any directional lights)
-	glUniform3fv (_directionalColorsLoc, dirCount, glm::value_ptr (ShaderDataUtil::GetDirectionalLightColors () [0]));
-	glUniform4fv (_directionalNormalsLoc, dirCount, glm::value_ptr (ShaderDataUtil::GetDirectionalLightNormals () [0]));
-	glUniform1i (_directionalCountLoc, dirCount);
-
-	//Send point light data (if there are any point lights)
-	glUniform3fv (_pointColorsLoc, pointCount, glm::value_ptr (ShaderDataUtil::GetPointLightColors () [0]));
-	glUniform4fv (_pointPositionsLoc, pointCount, glm::value_ptr (ShaderDataUtil::GetPointLightPositions () [0]));
-	glUniform2fv (_pointFalloffsLoc, pointCount, glm::value_ptr (ShaderDataUtil::GetPointLightFalloffs () [0]));
-	glUniform1i (_pointCountLoc, pointCount);
-
-	//Send spot light data (if there are any spot lights)
-	glUniform3fv (_spotColorsLoc, spotCount, glm::value_ptr (ShaderDataUtil::GetSpotLightColors () [0]));
-	glUniform4fv (_spotPositionsLoc, spotCount, glm::value_ptr (ShaderDataUtil::GetSpotLightPositions () [0]));
-	glUniform4fv (_spotNormalsLoc, spotCount, glm::value_ptr (ShaderDataUtil::GetSpotLightNormals () [0]));
-	glUniform1fv (_spotAngledotsLoc, spotCount, &ShaderDataUtil::GetSpotLightAngledots () [0]);
-	glUniform2fv (_spotFalloffsLoc, spotCount, glm::value_ptr (ShaderDataUtil::GetSpotLightFalloffs () [0]));
-	glUniform1i (_spotCountLoc, spotCount);
+	if (dirCount > 0)//Send directional light data (if there are any directional lights)
+	{
+		glUniform3fv(_directionalColorsLoc, dirCount, glm::value_ptr(ShaderDataUtil::GetDirectionalLightColors()[0]));
+		glUniform4fv(_directionalNormalsLoc, dirCount, glm::value_ptr(ShaderDataUtil::GetDirectionalLightNormals()[0]));
+	}
+	else
+	{
+		glUniform3fv(_directionalColorsLoc, 0, nullptr);
+		glUniform4fv(_directionalNormalsLoc, 0, nullptr);
+	}
+	glUniform1i(_directionalCountLoc, dirCount);
+	if (pointCount > 0)//Send point light data (if there are any point lights)
+	{
+		glUniform3fv(_pointColorsLoc, pointCount, glm::value_ptr(ShaderDataUtil::GetPointLightColors()[0]));
+		glUniform4fv(_pointPositionsLoc, pointCount, glm::value_ptr(ShaderDataUtil::GetPointLightPositions()[0]));
+		glUniform2fv(_pointFalloffsLoc, pointCount, glm::value_ptr(ShaderDataUtil::GetPointLightFalloffs()[0]));
+	}
+	else
+	{
+		glUniform3fv(_pointColorsLoc, 0, nullptr);
+		glUniform4fv(_pointPositionsLoc, 0, nullptr);
+		glUniform2fv(_pointFalloffsLoc, 0, nullptr);
+	}
+	glUniform1i(_pointCountLoc, pointCount);
+	if (spotCount > 0)//Send spot light data (if there are any spot lights)
+	{
+		glUniform3fv(_spotColorsLoc, spotCount, glm::value_ptr(ShaderDataUtil::GetSpotLightColors()[0]));
+		glUniform4fv(_spotPositionsLoc, spotCount, glm::value_ptr(ShaderDataUtil::GetSpotLightPositions()[0]));
+		glUniform4fv(_spotNormalsLoc, spotCount, glm::value_ptr(ShaderDataUtil::GetSpotLightNormals()[0]));
+		glUniform1fv(_spotAngledotsLoc, spotCount, &ShaderDataUtil::GetSpotLightAngledots()[0]);
+		glUniform2fv(_spotFalloffsLoc, spotCount, glm::value_ptr(ShaderDataUtil::GetSpotLightFalloffs()[0]));
+	}
+	else
+	{
+		glUniform3fv(_spotColorsLoc, 0, nullptr);
+		glUniform4fv(_spotPositionsLoc, 0, nullptr);
+		glUniform4fv(_spotNormalsLoc, 0, nullptr);
+		glUniform1fv(_spotAngledotsLoc, 0, nullptr);
+		glUniform2fv(_spotFalloffsLoc, 0, nullptr);
+	}
 
 	//Send basic vertex data to shader
 	pMesh->streamToOpenGL (_vertexLoc, _normalLoc, _uvLoc);
