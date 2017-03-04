@@ -12,7 +12,7 @@ class DoomAnimation : public DoomObject
 	public:
 		DoomAnimation (std::string pFilename, int pFrameWidth, int pFrameHeight, float pFrameTime);
 		DoomAnimation (glm::vec3 pPosition, std::string pFilename, int pFrameWidth, int pFrameHeight, float pFrameTime);
-		virtual void update (float pStep);
+		virtual void update (float pStep, bool pUpdateWorldTransform = false) override;
 	private:
 		int _columns = 1;
 		int _rows = 1;

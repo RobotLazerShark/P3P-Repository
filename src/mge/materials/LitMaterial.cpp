@@ -35,6 +35,7 @@ GLint LitMaterial::_spotFalloffsLoc = 0;
 GLint LitMaterial::_fadeLoc = 0;
 GLint LitMaterial::_fadeMinLoc = 0;
 GLint LitMaterial::_fadeMaxLoc = 0;
+GLint LitMaterial::_distributionLoc = 0;
 ShaderProgram* LitMaterial::_shaderProgram = nullptr;
 
 
@@ -119,6 +120,7 @@ void LitMaterial::initializeShader ()
 	_fadeLoc = _shaderProgram->getUniformLocation ("fade");
 	_fadeMinLoc = _shaderProgram->getUniformLocation ("fadeMin");
 	_fadeMaxLoc = _shaderProgram->getUniformLocation ("fadeMax");
+	_distributionLoc = _shaderProgram->getUniformLocation ("distribution");
 }
 
 
@@ -150,11 +152,12 @@ void LitMaterial::SetSpecularColor (glm::vec3 pColor)
 {
 	_specularColor = pColor;
 }
-void LitMaterial::SetFade (bool pFade, float pFadeMin, float pFadeMax)
+void LitMaterial::SetFade (bool pFade, float pFadeMin, float pFadeMax, float pDistribution)
 {
 	_fade = pFade;
 	_fadeMin = pFadeMin;
 	_fadeMax = pFadeMax;
+	_distribution = pDistribution;
 }
 
 
@@ -186,6 +189,7 @@ void LitMaterial::render (Mesh* pMesh, const glm::mat4& pModelMatrix, const glm:
 	glUniform1i (_fadeLoc, _fade);
 	glUniform1f (_fadeMinLoc, _fadeMin);
 	glUniform1f (_fadeMaxLoc, _fadeMax);
+	glUniform1f (_distributionLoc, _distribution);
 	glUniform3fv (_specularColorLoc, 1, glm::value_ptr (_specularColor));
 	glUniform4fv (_cameraPositionLoc, 1, glm::value_ptr (ShaderDataUtil::GetCameraWorldPosition ()));
 	glUniform3fv (_ambientColorLoc, 1, glm::value_ptr (ShaderDataUtil::GetAmbientColor ()));

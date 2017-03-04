@@ -3,6 +3,7 @@
 uniform bool fade;
 uniform float fadeMin;
 uniform float fadeMax;
+uniform float distribution;
 uniform sampler2D texture;
 uniform vec3 color;
 uniform bool useTexture;
@@ -82,14 +83,19 @@ void main (void)
 	float alpha = 1;
 	if (fade)
 	{
-		if (fragWorldPosition.y < fadeMin || fragWorldPosition.y > fadeMax)
+		if (fragWorldPosition.y > fadeMax)
 		{
 			fragment_color = vec4 (0,0,0,0);
 			return;
 		}
+		else if (fragWorldPosition.y < fadeMin)
+		{
+			alpha = 1;
+		}
 		else
 		{
-			alpha = 1 - (fragWorldPosition.y - fadeMin) / (fadeMax - fadeMin);
+			alpha = (fragWorldPosition.y - fadeMin) / (fadeMax - fadeMin);
+			alpha = 1 - (distribution * alpha + (1 - distribution) * alpha * alpha);
 		}
 	}
 

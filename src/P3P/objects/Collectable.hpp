@@ -10,8 +10,8 @@
 class Collectable : public GameObject, public JCPPEngine::AbstractListener
 {
 public:
-	Collectable(int pX, int pZ, std::string pName);
-	Collectable (int pX, int pZ, std::string pName, std::string pDialog, bool pCopyCollect);
+	Collectable(int pX, int pZ, std::string pName, bool pMark = false);
+	Collectable (int pX, int pZ, std::string pName, std::string pDialog, bool pCopyCollect, bool pMark = false);
 	~Collectable ();
 	std::string getName ();
 	virtual bool collect (int pOldX, int pOldZ);
@@ -28,6 +28,7 @@ protected:
 	sf::Sprite* _textBox = nullptr;
 	sf::Text* _text = nullptr;
 	GameObject* _model = nullptr;
+	GameObject* _mark = nullptr;
 };
 
 #endif

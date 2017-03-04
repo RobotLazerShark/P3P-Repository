@@ -192,8 +192,8 @@ bool Level::setMap (int pLevelNumber)
 	}
 
 	if (_levelNumber == 0)
-	{
-		map = LevelImporter::ReadFile ("Hub.tmx");
+	{_levelNumber=2;
+		map = LevelImporter::ReadFile ("Level2.tmx");
 	}
 	else if (_levelNumber == _bossLevelNumber)
 	{
@@ -265,12 +265,14 @@ void Level::loadMap ()
 					temp2->setMaterial (new LitMaterial ("Pipe1.png"));
 					temp2->setParent (temp);
 					temp2 = new GameObject ("Wall.obj");
-					temp2->setMaterial (new LitMaterial ("Wall.png"));
+					mat = new LitMaterial ("Wall.png");
+					mat->SetFade (true, _fadeMin, _fadeMax, _distribution);
+					temp2->setMaterial (mat);
 					temp2->translate (glm::vec3 (-1, 1.55f, 0));
 					temp2->setParent (temp);
 					temp2 = new GameObject ("Wall.obj");
 					mat = new LitMaterial ("Wall.png");
-					mat->SetFade (true, 2, 3);
+					mat->SetFade (true, _fadeMin, _fadeMax, _distribution);
 					temp2->setMaterial (mat);
 					temp2->translate (glm::vec3 (-1, 2.55f, 0));
 					temp2->setParent (temp);
@@ -287,23 +289,27 @@ void Level::loadMap ()
 					temp2->setMaterial (new LitMaterial ("Pipe2.png"));
 					temp2->setParent (temp);
 					temp2 = new GameObject ("Wall.obj");
-					temp2->setMaterial (new LitMaterial ("Wall.png"));
+					mat = new LitMaterial ("Wall.png");
+					mat->SetFade (true, _fadeMin, _fadeMax, _distribution);
+					temp2->setMaterial (mat);
 					temp2->translate (glm::vec3 (-1, 1.55f, 0));
 					temp2->setParent (temp);
 					temp2 = new GameObject ("Wall.obj");
-					temp2->setMaterial (new LitMaterial ("Wall.png"));
+					mat = new LitMaterial ("Wall.png");
+					mat->SetFade (true, _fadeMin, _fadeMax, _distribution);
+					temp2->setMaterial (mat);
 					temp2->translate (glm::vec3 (0, 1.55f, -1));
 					temp2->rotate (glm::radians (-90.0f), glm::vec3 (0, 1, 0));
 					temp2->setParent (temp);
 					temp2 = new GameObject ("Wall.obj");
 					mat = new LitMaterial ("Wall.png");
-					mat->SetFade (true, 2, 3);
+					mat->SetFade (true, _fadeMin, _fadeMax, _distribution);
 					temp2->setMaterial (mat);
 					temp2->translate (glm::vec3 (-1, 2.55f, 0));
 					temp2->setParent (temp);
 					temp2 = new GameObject ("Wall.obj");
 					mat = new LitMaterial ("Wall.png");
-					mat->SetFade (true, 2, 3);
+					mat->SetFade (true, _fadeMin, _fadeMax, _distribution);
 					temp2->setMaterial (mat);
 					temp2->translate (glm::vec3 (0, 2.55f, -1));
 					temp2->rotate (glm::radians (-90.0f), glm::vec3 (0, 1, 0));
@@ -321,12 +327,14 @@ void Level::loadMap ()
 					temp2->setMaterial(new LitMaterial("Wall.png"));
 					temp2->setParent(temp);
 					temp2 = new GameObject("Wall.obj");
-					temp2->setMaterial(new LitMaterial("Wall.png"));
+					mat = new LitMaterial ("Wall.png");
+					mat->SetFade (true, _fadeMin, _fadeMax, _distribution);
+					temp2->setMaterial (mat);
 					temp2->translate(glm::vec3(0, 1, 0));
 					temp2->setParent(temp);
 					temp2 = new GameObject("Wall.obj");
 					mat = new LitMaterial ("Wall.png");
-					mat->SetFade (true, 2, 3);
+					mat->SetFade (true, _fadeMin, _fadeMax, _distribution);
 					temp2->setMaterial (mat);
 					temp2->translate(glm::vec3(0, 2, 0));
 					temp2->setParent(temp);
@@ -336,13 +344,15 @@ void Level::loadMap ()
 					temp2->rotate(glm::radians(-90.0f), glm::vec3(0, 1, 0));
 					temp2->setParent(temp);
 					temp2 = new GameObject("Wall.obj");
-					temp2->setMaterial(new LitMaterial("Wall.png"));
+					mat = new LitMaterial ("Wall.png");
+					mat->SetFade (true, _fadeMin, _fadeMax, _distribution);
+					temp2->setMaterial (mat);
 					temp2->translate(glm::vec3(1, 1, -1));
 					temp2->rotate(glm::radians(-90.0f), glm::vec3(0, 1, 0));
 					temp2->setParent(temp);
 					temp2 = new GameObject("Wall.obj");
 					mat = new LitMaterial ("Wall.png");
-					mat->SetFade (true, 2, 3);
+					mat->SetFade (true, _fadeMin, _fadeMax, _distribution);
 					temp2->setMaterial (mat);
 					temp2->translate(glm::vec3(1, 2, -1));
 					temp2->rotate(glm::radians(-90.0f), glm::vec3(0, 1, 0));
@@ -363,12 +373,14 @@ void Level::loadMap ()
 					temp2->translate (glm::vec3 (-1, 0, 1));
 					temp2->setParent(temp);
 					temp2 = new GameObject("Wall.obj");
-					temp2->setMaterial(new LitMaterial("Wall.png"));
+					mat = new LitMaterial ("Wall.png");
+					mat->SetFade (true, _fadeMin, _fadeMax, _distribution);
+					temp2->setMaterial (mat);
 					temp2->translate(glm::vec3(-1, 1, 1));
 					temp2->setParent(temp);
 					temp2 = new GameObject("Wall.obj");
 					mat = new LitMaterial ("Wall.png");
-					mat->SetFade (true, 2, 3);
+					mat->SetFade (true, _fadeMin, _fadeMax, _distribution);
 					temp2->setMaterial (mat);
 					temp2->translate(glm::vec3(-1, 2, 1));
 					temp2->setParent(temp);
@@ -378,13 +390,15 @@ void Level::loadMap ()
 					temp2->rotate(glm::radians(-90.0f), glm::vec3(0, 1, 0));
 					temp2->setParent(temp);
 					temp2 = new GameObject("Wall.obj");
-					temp2->setMaterial(new LitMaterial("Wall.png"));
+					mat = new LitMaterial ("Wall.png");
+					mat->SetFade (true, _fadeMin, _fadeMax, _distribution);
+					temp2->setMaterial (mat);
 					temp2->translate(glm::vec3(0, 1, 0));
 					temp2->rotate(glm::radians(-90.0f), glm::vec3(0, 1, 0));
 					temp2->setParent(temp);
 					temp2 = new GameObject("Wall.obj");
 					mat = new LitMaterial ("Wall.png");
-					mat->SetFade (true, 2, 3);
+					mat->SetFade (true, _fadeMin, _fadeMax, _distribution);
 					temp2->setMaterial (mat);
 					temp2->translate(glm::vec3(0, 2, 0));
 					temp2->rotate(glm::radians(-90.0f), glm::vec3(0, 1, 0));
@@ -405,12 +419,14 @@ void Level::loadMap ()
 					temp2->setMaterial (new LitMaterial ("Wall.png"));
 					temp2->setParent (temp);
 					temp2 = new GameObject ("Wall.obj");
-					temp2->setMaterial (new LitMaterial ("Wall.png"));
+					mat = new LitMaterial ("Wall.png");
+					mat->SetFade (true, _fadeMin, _fadeMax, _distribution);
+					temp2->setMaterial (mat);
 					temp2->translate (glm::vec3 (0, 1, 0));
 					temp2->setParent (temp);
 					temp2 = new GameObject ("Wall.obj");
 					mat = new LitMaterial ("Wall.png");
-					mat->SetFade (true, 2, 3);
+					mat->SetFade (true, _fadeMin, _fadeMax, _distribution);
 					temp2->setMaterial (mat);
 					temp2->translate (glm::vec3 (0, 2, 0));
 					temp2->setParent (temp);
@@ -429,23 +445,27 @@ void Level::loadMap ()
 					temp2->setMaterial (new LitMaterial ("Pipe3.png"));
 					temp2->setParent (temp);
 					temp2 = new GameObject ("Wall.obj");
-					temp2->setMaterial (new LitMaterial ("Wall.png"));
+					mat = new LitMaterial ("Wall.png");
+					mat->SetFade (true, _fadeMin, _fadeMax, _distribution);
+					temp2->setMaterial (mat);
 					temp2->translate (glm::vec3 (-1, 1.55f, 0));
 					temp2->setParent (temp);
 					temp2 = new GameObject ("Wall.obj");
-					temp2->setMaterial (new LitMaterial ("Wall.png"));
+					mat = new LitMaterial ("Wall.png");
+					mat->SetFade (true, _fadeMin, _fadeMax, _distribution);
+					temp2->setMaterial (mat);
 					temp2->translate (glm::vec3 (0, 1.55f, -1));
 					temp2->rotate (glm::radians (-90.0f), glm::vec3 (0, 1, 0));
 					temp2->setParent (temp);
 					temp2 = new GameObject ("Wall.obj");
 					mat = new LitMaterial ("Wall.png");
-					mat->SetFade (true, 2, 3);
+					mat->SetFade (true, _fadeMin, _fadeMax, _distribution);
 					temp2->setMaterial (mat);
 					temp2->translate (glm::vec3 (-1, 2.55f, 0));
 					temp2->setParent (temp);
 					temp2 = new GameObject ("Wall.obj");
 					mat = new LitMaterial ("Wall.png");
-					mat->SetFade (true, 2, 3);
+					mat->SetFade (true, _fadeMin, _fadeMax, _distribution);
 					temp2->setMaterial (mat);
 					temp2->translate (glm::vec3 (0, 2.55f, -1));
 					temp2->rotate (glm::radians (-90.0f), glm::vec3 (0, 1, 0));
@@ -463,23 +483,27 @@ void Level::loadMap ()
 					temp2->setMaterial (new LitMaterial ("Pipe4.png"));
 					temp2->setParent (temp);
 					temp2 = new GameObject ("Wall.obj");
-					temp2->setMaterial (new LitMaterial ("Wall.png"));
+					mat = new LitMaterial ("Wall.png");
+					mat->SetFade (true, _fadeMin, _fadeMax, _distribution);
+					temp2->setMaterial (mat);
 					temp2->translate (glm::vec3 (-1, 1.55f, 0));
 					temp2->setParent (temp);
 					temp2 = new GameObject ("WallPipeL.obj");
-					temp2->setMaterial (new LitMaterial ("WallPipeL.png"));
+					mat = new LitMaterial ("WallPipeL.png");
+					mat->SetFade (true, _fadeMin, _fadeMax, _distribution);
+					temp2->setMaterial (mat);
 					temp2->translate (glm::vec3 (0, 1.55f, -1));
 					temp2->rotate (glm::radians (-90.0f), glm::vec3 (0, 1, 0));
 					temp2->setParent (temp);
 					temp2 = new GameObject ("Wall.obj");
 					mat = new LitMaterial ("Wall.png");
-					mat->SetFade (true, 2, 3);
+					mat->SetFade (true, _fadeMin, _fadeMax, _distribution);
 					temp2->setMaterial (mat);
 					temp2->translate (glm::vec3 (-1, 2.55f, 0));
 					temp2->setParent (temp);
 					temp2 = new GameObject ("WallPipeL.obj");
 					mat = new LitMaterial ("WallPipeL.png");
-					mat->SetFade (true, 2, 3);
+					mat->SetFade (true, _fadeMin, _fadeMax, _distribution);
 					temp2->setMaterial (mat);
 					temp2->translate (glm::vec3 (0, 2.55f, -1));
 					temp2->rotate (glm::radians (-90.0f), glm::vec3 (0, 1, 0));
@@ -703,11 +727,18 @@ void Level::loadMap ()
 				//Collectable: property = name & stay & dialog
 				if (object->properties.size () > 1)
 				{
-					temp = new Collectable (object->x, object->z, object->properties [0], object->properties [2], (std::stoi (object->properties [1]) > 0));
+					if (std::stoi (object->properties [1]) > 0)//Create tutorial computer
+					{
+						temp = new Collectable (object->x, object->z, object->properties [0], object->properties [2], true, _levelNumber == 1);
+					}
+					else//Create dialog pickup
+					{
+						temp = new Collectable (object->x, object->z, object->properties [0], object->properties [2], true, _levelNumber == 3);
+					}
 				}
-				else
+				else//Create quest item
 				{
-					temp = new Collectable (object->x, object->z, object->properties [0]);
+					temp = new Collectable (object->x, object->z, object->properties [0], _levelNumber == 2);
 				}
 				temp->setParent (this);
 				//If there is an object already in this place, delete it.

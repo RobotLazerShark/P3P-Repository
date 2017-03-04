@@ -8,6 +8,12 @@
 DoomObject::DoomObject () : GameObject () {}
 //Constructor for when we know the position
 DoomObject::DoomObject (glm::vec3 pPosition) : GameObject ("DoomObject", pPosition) {}
+//Destructor
+DoomObject::~DoomObject ()
+{
+	_material = nullptr;
+	GameObject::~GameObject ();
+}
 
 
 //////////////////////////////|	INTERACTION
