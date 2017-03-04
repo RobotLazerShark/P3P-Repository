@@ -314,6 +314,19 @@ void GameObject::remove (GameObject* pChild)
 	pChild->setParent (nullptr);
 }
 
+void GameObject::removeAll ()
+{
+	while (_children.size () > 0)
+	{
+		GameObject* child = _children [0];
+		if (child == nullptr) continue;
+		remove (child);
+		delete child;
+		child = nullptr;
+	}
+	_children.clear ();
+}
+
 ////////////
 
 //costly operation, use with care

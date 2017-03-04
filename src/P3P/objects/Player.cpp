@@ -33,6 +33,26 @@ void stopFunctionPlayer (int pAnimIndex, GameObject* pOwner)
 				player->_stopFunc = nullptr;
 				tempFunc (pAnimIndex, tempOwner);
 			}
+			else if (player->_questFinished)
+			{
+				player->_noMove = true;
+				player->_questFinished = false;
+				switch ((int)player->_modelOrientation[1])
+				{
+				case 0:
+					player->_rotationAnimator->playAnimation(13, false, &stopFunctionPlayer, player);
+					break;
+				case 180:
+					player->_rotationAnimator->playAnimation(14, false, &stopFunctionPlayer, player);
+					break;
+				case 90:
+					player->_rotationAnimator->playAnimation(15, false, &stopFunctionPlayer, player);
+					break;
+				case -90:
+					player->_rotationAnimator->playAnimation(16, false, &stopFunctionPlayer, player);
+					break;
+				}
+			}
 			break;
 		case 1:
 			player->_noMove = false;
@@ -45,6 +65,7 @@ void stopFunctionPlayer (int pAnimIndex, GameObject* pOwner)
 		case 14:
 		case 15:
 		case 16:
+			player->_questFinished = false;
 			player->_noMove = false;
 			break;
 		default:
@@ -221,6 +242,10 @@ bool Player::movePlayer (int pX, int pZ, bool pAnimate)
 			_currentTile [1] = _oldTile [1];
 			return false;
 		}
+		else if (collectable->isQuestItem ())
+		{
+			_questFinished = true;//When we finish the 'walk' animation, the fun animation will start.
+		}
 	}
 	else
 	{
@@ -335,6 +360,10 @@ bool Player::movePlayer (int pX, int pZ, bool pAnimate, void (*pFuncPtr) (int, G
 			_currentTile [1] = _oldTile [1];
 			return false;
 		}
+		else if (collectable->isQuestItem ())
+		{
+			_questFinished = true;//When we finish the 'walk' animation, the fun animation will start.
+		}
 	}
 	else
 	{
@@ -366,10 +395,10 @@ bool Player::movePlayer (int pX, int pZ, bool pAnimate, void (*pFuncPtr) (int, G
     if (_progressTracker->checkWin () && !Level::singletonInstance->levelCompleted)
     {
         Level::singletonInstance->levelCompleted = true;
-//        if (_progressTracker->boxSpots.size () > 0)
-//        {
-//            Level::singletonInstance->increaseLevelKey ();
-//        }
+        if (_progressTracker->boxSpots.size () > 0)
+        {
+            Level::singletonInstance->increaseLevelKey ();
+        }
     }
 	Stats::singletonInstance->data.metersWalked++;
 	Stats::singletonInstance->refreshText();
@@ -430,23 +459,21 @@ void Player::ProcessEvent (JCPPEngine::Event* pEvent)
 			die ();
 			return;
 		case sf::Keyboard::Key::F:
+
+			_noMove = true;
 			switch ((int)_modelOrientation[1])
 			{
 			case 0:
 				_rotationAnimator->playAnimation(13, false, &stopFunctionPlayer, this);
-				_noMove = true;
 				break;
 			case 180:
 				_rotationAnimator->playAnimation(14, false, &stopFunctionPlayer, this);
-				_noMove = true;
 				break;
 			case 90:
 				_rotationAnimator->playAnimation(15, false, &stopFunctionPlayer, this);
-				_noMove = true;
 				break;
 			case -90:
 				_rotationAnimator->playAnimation(16, false, &stopFunctionPlayer, this);
-				_noMove = true;
 				break;
 			}
 			return;

@@ -17,6 +17,7 @@ public:
 	virtual bool collect (int pOldX, int pOldZ);
 	virtual void update (float pStep, bool pUpdateWorldTransform = false) override;
 	void ProcessEvent (JCPPEngine::Event* pEvent) override;
+	bool isQuestItem ();
 protected:
 	std::string _name;
 	bool _collected = false;

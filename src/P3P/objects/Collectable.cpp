@@ -105,6 +105,13 @@ Collectable::~Collectable ()
 }
 
 
+//Check if this collectable is a quest item
+bool Collectable::isQuestItem ()
+{
+	return !_hasDialog;
+}
+
+
 //Update
 void Collectable::update (float pStep, bool pUpdateWorldTransform)
 {

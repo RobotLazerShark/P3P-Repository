@@ -57,6 +57,9 @@ class Level : public GameObject
 		static void render (sf::RenderWindow* pWindow);
 		Hud * hud = nullptr;
 		std::vector<Hint*> hints;
+		GameObject* transparencyLayer1 = nullptr;
+		GameObject* transparencyLayer2 = nullptr;
+		GameObject* transparencyLayer3 = nullptr;
 };
 
 #endif

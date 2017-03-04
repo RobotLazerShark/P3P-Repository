@@ -65,6 +65,7 @@ class GameObject
 		virtual void update (float pStep, bool pUpdateWorldTransform = false);
 		void add (GameObject* pChild);
 		void remove (GameObject* pChild);
+		void removeAll ();
 		virtual void setParent (GameObject* pGameObject);
 		GameObject* getParent ();
 		int getChildCount ();

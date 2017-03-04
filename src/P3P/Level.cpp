@@ -42,7 +42,15 @@ Level::Level (int pPlayerSkin)
 	singletonInstance = this;
 	_hudOverlay = new sf::Sprite (*JCPPEngine::TextureManager::GetTexture ("images/Hud.png"));
 	_playerSkin = pPlayerSkin;
+
 	setParent (World::singletonInstance);
+	//Add transparency layers (transparent objects need to be rendered in correct order, before non-transparent objects)
+	transparencyLayer1 = new GameObject ();
+	transparencyLayer1->setParent (World::singletonInstance);
+	transparencyLayer2 = new GameObject ();
+	transparencyLayer2->setParent (World::singletonInstance);
+	transparencyLayer3 = new GameObject ();
+	transparencyLayer3->setParent (World::singletonInstance);
 
 	hud = new Hud();
 	setMap (0);
@@ -96,7 +104,6 @@ void Level::update (float pStep, bool pUpdateWorldTransform)
 	}
 
 	//if it's boss level check mini puzzles
-	//cout << bossPuzzlesTrackers.size() << endl;
 	for (int i = 0; i < bossPuzzlesTrackers.size(); i++)
 	{
 		if (bossPuzzlesTrackers[i]->checkWin())
@@ -192,8 +199,8 @@ bool Level::setMap (int pLevelNumber)
 	}
 
 	if (_levelNumber == 0)
-	{_levelNumber=2;
-		map = LevelImporter::ReadFile ("Level2.tmx");
+	{
+		map = LevelImporter::ReadFile ("Hub.tmx");
 	}
 	else if (_levelNumber == _bossLevelNumber)
 	{
@@ -219,11 +226,13 @@ void Level::loadMap ()
 	GameObject* temp2 = nullptr;
 	ProgressTracker * bossPuzzleTracker = nullptr;
 	LitMaterial* mat = nullptr;
+	float rotation;
+	glm::vec3 position;
 
 	//Build all base tiles
-	for (int x = 0; x < map->width; x++)
+	for (int y = 0; y < map->height; y++)
 	{
-		for (int y = 0; y < map->height; y++)
+		for (int x = 0; x < map->width; x++)
 		{
 			switch (map->baseTiles [x] [y])
 			{
@@ -260,6 +269,8 @@ void Level::loadMap ()
 				case 10:
 				case 11:
 					//Wall pipe 1
+					position = glm::vec3 (TILESIZE * x, -0.05, TILESIZE * y);
+					rotation = -90.0f * (map->baseTiles[x][y]-9);
 					temp = new GameObject ();
 					temp2 = new GameObject ("Pipe1.obj");
 					temp2->setMaterial (new LitMaterial ("Pipe1.png"));
@@ -268,22 +279,28 @@ void Level::loadMap ()
 					mat = new LitMaterial ("Wall.png");
 					mat->SetFade (true, _fadeMin, _fadeMax, _distribution);
 					temp2->setMaterial (mat);
+					temp2->translate (position);
+					temp2->rotate (glm::radians (rotation), glm::vec3 (0, 1, 0));
 					temp2->translate (glm::vec3 (-1, 1.55f, 0));
-					temp2->setParent (temp);
+					temp2->setParent (transparencyLayer2);
 					temp2 = new GameObject ("Wall.obj");
 					mat = new LitMaterial ("Wall.png");
 					mat->SetFade (true, _fadeMin, _fadeMax, _distribution);
 					temp2->setMaterial (mat);
+					temp2->translate (position);
+					temp2->rotate (glm::radians (rotation), glm::vec3 (0, 1, 0));
 					temp2->translate (glm::vec3 (-1, 2.55f, 0));
-					temp2->setParent (temp);
+					temp2->setParent (transparencyLayer3);
 					temp->setParent (this);
-					temp->translate (glm::vec3 (TILESIZE * x, -0.05, TILESIZE * y));
-					temp->rotate (glm::radians (-90.0f * (map->baseTiles[x][y]-9)), glm::vec3 (0, 1, 0));
+					temp->translate (position);
+					temp->rotate (glm::radians (rotation), glm::vec3 (0, 1, 0));
 					map->baseTiles [x] [y] = (int)temp;
 					break;
 				case 13:
 				case 14:
 					//Wall pipe 2
+					position = glm::vec3 (TILESIZE * x, -0.05f, TILESIZE * y);
+					rotation = -90.0f * (map->baseTiles[x][y]-13);
 					temp = new GameObject ();
 					temp2 = new GameObject ("Pipe2.obj");
 					temp2->setMaterial (new LitMaterial ("Pipe2.png"));
@@ -292,36 +309,44 @@ void Level::loadMap ()
 					mat = new LitMaterial ("Wall.png");
 					mat->SetFade (true, _fadeMin, _fadeMax, _distribution);
 					temp2->setMaterial (mat);
+					temp2->translate (position);
+					temp2->rotate (glm::radians (rotation), glm::vec3 (0,1,0));
 					temp2->translate (glm::vec3 (-1, 1.55f, 0));
-					temp2->setParent (temp);
+					temp2->setParent (transparencyLayer2);
 					temp2 = new GameObject ("Wall.obj");
 					mat = new LitMaterial ("Wall.png");
 					mat->SetFade (true, _fadeMin, _fadeMax, _distribution);
 					temp2->setMaterial (mat);
-					temp2->translate (glm::vec3 (0, 1.55f, -1));
-					temp2->rotate (glm::radians (-90.0f), glm::vec3 (0, 1, 0));
-					temp2->setParent (temp);
+					temp2->translate (position);
+					temp2->rotate (glm::radians (rotation -90.0f), glm::vec3 (0, 1, 0));
+					temp2->translate (glm::vec3 (-1, 1.55f, 0));
+					temp2->setParent (transparencyLayer2);
 					temp2 = new GameObject ("Wall.obj");
 					mat = new LitMaterial ("Wall.png");
 					mat->SetFade (true, _fadeMin, _fadeMax, _distribution);
 					temp2->setMaterial (mat);
+					temp2->translate (position);
+					temp2->rotate (glm::radians (rotation), glm::vec3 (0,1,0));
 					temp2->translate (glm::vec3 (-1, 2.55f, 0));
-					temp2->setParent (temp);
+					temp2->setParent (transparencyLayer3);
 					temp2 = new GameObject ("Wall.obj");
 					mat = new LitMaterial ("Wall.png");
 					mat->SetFade (true, _fadeMin, _fadeMax, _distribution);
 					temp2->setMaterial (mat);
-					temp2->translate (glm::vec3 (0, 2.55f, -1));
-					temp2->rotate (glm::radians (-90.0f), glm::vec3 (0, 1, 0));
-					temp2->setParent (temp);
+					temp2->translate (position);
+					temp2->rotate (glm::radians (rotation -90.0f), glm::vec3 (0, 1, 0));
+					temp2->translate (glm::vec3 (-1, 2.55f, 0));
+					temp2->setParent (transparencyLayer3);
 					temp->setParent (this);
-					temp->translate (glm::vec3 (TILESIZE * x, -0.05f, TILESIZE * y));
-					temp->rotate (glm::radians (-90.0f * (map->baseTiles[x][y]-13)), glm::vec3 (0, 1, 0));
+					temp->translate (position);
+					temp->rotate (glm::radians (rotation), glm::vec3 (0, 1, 0));
 					map->baseTiles [x] [y] = (int) temp;
 					break;
 				case 17:
 				case 18:
 					//Wall corner
+					position = glm::vec3(TILESIZE * x, 0.5f, TILESIZE * y);
+					rotation = -90.0f * (map->baseTiles[x][y] - 17);
 					temp = new GameObject();
 					temp2 = new GameObject("Wall.obj");
 					temp2->setMaterial(new LitMaterial("Wall.png"));
@@ -330,14 +355,18 @@ void Level::loadMap ()
 					mat = new LitMaterial ("Wall.png");
 					mat->SetFade (true, _fadeMin, _fadeMax, _distribution);
 					temp2->setMaterial (mat);
+					temp2->translate (position);
+					temp2->rotate (glm::radians (rotation), glm::vec3 (0,1,0));
 					temp2->translate(glm::vec3(0, 1, 0));
-					temp2->setParent(temp);
+					temp2->setParent(transparencyLayer2);
 					temp2 = new GameObject("Wall.obj");
 					mat = new LitMaterial ("Wall.png");
 					mat->SetFade (true, _fadeMin, _fadeMax, _distribution);
 					temp2->setMaterial (mat);
+					temp2->translate (position);
+					temp2->rotate (glm::radians (rotation), glm::vec3 (0,1,0));
 					temp2->translate(glm::vec3(0, 2, 0));
-					temp2->setParent(temp);
+					temp2->setParent(transparencyLayer3);
 					temp2 = new GameObject("Wall.obj");
 					temp2->setMaterial(new LitMaterial("Wall.png"));
 					temp2->translate(glm::vec3(1, 0, -1));
@@ -347,19 +376,21 @@ void Level::loadMap ()
 					mat = new LitMaterial ("Wall.png");
 					mat->SetFade (true, _fadeMin, _fadeMax, _distribution);
 					temp2->setMaterial (mat);
-					temp2->translate(glm::vec3(1, 1, -1));
-					temp2->rotate(glm::radians(-90.0f), glm::vec3(0, 1, 0));
-					temp2->setParent(temp);
+					temp2->translate (position);
+					temp2->rotate(glm::radians(rotation-90.0f), glm::vec3(0, 1, 0));
+					temp2->translate(glm::vec3(-1, 1, -1));
+					temp2->setParent(transparencyLayer2);
 					temp2 = new GameObject("Wall.obj");
 					mat = new LitMaterial ("Wall.png");
 					mat->SetFade (true, _fadeMin, _fadeMax, _distribution);
 					temp2->setMaterial (mat);
-					temp2->translate(glm::vec3(1, 2, -1));
-					temp2->rotate(glm::radians(-90.0f), glm::vec3(0, 1, 0));
-					temp2->setParent(temp);
+					temp2->translate (position);
+					temp2->rotate(glm::radians(rotation-90.0f), glm::vec3(0, 1, 0));
+					temp2->translate(glm::vec3(-1, 2, -1));
+					temp2->setParent(transparencyLayer3);
 					temp->setParent(this);
-					temp->translate(glm::vec3(TILESIZE * x, 0.5f, TILESIZE * y));
-					temp->rotate(glm::radians(-90.0f * (map->baseTiles[x][y] - 17)), glm::vec3(0, 1, 0));
+					temp->translate(position);
+					temp->rotate(glm::radians(rotation), glm::vec3(0, 1, 0));
 					//This tile should not be walkable
 					_nonWalkables.push_back(temp);
 					map->baseTiles[x][y] = (int)nullptr;
@@ -367,6 +398,8 @@ void Level::loadMap ()
 				case 19:
 				case 20:
 					//Wall corner
+					position = glm::vec3(TILESIZE * x, 0.5f, TILESIZE * y);
+					rotation = -90.0f * (map->baseTiles[x][y] - 19);
 					temp = new GameObject();
 					temp2 = new GameObject("Wall.obj");
 					temp2->setMaterial(new LitMaterial("Wall.png"));
@@ -376,36 +409,41 @@ void Level::loadMap ()
 					mat = new LitMaterial ("Wall.png");
 					mat->SetFade (true, _fadeMin, _fadeMax, _distribution);
 					temp2->setMaterial (mat);
+					temp2->translate (position);
+					temp2->rotate (glm::radians (rotation), glm::vec3 (0,1,0));
 					temp2->translate(glm::vec3(-1, 1, 1));
-					temp2->setParent(temp);
+					temp2->setParent(transparencyLayer2);
 					temp2 = new GameObject("Wall.obj");
 					mat = new LitMaterial ("Wall.png");
 					mat->SetFade (true, _fadeMin, _fadeMax, _distribution);
 					temp2->setMaterial (mat);
+					temp2->translate (position);
+					temp2->rotate (glm::radians (rotation), glm::vec3 (0,1,0));
 					temp2->translate(glm::vec3(-1, 2, 1));
-					temp2->setParent(temp);
+					temp2->setParent(transparencyLayer3);
 					temp2 = new GameObject("Wall.obj");
 					temp2->setMaterial(new LitMaterial("Wall.png"));
-					temp2->translate(glm::vec3(0, 0, 0));
 					temp2->rotate(glm::radians(-90.0f), glm::vec3(0, 1, 0));
 					temp2->setParent(temp);
 					temp2 = new GameObject("Wall.obj");
 					mat = new LitMaterial ("Wall.png");
 					mat->SetFade (true, _fadeMin, _fadeMax, _distribution);
 					temp2->setMaterial (mat);
+					temp2->translate (position);
+					temp2->rotate(glm::radians(rotation-90.0f), glm::vec3(0, 1, 0));
 					temp2->translate(glm::vec3(0, 1, 0));
-					temp2->rotate(glm::radians(-90.0f), glm::vec3(0, 1, 0));
-					temp2->setParent(temp);
+					temp2->setParent(transparencyLayer2);
 					temp2 = new GameObject("Wall.obj");
 					mat = new LitMaterial ("Wall.png");
 					mat->SetFade (true, _fadeMin, _fadeMax, _distribution);
 					temp2->setMaterial (mat);
+					temp2->translate (position);
+					temp2->rotate(glm::radians(rotation-90.0f), glm::vec3(0, 1, 0));
 					temp2->translate(glm::vec3(0, 2, 0));
-					temp2->rotate(glm::radians(-90.0f), glm::vec3(0, 1, 0));
-					temp2->setParent(temp);
+					temp2->setParent(transparencyLayer3);
 					temp->setParent(this);
-					temp->translate(glm::vec3(TILESIZE * x, 0.5f, TILESIZE * y));
-					temp->rotate(glm::radians(-90.0f * (map->baseTiles[x][y] - 19)), glm::vec3(0, 1, 0));
+					temp->translate(position);
+					temp->rotate(glm::radians(rotation), glm::vec3(0, 1, 0));
 					//This tile should not be walkable
 					_nonWalkables.push_back(temp);
 					map->baseTiles[x][y] = (int)nullptr;
@@ -414,6 +452,8 @@ void Level::loadMap ()
 				case 22:
 				case 23:
 					//Wall
+					position = glm::vec3 (TILESIZE * x, 0.5f, TILESIZE * y);
+					rotation = -90.0f * (map->baseTiles[x][y]-21);
 					temp = new GameObject ();
 					temp2 = new GameObject ("Wall.obj");
 					temp2->setMaterial (new LitMaterial ("Wall.png"));
@@ -422,17 +462,21 @@ void Level::loadMap ()
 					mat = new LitMaterial ("Wall.png");
 					mat->SetFade (true, _fadeMin, _fadeMax, _distribution);
 					temp2->setMaterial (mat);
+					temp2->translate (position);
+					temp2->rotate (glm::radians (rotation), glm::vec3 (0,1,0));
 					temp2->translate (glm::vec3 (0, 1, 0));
-					temp2->setParent (temp);
+					temp2->setParent (transparencyLayer2);
 					temp2 = new GameObject ("Wall.obj");
 					mat = new LitMaterial ("Wall.png");
 					mat->SetFade (true, _fadeMin, _fadeMax, _distribution);
 					temp2->setMaterial (mat);
+					temp2->translate (position);
+					temp2->rotate (glm::radians (rotation), glm::vec3 (0,1,0));
 					temp2->translate (glm::vec3 (0, 2, 0));
-					temp2->setParent (temp);
+					temp2->setParent (transparencyLayer3);
 					temp->setParent (this);
-					temp->translate (glm::vec3 (TILESIZE * x, 0.5f, TILESIZE * y));
-					temp->rotate (glm::radians (-90.0f * (map->baseTiles[x][y]-21)), glm::vec3 (0, 1, 0));
+					temp->translate (position);
+					temp->rotate (glm::radians (rotation), glm::vec3 (0, 1, 0));
 					//This tile should not be walkable
 					_nonWalkables.push_back (temp);
 					map->baseTiles [x] [y] = (int)nullptr;
@@ -440,6 +484,8 @@ void Level::loadMap ()
 				case 25:
 				case 26:
 					//Wall pipe 3
+					position  = glm::vec3 (TILESIZE * x, -0.05f, TILESIZE * y);
+					rotation = -90.0f * (map->baseTiles[x][y]-25);
 					temp = new GameObject ();
 					temp2 = new GameObject ("Pipe3.obj");
 					temp2->setMaterial (new LitMaterial ("Pipe3.png"));
@@ -448,36 +494,44 @@ void Level::loadMap ()
 					mat = new LitMaterial ("Wall.png");
 					mat->SetFade (true, _fadeMin, _fadeMax, _distribution);
 					temp2->setMaterial (mat);
+					temp2->translate (position);
+					temp2->rotate (glm::radians (rotation), glm::vec3 (0, 1, 0));
 					temp2->translate (glm::vec3 (-1, 1.55f, 0));
-					temp2->setParent (temp);
+					temp2->setParent (transparencyLayer2);
 					temp2 = new GameObject ("Wall.obj");
 					mat = new LitMaterial ("Wall.png");
 					mat->SetFade (true, _fadeMin, _fadeMax, _distribution);
 					temp2->setMaterial (mat);
-					temp2->translate (glm::vec3 (0, 1.55f, -1));
-					temp2->rotate (glm::radians (-90.0f), glm::vec3 (0, 1, 0));
-					temp2->setParent (temp);
+					temp2->translate (position);
+					temp2->rotate (glm::radians (rotation-90.0f), glm::vec3 (0, 1, 0));
+					temp2->translate (glm::vec3 (-1, 1.55f, 0));
+					temp2->setParent (transparencyLayer2);
 					temp2 = new GameObject ("Wall.obj");
 					mat = new LitMaterial ("Wall.png");
 					mat->SetFade (true, _fadeMin, _fadeMax, _distribution);
 					temp2->setMaterial (mat);
+					temp2->translate (position);
+					temp2->rotate (glm::radians (rotation), glm::vec3 (0, 1, 0));
 					temp2->translate (glm::vec3 (-1, 2.55f, 0));
-					temp2->setParent (temp);
+					temp2->setParent (transparencyLayer3);
 					temp2 = new GameObject ("Wall.obj");
 					mat = new LitMaterial ("Wall.png");
 					mat->SetFade (true, _fadeMin, _fadeMax, _distribution);
 					temp2->setMaterial (mat);
-					temp2->translate (glm::vec3 (0, 2.55f, -1));
-					temp2->rotate (glm::radians (-90.0f), glm::vec3 (0, 1, 0));
-					temp2->setParent (temp);
+					temp2->translate (position);
+					temp2->rotate (glm::radians (rotation-90.0f), glm::vec3 (0, 1, 0));
+					temp2->translate (glm::vec3 (-1, 2.55f, 0));
+					temp2->setParent (transparencyLayer3);
 					temp->setParent (this);
-					temp->translate (glm::vec3 (TILESIZE * x, -0.05f, TILESIZE * y));
-					temp->rotate (glm::radians (-90.0f * (map->baseTiles[x][y]-25)), glm::vec3 (0, 1, 0));
+					temp->translate (position);
+					temp->rotate (glm::radians (rotation), glm::vec3 (0, 1, 0));
 					map->baseTiles [x] [y] = (int) temp;
 					break;
 				case 29:
 				case 30:
 					//Wall pipe 4
+					position = glm::vec3 (TILESIZE * x, -0.05f, TILESIZE * y);
+					rotation = -90.0f * (map->baseTiles[x][y]-29);
 					temp = new GameObject ();
 					temp2 = new GameObject ("Pipe4.obj");
 					temp2->setMaterial (new LitMaterial ("Pipe4.png"));
@@ -486,31 +540,37 @@ void Level::loadMap ()
 					mat = new LitMaterial ("Wall.png");
 					mat->SetFade (true, _fadeMin, _fadeMax, _distribution);
 					temp2->setMaterial (mat);
+					temp2->translate (position);
+					temp2->rotate (glm::radians (rotation), glm::vec3 (0, 1, 0));
 					temp2->translate (glm::vec3 (-1, 1.55f, 0));
-					temp2->setParent (temp);
+					temp2->setParent (transparencyLayer2);
 					temp2 = new GameObject ("WallPipeL.obj");
 					mat = new LitMaterial ("WallPipeL.png");
 					mat->SetFade (true, _fadeMin, _fadeMax, _distribution);
 					temp2->setMaterial (mat);
-					temp2->translate (glm::vec3 (0, 1.55f, -1));
-					temp2->rotate (glm::radians (-90.0f), glm::vec3 (0, 1, 0));
-					temp2->setParent (temp);
+					temp2->translate (position);
+					temp2->rotate (glm::radians (rotation-90.0f), glm::vec3 (0, 1, 0));
+					temp2->translate (glm::vec3 (-1, 1.55f, 0));
+					temp2->setParent (transparencyLayer2);
 					temp2 = new GameObject ("Wall.obj");
 					mat = new LitMaterial ("Wall.png");
 					mat->SetFade (true, _fadeMin, _fadeMax, _distribution);
 					temp2->setMaterial (mat);
+					temp2->translate (position);
+					temp2->rotate (glm::radians (rotation), glm::vec3 (0, 1, 0));
 					temp2->translate (glm::vec3 (-1, 2.55f, 0));
-					temp2->setParent (temp);
+					temp2->setParent (transparencyLayer3);
 					temp2 = new GameObject ("WallPipeL.obj");
 					mat = new LitMaterial ("WallPipeL.png");
 					mat->SetFade (true, _fadeMin, _fadeMax, _distribution);
 					temp2->setMaterial (mat);
-					temp2->translate (glm::vec3 (0, 2.55f, -1));
-					temp2->rotate (glm::radians (-90.0f), glm::vec3 (0, 1, 0));
-					temp2->setParent (temp);
+					temp2->translate (position);
+					temp2->rotate (glm::radians (rotation-90.0f), glm::vec3 (0, 1, 0));
+					temp2->translate (glm::vec3 (-1, 2.55f, 0));
+					temp2->setParent (transparencyLayer3);
 					temp->setParent (this);
-					temp->translate (glm::vec3 (TILESIZE * x, -0.05f, TILESIZE * y));
-					temp->rotate (glm::radians (-90.0f * (map->baseTiles[x][y]-29)), glm::vec3 (0, 1, 0));
+					temp->translate (position);
+					temp->rotate (glm::radians (rotation), glm::vec3 (0, 1, 0));
 					map->baseTiles [x] [y] = (int) temp;
 					break;
 				case 32:
@@ -532,9 +592,9 @@ void Level::loadMap ()
 		}
 	}
 	//Build all object tiles
-	for (int x = 0; x < map->width; x++)
+	for (int y = 0; y < map->height; y++)
 	{
-		for (int y = 0; y < map->height; y++)
+		for (int x = 0; x < map->width; x++)
 		{
 			switch (map->objectTiles [x] [y])
 			{
@@ -738,7 +798,7 @@ void Level::loadMap ()
 				}
 				else//Create quest item
 				{
-					temp = new Collectable (object->x, object->z, object->properties [0], _levelNumber == 2);
+					temp = new Collectable (object->x, object->z, object->properties [0], true);//_levelNumber == 2);
 				}
 				temp->setParent (this);
 				//If there is an object already in this place, delete it.
@@ -871,6 +931,11 @@ void Level::clear ()
 	{
 		delete Boss::singletonInstance;
 	}
+
+	//Delete transparent objects
+	transparencyLayer1->removeAll ();
+	transparencyLayer2->removeAll ();
+	transparencyLayer3->removeAll ();
 
 	//Delete gates
 	for (Gate* gate : _gates)
