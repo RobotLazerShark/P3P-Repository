@@ -16,6 +16,7 @@ class DoomObject : public GameObject, public AbstractMaterial
 
 	public:
 		DoomObject ();
+		~DoomObject () override;
 		DoomObject (glm::vec3 pPosition);
 		bool CheckIfClicked (sf::Vector2i pMouseClickPosition);
 		void SetClickHitbox (glm::vec2 pOffset, glm::vec2 pHalfSize);

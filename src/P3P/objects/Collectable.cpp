@@ -6,18 +6,25 @@
 #include <JCPPEngine/InputManager.hpp>
 #include <JCPPEngine/TextureManager.hpp>
 #include <JCPPEngine/FontManager.hpp>
+#include <mge/objects/DoomAnimation.hpp>
 
 //Constructor
-Collectable::Collectable(int pX, int pZ, std::string pName) : GameObject()//Quest collectable
+Collectable::Collectable(int pX, int pZ, std::string pName, bool pMark) : GameObject()//Quest collectable
 {
 	_name = pName;
 	_hasDialog = false;
 	_copyCollect = false;
 
+	if (pMark)
+	{
+		_mark = new DoomAnimation (glm::vec3 (0, 0.5f, 0), "Mark.png", 64, 64, 0.08f);
+		_mark->setParent (this);
+	}
+
 	//Set up model
 	_model = new GameObject ("cube_flat.obj");
 	_model->setMaterial(new LitMaterial(glm::vec3(0.6f,0.6f,0)));
-	_model->translate(glm::vec3(0, 0.5f, 0));
+	_model->translate(glm::vec3(0, 0.25f, 0));
 	_model->scale(0.5f);
 	_model->setParent (this);
 
@@ -25,7 +32,7 @@ Collectable::Collectable(int pX, int pZ, std::string pName) : GameObject()//Ques
 	_position [0] = pX;
 	_position [1] = pZ;
 }
-Collectable::Collectable(int pX, int pZ, std::string pName, std::string pDialog, bool pCopyCollect) : GameObject()
+Collectable::Collectable(int pX, int pZ, std::string pName, std::string pDialog, bool pCopyCollect, bool pMark) : GameObject()
 {
 	_name = pName;
 	_hasDialog = true;
@@ -35,6 +42,11 @@ Collectable::Collectable(int pX, int pZ, std::string pName, std::string pDialog,
 	//Set up model
 	if (_copyCollect)//Tutorial computer
 	{
+		if (pMark)
+		{
+			_mark = new DoomAnimation (glm::vec3 (0, 1.25f, 0.4f), "Mark.png", 64, 64, 0.08f);
+			_mark->setParent (this);
+		}
 		_model = new GameObject ("Computer.obj");
 		_model->setMaterial (new LitMaterial ("Computer.png"));
 		_model->translate (glm::vec3 (0, 0.05f, 0));
@@ -42,9 +54,14 @@ Collectable::Collectable(int pX, int pZ, std::string pName, std::string pDialog,
 	}
 	else//Story collectable
 	{
+		if (pMark)
+		{
+			_mark = new DoomAnimation (glm::vec3 (0, 0.25f, 0), "Mark.png", 64, 64, 0.08f);
+			_mark->setParent (this);
+		}
 		_model = new GameObject ("cube_flat.obj");
 		_model->setMaterial(new LitMaterial(glm::vec3(0.6f,0.6f,0)));
-		_model->translate(glm::vec3(0, 0.5f, 0));
+		_model->translate(glm::vec3(0, 0.25f, 0));
 		_model->scale(0.5f);
 	}
 	_model->setParent(this);
@@ -192,6 +209,12 @@ bool Collectable::collect (int pOldX, int pOldZ)
 		if (!alreadyInInventory)
 		{
 			Player::singletonInstance->inventory.push_back (_name);
+			if (_mark != nullptr)
+			{
+				_mark->setParent (nullptr);
+				delete _mark;
+				_mark = nullptr;
+			}
 			Stats::singletonInstance->data.itemsCollected++;
 			Stats::singletonInstance->refreshText();
 		}

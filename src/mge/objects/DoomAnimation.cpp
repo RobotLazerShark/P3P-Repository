@@ -28,6 +28,7 @@ DoomAnimation::DoomAnimation (std::string pFilename, int pFrameWidth, int pFrame
 	else
 	{
 		_valid = false;
+		std::cout << "[ERROR]: could not read the file '" << pFilename << "'!" << std::endl;
 	}
 	setMaterial ((AbstractMaterial*)(this));
 }
@@ -56,14 +57,19 @@ DoomAnimation::DoomAnimation (glm::vec3 pPosition, std::string pFilename, int pF
 	else
 	{
 		_valid = false;
+		std::cout<<"[ERROR]: could not read the file '"<<pFilename<<"'!"<<std::endl;
 	}
 	setMaterial ((AbstractMaterial*)(this));
 }
 
 
 //////////////////////////////|	GAMEOBJECT FUNCTIONS
-void DoomAnimation::update (float pStep)
+void DoomAnimation::update (float pStep, bool pUpdateWorldTransform)
 {
+	GameObject::update (pStep, pUpdateWorldTransform);
+
+	if (!_valid) return;
+
 	//update animation
 	if (_frameTimer >= _frameDelay)
 	{

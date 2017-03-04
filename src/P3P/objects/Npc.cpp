@@ -56,7 +56,7 @@ Npc::Npc(int pX, int pZ) : GameObject()
 	position [0] = pX;
 	position [1] = pZ;
 
-	Light* light = new Light(glm::vec3(1, 1, 0.8f), 10, glm::vec3(-0.5f, 2.5f, -0.5f), glm::radians (60.0f), glm::vec2 (0.25f, 0.75f));
+	Light* light = new Light(glm::vec3(1, 1, 0.8f), 12, glm::vec3(-0.5f, 2.5f, -0.5f), glm::radians (60.0f), glm::vec2 (0.25f, 0.75f));
 	light->setParent(this);
 }
 //Destructor
