@@ -18,13 +18,14 @@
 #include <P3P/objects/base objects/BreakingBlock.hpp>
 #include <mge/behaviours/FollowBehaviour.hpp>
 #include <mge/behaviours/ThirdPersonCameraBehaviour.hpp>
+#include <mge/behaviours/BossCameraBehaviour.hpp>
 #include <mge/objects/Camera.hpp>
 #include <P3P/ProgressTracker.hpp>
 #include <mge/materials/LitMaterial.hpp>
 #include <mge/materials/TextureMaterial.hpp>
 #include <JCPPEngine/Random.hpp>
 #include <JCPPEngine/TextureManager.hpp>
-
+#include "P3P/BossCameraAnchor.hpp"
 
 //Static variables
 const float Level::TILESIZE = 1;
@@ -739,6 +740,7 @@ void Level::loadMap ()
 	//XmlObjects are used to we can use properties
 	XmlObject* object;
 	ThirdPersonCameraBehaviour* behaviour;
+	std::vector<BossCameraAnchor*> anchors;
 	for (int i = 0, size = map->xmlObjects.size (); i < size; i ++)
 	{
 		object = map->xmlObjects [i];
@@ -759,6 +761,9 @@ void Level::loadMap ()
 					case 2:
 						World::singletonInstance->getMainCamera ()->setBehaviour (new PercentageFollowBehaviour (std::stof (object->properties [2]), (object->x * TILESIZE), std::stof (object->properties [1]), (object->z * TILESIZE)));
 						break;
+					case 3:
+						World::singletonInstance->getMainCamera()->setBehaviour(new BossCameraBehaviour());
+						World::singletonInstance->getMainCamera()->setWorldPosition(glm::vec3(object->x, 6, object->z));
 					default:
 						break;
 				}
@@ -901,10 +906,23 @@ void Level::loadMap ()
 				}
 				bossPuzzlesTrackers.push_back(bossPuzzleTracker);
 				break;
+			case 67:
+				anchors.push_back(new BossCameraAnchor(object->x*Level::TILESIZE, std::stoi(object->properties[1]),object->z*Level::TILESIZE, //pos
+					std::stoi(object->properties[3]), std::stoi(object->properties[2]), //rangeX
+					std::stoi(object->properties[5]), std::stoi(object->properties[4]), //rangeY
+					std::stoi(object->properties[0]) //controlsMode
+					));
+				//sdf
 			default:
 				break;
 		}
 	}
+
+	for (BossCameraAnchor * anchor : anchors)
+	{
+		((BossCameraBehaviour*)World::singletonInstance->getMainCamera()->getBehaviour())->anchors.push_back(anchor);
+	}
+	anchors.clear();
 
 	hud->enable();
 }

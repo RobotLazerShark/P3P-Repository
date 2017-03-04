@@ -1,6 +1,9 @@
 #include <P3P/objects/base objects/Mirror.hpp>
 #include <P3P/Level.hpp>
 #include <P3P/objects/Boss.hpp>
+#include <mge/core/World.hpp>
+#include <mge/objects/Camera.hpp>
+#include <mge/behaviours/BossCameraBehaviour.hpp>
 
 Mirror::Mirror(int pX, int pZ) : ButtonTarget()
 {
@@ -45,7 +48,14 @@ bool Mirror::setActive(bool pActive)
 	if (_active && !up && !broken)
 	{
 		up = true;
-		_animator->playAnimation(0, false, false, &animationEndFunction, this);
+		//start look transition
+		_cameraPositionBeforeTransition = World::singletonInstance->getMainCamera()->getWorldPosition();
+		glm::vec3 bossPos = Boss::singletonInstance->getWorldPosition();
+		bossPos.y = 4;
+		((BossCameraBehaviour*)World::singletonInstance->getMainCamera()->getBehaviour())->startLookTransition(false, getWorldPosition());
+		((BossCameraBehaviour*)World::singletonInstance->getMainCamera()->getBehaviour())->startTransition(bossPos);
+
+		_cameraIsMovingTowardsMirror = true;
 	}
 	if (!_active)
 	{
@@ -72,5 +82,32 @@ void Mirror::update(float pStep, bool pUpdateWorldTransform)
 
 		_facingBoss = true;
 	}
+
+	//if camera is done mobing towards the mirror play animation
+	if (_cameraIsMovingTowardsMirror)
+	{
+		if (((BossCameraBehaviour*)World::singletonInstance->getMainCamera()->getBehaviour())->_currentLookAtPos == getWorldPosition())
+		{
+			_animator->playAnimation(0, false, false, &animationEndFunction, this);
+
+			_cameraLookingAtMirror = true;
+			_cameraIsMovingTowardsMirror = false;
+		}
+	}
 	
+	//make camera look at mirror for 1.5 seconds
+	if (_cameraLookingAtMirror)
+	{
+		_lookedAtFor += pStep;
+		if (_lookedAtFor >= _lookingDuration)
+		{
+			((BossCameraBehaviour*)World::singletonInstance->getMainCamera()->getBehaviour())->startLookTransition(true);
+			((BossCameraBehaviour*)World::singletonInstance->getMainCamera()->getBehaviour())->startTransition(_cameraPositionBeforeTransition);
+			_cameraLookingAtMirror = false;
+		}
+		else
+		{
+			Player::singletonInstance->_noMove = true;
+		}
+	}
 }

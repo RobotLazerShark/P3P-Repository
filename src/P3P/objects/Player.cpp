@@ -480,6 +480,30 @@ void Player::ProcessEvent (JCPPEngine::Event* pEvent)
 		default:
 			break;
 	}
+	
+	//rotate movement based on controlsMode
+	float angle = 0;
+	switch (controlsMode)
+	{
+	case 2:
+		angle = -3.14f/2;
+		break;
+	case 3:
+		angle = 3.14f;
+		break;
+	case 4:
+		angle = 3.14f / 2;
+		break;
+	default:
+		break;
+	}
+	float cosX = cos(angle) * movement[0];
+	float sinX = sin(angle) * movement[0];
+	float cosY = cos(angle) * movement[1];
+	float sinY = sin(angle) * movement[1];
+	movement[0] = round(cosX - sinY);
+	movement[1] = round(sinX + cosY);
+	
 	int newTile [2] = { _currentTile [0] + movement [0], _currentTile [1] + movement [1] };
 	//Check if new position is valid
 	if

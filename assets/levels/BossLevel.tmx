@@ -1,26 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" renderorder="right-down" width="30" height="17" tilewidth="64" tileheight="64" nextobjectid="22">
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="30" height="17" tilewidth="64" tileheight="64" nextobjectid="31">
  <tileset firstgid="1" name="Tileset" tilewidth="64" tileheight="64" tilecount="72">
   <image source="NewTileset.png" width="518" height="580"/>
  </tileset>
  <layer name="Tile Layer 1" width="30" height="17">
   <data encoding="csv">
-0,22,22,22,22,22,22,22,22,22,22,22,18,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-21,1,1,7,1,1,1,1,1,1,1,6,6,18,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-21,1,1,7,5,5,1,1,1,1,1,5,5,5,18,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-21,1,1,1,1,5,1,1,8,1,1,1,1,5,5,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-21,1,6,1,1,5,1,1,1,1,1,1,6,1,1,6,20,0,0,0,0,0,0,0,0,0,0,0,0,0,
-21,6,7,7,1,1,1,1,1,1,1,1,1,1,5,6,23,0,0,0,0,0,0,0,0,0,0,0,0,0,
-21,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,14,22,22,22,22,22,22,0,0,0,0,0,0,0,
-21,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,
-21,1,1,8,1,1,1,1,1,1,1,1,1,8,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,
-21,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,
-21,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,23,0,0,0,0,0,0,0,0,0,0,0,0,0,
-21,6,1,5,5,1,1,1,1,1,1,1,1,1,1,1,23,0,0,0,0,0,0,0,0,0,0,0,0,0,
-21,5,5,5,1,5,1,1,1,1,1,1,1,1,1,1,23,0,0,0,0,0,0,0,0,0,0,0,0,0,
-21,1,1,5,5,5,1,1,8,1,1,1,1,1,1,1,23,0,0,0,0,0,0,0,0,0,0,0,0,0,
-21,6,1,1,5,5,1,1,1,1,1,1,1,1,1,6,23,0,0,0,0,0,0,0,0,0,0,0,0,0,
-21,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,23,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,1,1,7,1,1,1,1,1,1,1,6,6,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,1,1,7,5,5,1,1,1,1,1,5,5,5,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,1,1,1,1,5,1,1,8,1,1,1,1,5,5,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,1,6,1,1,5,1,1,1,1,1,1,6,1,1,6,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,6,7,7,1,1,1,1,1,1,1,1,1,1,5,6,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,
+0,1,1,8,1,1,1,1,1,1,1,1,1,8,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,
+0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,
+0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,6,1,5,5,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,5,5,5,1,5,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,1,1,5,5,5,1,1,8,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,6,1,1,5,5,1,1,1,1,1,1,1,1,1,6,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 </data>
  </layer>
@@ -52,11 +52,9 @@
    <property name="t2x" value="1"/>
    <property name="t2y" value="14"/>
   </properties>
-  <object id="15" gid="58" x="579" y="709" width="64" height="64">
+  <object id="15" gid="58" x="1479" y="583" width="64" height="64">
    <properties>
-    <property name="Behaviour" value="1"/>
-    <property name="Distance" value="8"/>
-    <property name="Height" value="6"/>
+    <property name="Behaviour" value="3"/>
    </properties>
   </object>
   <object id="17" gid="66" x="206.467" y="589.033" width="64" height="64">
@@ -99,6 +97,66 @@
    <properties>
     <property name="x" value="13"/>
     <property name="y" value="14"/>
+   </properties>
+  </object>
+  <object id="22" gid="67" x="1486" y="592" width="64" height="64">
+   <properties>
+    <property name="controls mode" value="2"/>
+    <property name="height" value="6"/>
+    <property name="xMax" value="30"/>
+    <property name="xMin" value="15"/>
+    <property name="yMax" value="9"/>
+    <property name="yMin" value="7"/>
+   </properties>
+  </object>
+  <object id="25" gid="67" x="520" y="1090.67" width="64" height="64">
+   <properties>
+    <property name="controls mode" value="1"/>
+    <property name="height" value="9"/>
+    <property name="xMax" value="14"/>
+    <property name="xMin" value="0"/>
+    <property name="yMax" value="9"/>
+    <property name="yMin" value="7"/>
+   </properties>
+  </object>
+  <object id="26" gid="67" x="390.667" y="586.667" width="64" height="64">
+   <properties>
+    <property name="controls mode" value="1"/>
+    <property name="height" value="6"/>
+    <property name="xMax" value="6"/>
+    <property name="xMin" value="1"/>
+    <property name="yMax" value="6"/>
+    <property name="yMin" value="1"/>
+   </properties>
+  </object>
+  <object id="27" gid="67" x="394.667" y="602.667" width="64" height="64">
+   <properties>
+    <property name="controls mode" value="3"/>
+    <property name="height" value="6"/>
+    <property name="xMax" value="6"/>
+    <property name="xMin" value="1"/>
+    <property name="yMax" value="15"/>
+    <property name="yMin" value="10"/>
+   </properties>
+  </object>
+  <object id="28" gid="67" x="653.333" y="588" width="64" height="64">
+   <properties>
+    <property name="controls mode" value="1"/>
+    <property name="height" value="6"/>
+    <property name="xMax" value="15"/>
+    <property name="xMin" value="10"/>
+    <property name="yMax" value="6"/>
+    <property name="yMin" value="1"/>
+   </properties>
+  </object>
+  <object id="29" gid="67" x="656" y="600" width="64" height="64">
+   <properties>
+    <property name="controls mode" value="3"/>
+    <property name="height" value="6"/>
+    <property name="xMax" value="15"/>
+    <property name="xMin" value="10"/>
+    <property name="yMax" value="15"/>
+    <property name="yMin" value="10"/>
    </properties>
   </object>
  </objectgroup>

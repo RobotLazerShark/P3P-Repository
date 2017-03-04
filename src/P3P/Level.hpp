@@ -35,6 +35,7 @@ class Level : public GameObject
 		float _fadeMin = 1.75f;
 		float _fadeMax = 3;
 		float _distribution = 1;
+
 	public:
 		int _bossLevelNumber = 5;
 		Level (int pPlayerSkin);

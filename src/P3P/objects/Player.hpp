@@ -8,6 +8,7 @@
 #include <mge/behaviours/AnimationBehaviour.hpp>
 #include <JCPPEngine/AbstractListener.hpp>
 #include <P3P/ProgressTracker.hpp>
+#include <Math.h>
 
 class Collectable;
 
@@ -39,6 +40,7 @@ class Player : public GameObject, public JCPPEngine::AbstractListener
 		bool blockMovement = false;
 		glm::vec3 _modelOrientation = glm::vec3 (0, 0, 0);
 		AnimationBehaviour* _rotationAnimator = nullptr;
+		int controlsMode = 0;
 	protected:
 
     private:

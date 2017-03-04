@@ -23,7 +23,12 @@ class Mirror : public ButtonTarget
 		AnimationBehaviour* _animator = nullptr;
 
 		bool _facingBoss = false;
-		
+
+		bool _cameraIsMovingTowardsMirror = false;
+		bool _cameraLookingAtMirror = false;
+		float _lookedAtFor = 0;
+		float _lookingDuration = 1.5f;
+		glm::vec3 _cameraPositionBeforeTransition;
 };
 
 #endif
