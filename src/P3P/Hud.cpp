@@ -4,23 +4,34 @@
 #include <JCPPEngine/MouseEvent.hpp>
 #include <JCPPEngine/InputManager.hpp>
 
+
 //---------------button press functions---------------------
 bool statsOn = false;
 int hintIndex = -1;
+int oldState = 0;
 
 void reloadFunction()
 {
 	Player::singletonInstance->die();
 }
+
 void quitToHudFunction()
 {
 	hintIndex = -1;
+	statsOn = false;
+	
+	if (Stats::singletonInstance != nullptr)
+	{
+		Stats::singletonInstance->setActive(statsOn);
+	}
 	Level::singletonInstance->loadLevel(0);
 }
+
 void quitToMenuFunction()
 {
 	
 }
+
 void hintFunction()
 {
 	if (hintIndex != -1)
@@ -39,6 +50,7 @@ void hintFunction()
 		Level::singletonInstance->hints[hintIndex]->setActive(true);
 	}
 }
+
 void statsFunction()
 {
 	statsOn = !statsOn;
@@ -47,17 +59,53 @@ void statsFunction()
 		Stats::singletonInstance->setActive(statsOn);
 	}
 }
+
+void levelPauseFunction()
+{
+	oldState = Hud::singletonInstance->state;
+	Hud::singletonInstance->setState(4);
+}
+void hubPauseFunction()
+{
+	oldState = Hud::singletonInstance->state;
+	Hud::singletonInstance->setState(5);
+	//TODO: pause game.
+}
+
+void continueFunction()
+{
+	statsOn = false;
+	if (Stats::singletonInstance != nullptr)
+	{
+		Stats::singletonInstance->setActive(statsOn);
+	}
+	Hud::singletonInstance->setState(oldState);
+}
+
 //------------------------------------------------------------
+
+//static variables
+Hud* Hud::singletonInstance = nullptr;
 
 Hud::Hud()
 {
-	//create buttons
-	buttons.push_back(new HudButton("mge/textures/ReloadButton.png", sf::Vector2f(0, 0), &reloadFunction));
-	buttons.push_back(new HudButton("mge/textures/QuitToHudButton.png", sf::Vector2f(0, 95), &quitToHudFunction));
-	buttons.push_back(new HudButton("mge/textures/QuitToMenuButton.png", sf::Vector2f(0, 2 * 95), &quitToMenuFunction));
-	buttons.push_back(new HudButton("mge/textures/HintButton.png", sf::Vector2f(0, 3 * 95), &hintFunction));
-	buttons.push_back(new HudButton("mge/textures/StatsButton.png", sf::Vector2f(0, 4 * 95), &statsFunction));
+	if (singletonInstance != nullptr)
+	{
+		delete singletonInstance;
+	}
+	singletonInstance = this;
 
+	//create buttons
+	buttons.push_back(new HudButton("mge/textures/PauseButton.png", sf::Vector2f(0, 0), &levelPauseFunction)); //0
+	buttons.push_back(new HudButton("mge/textures/PauseButton.png", sf::Vector2f(0, 0), &hubPauseFunction)); //1
+	buttons.push_back(new HudButton("mge/textures/ReloadButton.png", sf::Vector2f(0, 95), &reloadFunction)); //2
+
+	buttons.push_back(new HudButton("mge/textures/HintButton.png", sf::Vector2f(500, 2 * 95), &hintFunction)); //3
+	buttons.push_back(new HudButton("mge/textures/ContinueButton.png", sf::Vector2f(500, 3 * 95), &continueFunction)); //4
+	buttons.push_back(new HudButton("mge/textures/StatsButton.png", sf::Vector2f(500, 4 * 95), &statsFunction)); //5
+	buttons.push_back(new HudButton("mge/textures/QuitToMenuButton.png", sf::Vector2f(500, 5 * 95), &quitToMenuFunction)); //6
+	buttons.push_back(new HudButton("mge/textures/QuitToHudButton.png", sf::Vector2f(500, 6* 95), &quitToHudFunction)); //7
+	
 	registerForEvent(JCPPEngine::Event::EventType::MouseDown);
 
 	if (Stats::singletonInstance == nullptr)
@@ -78,6 +126,9 @@ Hud::~Hud()
 		delete Stats::singletonInstance;
 		Stats::singletonInstance = nullptr;
 	}
+
+	singletonInstance = nullptr;
+	setParent(nullptr);
 	GameObject::~GameObject();
 }
 
@@ -86,33 +137,39 @@ void Hud::update(float pStep, bool pUpdateWorldTransform)
 	GameObject::update(pStep, pUpdateWorldTransform);
 }
 
-void Hud::setState(int state)
+void Hud::setState(int newState)
 {
+	state = newState;
+	for(HudButton * button : buttons)
+	{
+		button->setActive(false);
+	}
 	switch (state)
 	{
 	case 0: //menu
-		buttons[0]->setActive(false);
-		buttons[1]->setActive(false);
-		buttons[2]->setActive(false);
-		buttons[3]->setActive(false);
-		buttons[4]->setActive(false);
 		break;
-	case 1: // hub
-		buttons[0]->setActive(false);
-		buttons[1]->setActive(false);
-		buttons[2]->setActive(true);
-		buttons[3]->setActive(false);
-		buttons[4]->setActive(true);
+	case 1: //hub
+		buttons[1]->setActive(true);
 		break;
-	case 2: // normal level
+	case 2: //normal level
 		buttons[0]->setActive(true);
 		buttons[1]->setActive(true);
 		buttons[2]->setActive(true);
+		break;
+	case 3://boss level
+		//todo
+		break;
+	case 4://level pause
 		buttons[3]->setActive(true);
 		buttons[4]->setActive(true);
+		buttons[5]->setActive(true);
+		buttons[6]->setActive(true);
+		buttons[7]->setActive(true);
 		break;
-	case 3:// boss level
-		//todo
+	case 5://hub pause
+		buttons[4]->setActive(true);
+		buttons[5]->setActive(true);
+		buttons[6]->setActive(true);
 		break;
 	}
 }
