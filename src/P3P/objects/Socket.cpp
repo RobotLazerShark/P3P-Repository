@@ -36,6 +36,13 @@ Socket::Socket(int pX, int pZ, int pOrientation, ButtonTarget* pTarget) : GameOb
 	//save target
 	_target = pTarget;
 }
+Socket::~Socket ()
+{
+	_model->setMaterial (nullptr);
+	delete onMaterial;
+	delete offMaterial;
+	GameObject::~GameObject ();
+}
 
 void Socket::update(float pStep, bool pUpdateWorldTransform)
 {

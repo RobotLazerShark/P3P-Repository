@@ -52,14 +52,20 @@ bool Mirror::setActive(bool pActive)
 	if (_active && !up && !broken)
 	{
 		up = true;
-		//start look transition
-		_cameraPositionBeforeTransition = World::singletonInstance->getMainCamera()->getWorldPosition();
-		glm::vec3 bossPos = Boss::singletonInstance->getWorldPosition();
-		bossPos.y = 4;
-		((BossCameraBehaviour*)World::singletonInstance->getMainCamera()->getBehaviour())->startLookTransition(false, getWorldPosition());
-		((BossCameraBehaviour*)World::singletonInstance->getMainCamera()->getBehaviour())->startTransition(bossPos);
-
-		_cameraIsMovingTowardsMirror = true;
+		if (behaviour != nullptr)
+		{
+			//start look transition
+			_cameraPositionBeforeTransition = World::singletonInstance->getMainCamera()->getWorldPosition();
+			glm::vec3 bossPos = Boss::singletonInstance->getWorldPosition();
+			bossPos.y = 4;
+			behaviour->startLookTransition(false, getWorldPosition());
+			behaviour->startTransition(bossPos);
+			_cameraIsMovingTowardsMirror = true;
+		}
+		else
+		{
+			_animator->playAnimation(0, false, false, &animationEndFunction, this);
+		}
 	}
 	if (!_active)
 	{
@@ -85,28 +91,25 @@ void Mirror::update(float pStep, bool pUpdateWorldTransform)
 		_model->setTransform(glm::mat4(glm::vec4(right, 0), glm::vec4(up, 0), glm::vec4(forward, 0), glm::vec4(0,0,0, 1)));
 
 		_facingBoss = true;
+		behaviour = dynamic_cast <BossCameraBehaviour*> (World::singletonInstance->getMainCamera ()->getBehaviour ());
 	}
 
 	//if camera is done mobing towards the mirror play animation
-	if (_cameraIsMovingTowardsMirror)
+	if (behaviour != nullptr && _cameraIsMovingTowardsMirror && behaviour->_currentLookAtPos == getWorldPosition ())
 	{
-		if (((BossCameraBehaviour*)World::singletonInstance->getMainCamera()->getBehaviour())->_currentLookAtPos == getWorldPosition())
-		{
-			_animator->playAnimation(0, false, false, &animationEndFunction, this);
-
-			_cameraLookingAtMirror = true;
-			_cameraIsMovingTowardsMirror = false;
-		}
+		_animator->playAnimation(0, false, false, &animationEndFunction, this);
+		_cameraLookingAtMirror = true;
+		_cameraIsMovingTowardsMirror = false;
 	}
 	
 	//make camera look at mirror for 1.5 seconds
-	if (_cameraLookingAtMirror)
+	if (behaviour != nullptr && _cameraLookingAtMirror)
 	{
 		_lookedAtFor += pStep;
 		if (_lookedAtFor >= _lookingDuration)
 		{
-			((BossCameraBehaviour*)World::singletonInstance->getMainCamera()->getBehaviour())->startLookTransition(true);
-			((BossCameraBehaviour*)World::singletonInstance->getMainCamera()->getBehaviour())->startTransition(_cameraPositionBeforeTransition);
+			behaviour->startLookTransition(true);
+			behaviour->startTransition(_cameraPositionBeforeTransition);
 			_cameraLookingAtMirror = false;
 		}
 		else

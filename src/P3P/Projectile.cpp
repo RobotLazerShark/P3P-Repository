@@ -1,14 +1,15 @@
 #include <P3P/Projectile.hpp>
 #include <P3P/Level.hpp>
 #include <P3P/objects/Boss.hpp>
-#include <mge/materials/ColorMaterial.hpp>
+#include <mge/materials/TextureMaterial.hpp>
+#include <JCPPEngine/SoundManager.hpp>
 
 Projectile::Projectile(glm::vec3 pos, int targetX, int targetZ, Boss * pOwner) : GameObject()
 {
 	//Set up model
 	_model = new GameObject("cube_flat.obj");
 	_model->badScale(glm::vec3 (0.25f, 0.25f, 0.75f));
-	_model->setMaterial(new ColorMaterial(glm::vec3(1, 0, 0)));
+	_model->setMaterial(new TextureMaterial("Projectile.png"));
 	_model->setParent(this);
 	
 	setWorldPosition(pos);
@@ -75,6 +76,7 @@ void Projectile::update(float pStep, bool pUpdateWorldTransform)
 				mirror->setActive(false);
 				_target = _startPosition;
 				reflected = true;
+				JCPPEngine::SoundManager::PlaySound (new sf::Sound (*JCPPEngine::SoundManager::GetBuffer ("sounds/ProjectileBounce.wav")));
 			}
 			//if reached player
 			else if (Player::singletonInstance->_currentTile[0] == _targetTile[0] && Player::singletonInstance->_currentTile[1] == _targetTile[1])

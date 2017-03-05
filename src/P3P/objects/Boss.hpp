@@ -24,10 +24,10 @@ class Boss : public GameObject
 		bool _dead = false;
 		GameObject* _model = nullptr;
 		LitMaterial* _faceMaterial = nullptr;
-		int liveCount = 5;
+		int liveCount = 4;
 		int _position[2] = { 0, 0 };
 		float _timer = 0;
-		const float SHOOTING_FREQUENCY = 1;
+		const float SHOOTING_FREQUENCY = 2.0f;
 		std::vector<Projectile*> projectiles;
 		AnimationBehaviour* _barrel1Animator = nullptr;
 		AnimationBehaviour* _barrel2Animator = nullptr;

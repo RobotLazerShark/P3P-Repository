@@ -57,7 +57,7 @@ Level::Level (int pPlayerSkin, sf::RenderWindow* pWindow)
 	transparencyLayer3->setParent (World::singletonInstance);
 
 	hud = new Hud();
-	setMap (0);
+	setMap (_bossLevelNumber);
 	loadMap ();
 }
 //Destructor
@@ -187,13 +187,19 @@ bool Level::setMap (int pLevelNumber)
 		{
 			_isHub = true;
 			levelCompleted = (_levelNumber == 0);
-			hud->setState(1);
+			if (!_reloading)
+			{
+				hud->setState(1);
+			}
 		}
 		else
 		{
 			_isHub = false;
 			levelCompleted = false;
-			hud->setState(2);
+			if (!_reloading)
+			{
+				hud->setState(2);
+			}
 		}
 	}
 
@@ -768,6 +774,7 @@ void Level::loadMap ()
 					case 3:
 						World::singletonInstance->getMainCamera()->setBehaviour(new BossCameraBehaviour());
 						World::singletonInstance->getMainCamera()->setWorldPosition(glm::vec3(object->x, 6, object->z));
+						break;
 					default:
 						break;
 				}
@@ -924,7 +931,7 @@ void Level::loadMap ()
 				bossPuzzleTracker = new ProgressTracker();
 				if (dynamic_cast <Mirror*> ((GameObject*)map->baseTiles[object->x][object->z]) != nullptr)
 				{
-					bossPuzzleTracker->_targetMirror = dynamic_cast <Mirror*> ((GameObject*)map->baseTiles[object->x][object->z]);
+					bossPuzzleTracker->_targetMirror = static_cast <Mirror*> ((GameObject*)map->baseTiles[object->x][object->z]);
 				}
 				else
 				{
@@ -935,7 +942,6 @@ void Level::loadMap ()
 					if (i + 1 < object->properties.size())
 					{
 						BoxSpot * boxSpot = dynamic_cast <BoxSpot*> ((GameObject*)map->baseTiles[std::stoi(object->properties[i])][std::stoi(object->properties[i + 1])]);
-						
 						if (boxSpot != nullptr)
 						{
 							bossPuzzleTracker->boxSpots.push_back(boxSpot);
@@ -1073,7 +1079,6 @@ void Level::clear ()
 	bossPuzzlesTrackers.clear();
 
 	World::singletonInstance->getMainCamera ()->setBehaviour (nullptr);
-	drawBuffer.clear ();
 }
 
 //Clear everything in the level, and build a new level

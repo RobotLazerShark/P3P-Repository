@@ -68,8 +68,11 @@ Fan::Fan(int pX, int pZ, int pXDirection, int pYDirection, bool pReversed) : But
 }
 Fan::~Fan ()
 {
-	JCPPEngine::SoundManager::StopSoundLoop (_soundIndex);
-	_soundIndex = -1;
+	if (_soundIndex != -1)
+	{
+		JCPPEngine::SoundManager::StopSoundLoop (_soundIndex);
+		_soundIndex = -1;
+	}
 }
 
 void Fan::move(int pX, int pZ)

@@ -34,6 +34,7 @@ void MGEDemo::_initializeScene()
 	JCPPEngine::SoundManager::GetBuffer ("sounds/Death.wav");
 	JCPPEngine::SoundManager::GetBuffer ("sounds/Unstable.wav");
 	JCPPEngine::SoundManager::GetBuffer ("sounds/Fan.wav");
+	JCPPEngine::SoundManager::GetBuffer ("sounds/NpcTalking.wav");
 
 	//add camera first (it will be updated last)
 	Camera* camera = new Camera ();

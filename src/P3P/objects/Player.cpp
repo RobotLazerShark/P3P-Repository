@@ -56,7 +56,6 @@ void stopFunctionPlayer (int pAnimIndex, GameObject* pOwner)
 			}
 			break;
 		case 1:
-			player->_noMove = false;
 			Level::singletonInstance->reloadLevel ();
 			break;
 		case 12:

@@ -81,7 +81,6 @@ void BossCameraBehaviour::update(float pStep)
 		{
 			lookAt(_lookTargetPos);
 			_player->_noMove = false;
-			cout << "unlocked movement" << endl;
 			_inLookTransition = false;		
 		}
 	}
@@ -137,7 +136,6 @@ void BossCameraBehaviour::startLookTransition(bool lookAtPlayer, glm::vec3 newTa
 	_inLookTransition = true;
 
 	Player::singletonInstance->_noMove = true;
-	cout << "blocked movement" << endl;
 }
 
 void BossCameraBehaviour::lookAt(glm::vec3 target)

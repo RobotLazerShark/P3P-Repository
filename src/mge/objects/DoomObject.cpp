@@ -12,6 +12,7 @@ DoomObject::DoomObject (glm::vec3 pPosition) : GameObject ("DoomObject", pPositi
 DoomObject::~DoomObject ()
 {
 	_material = nullptr;
+	delete _sprite;
 	GameObject::~GameObject ();
 }
 

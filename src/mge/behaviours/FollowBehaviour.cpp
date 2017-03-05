@@ -16,7 +16,7 @@ void PercentageFollowBehaviour::update(float pStep)
 		_owner->setLocalPosition (_initialPosition);
 		_player = Player::singletonInstance;
 		//Set initial values
-		glm::vec3 playerPos = glm::vec3 (_player->_currentTile [0] * Level::TILESIZE, 0, _player->_currentTile [1] * Level::TILESIZE);
+		glm::vec3 playerPos = glm::vec3 (_player->_currentTile [0], 0, _player->_currentTile [1]);
 		_curTargetPos [0] = playerPos.x;
 		_curTargetPos [1] = playerPos.z;
 		_newTargetPos [0] = _player->_currentTile [0];
@@ -24,7 +24,11 @@ void PercentageFollowBehaviour::update(float pStep)
 		//move
 		glm::vec3 newPosition = _initialPosition;
 		newPosition.x = _initialPosition.x * (1 - _intensity) + playerPos.x * _intensity;
-		newPosition.z = _initialPosition.z * (1 - _intensity) + playerPos.y * _intensity;
+		newPosition.z = _initialPosition.z * (1 - _intensity) + playerPos.z * _intensity;
+		if (newPosition.z < playerPos.z + 3)
+		{
+			newPosition.z = playerPos.z + 3;
+		}
 		_owner->setLocalPosition (newPosition);
 		//look at player
 		glm::vec3 forward = glm::normalize (_owner->getLocalPosition () - playerPos);
@@ -39,14 +43,18 @@ void PercentageFollowBehaviour::update(float pStep)
 	_newTargetPos [1] = _player->_currentTile [1];
 	if (_newTargetPos [0] != _curTargetPos [0] || _newTargetPos [1] != _curTargetPos [1]) 
 	{
-		glm::vec3 playerPos = glm::vec3 (_curTargetPos [0] + (_newTargetPos [0] - _curTargetPos [0]) * (1 - _smoothing), 0, _curTargetPos [1] + (_newTargetPos [1] - _curTargetPos [1]) * (1 - _smoothing)) * Level::TILESIZE;
+		glm::vec3 playerPos = glm::vec3 (_curTargetPos [0] + (_newTargetPos [0] - _curTargetPos [0]) * (1 - _smoothing), 0, _curTargetPos [1] + (_newTargetPos [1] - _curTargetPos [1]) * (1 - _smoothing));
 		_curTargetPos [0] = playerPos.x;
 		_curTargetPos [1] = playerPos.z;
 
 		//move
 		glm::vec3 newPosition = _initialPosition;
 		newPosition.x = _initialPosition.x * (1 - _intensity) + playerPos.x * _intensity;
-		newPosition.z = _initialPosition.z * (1 - _intensity) + playerPos.y * _intensity;
+		newPosition.z = _initialPosition.z * (1 - _intensity) + playerPos.z * _intensity;
+		if (newPosition.z < playerPos.z + 3)
+		{
+			newPosition.z = playerPos.z + 3;
+		}
 		_owner->setLocalPosition (newPosition);
 
 		//look at player

@@ -7,6 +7,8 @@
 #include <P3P/ButtonTarget.hpp>
 #include <mge/behaviours/AnimationBehaviour.hpp>
 
+//Forward declaration
+class BossCameraBehaviour;
 
 class Mirror : public ButtonTarget
 {
@@ -16,12 +18,11 @@ class Mirror : public ButtonTarget
 		void update(float pStep, bool pUpdateWorldTransform = false) override;
 		bool up = false;
 		bool broken = false;
-
 	private:
 		GameObject* _model = nullptr;
 		bool _active = false;
 		AnimationBehaviour* _animator = nullptr;
-
+		BossCameraBehaviour* behaviour = nullptr;
 		bool _facingBoss = false;
 
 		bool _cameraIsMovingTowardsMirror = false;
