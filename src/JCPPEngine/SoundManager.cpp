@@ -85,6 +85,30 @@ namespace JCPPEngine
 		std::cout << "[ERROR]: All Music loop-slots are occupied." << std::endl;
 		return -1;
 	}
+	//Get how many sounds are looping
+	int SoundManager::GetSoundLoopCount ()
+	{
+		for (int i = 0, size = MAXLOOPING; i < size; i ++)
+		{
+			if (_loopingSounds [i] == nullptr)
+			{
+				return i;
+			}
+		}
+		return MAXLOOPING;
+	}
+	//Get how many music's are looping
+	int SoundManager::GetMusicLoopCount ()
+	{
+		for (int i = 0, size = MAXLOOPING; i < size; i ++)
+		{
+			if (_loopingMusic [i] == nullptr)
+			{
+				return i;
+			}
+		}
+		return MAXLOOPING;
+	}
 	//Stop playing a looping sound
 	void SoundManager::StopSoundLoop (int pSoundIndex)
 	{

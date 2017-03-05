@@ -5,7 +5,7 @@
 
 
 //Constructor
-Spikes::Spikes(int pX, int pZ) : GameObject()
+Spikes::Spikes(int pX, int pZ) : ButtonTarget()
 {
 	//Set up model
 	_model = new GameObject("SpikesFloor.obj");

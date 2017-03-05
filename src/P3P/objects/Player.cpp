@@ -8,6 +8,7 @@
 #include <JCPPEngine/KeyEvent.hpp>
 #include <JCPPEngine/InputManager.hpp>
 #include <JCPPEngine/Random.hpp>
+#include <JCPPEngine/SoundManager.hpp>
 #include <mge/materials/TextureMaterial.hpp>
 
 
@@ -146,6 +147,7 @@ Player::Player (int pX, int pZ, ProgressTracker* pProgressTracker, int pSkin) : 
 	_oldTile [1] = _currentTile [1];
 	_noMove = true;
 	_rotationAnimator->playAnimation(12, false, &stopFunctionPlayer, this);
+	JCPPEngine::SoundManager::PlaySound (new sf::Sound (*JCPPEngine::SoundManager::GetBuffer ("sounds/Spawn.wav")));
 }
 
 //Destructor
@@ -161,6 +163,7 @@ Player::~Player ()
 	inventory.clear ();
 	_wheelAnimator = nullptr;
 	_baseAnimator = nullptr;
+	Level::map->objectTiles [_currentTile [0]] [_currentTile [1]] = (int)nullptr;
 	GameObject::~GameObject ();
 }
 
@@ -192,13 +195,10 @@ bool Player::movePlayer (int pX, int pZ, bool pAnimate)
 	}
 	else if (door != nullptr)//The new position contains a door
 	{
-		if (!door->enter ())
-		{
-			//we cannot enter the door
-			_currentTile [0] = _oldTile [0];
-			_currentTile [1] = _oldTile [1];
-			return false;
-		}
+		door->enter ();
+		//we cannot enter the door's space
+		_currentTile [0] = _oldTile [0];
+		_currentTile [1] = _oldTile [1];
 		return false;
 	}
 	else if (box != nullptr)//The new position contains a box
@@ -226,6 +226,7 @@ bool Player::movePlayer (int pX, int pZ, bool pAnimate)
 		}
 		else
 		{
+			JCPPEngine::SoundManager::PlaySound (new sf::Sound (*JCPPEngine::SoundManager::GetBuffer ("sounds/Thump.wav")));
 			//we cannot move the box
 			_currentTile [0] = _oldTile [0];
 			_currentTile [1] = _oldTile [1];
@@ -310,13 +311,10 @@ bool Player::movePlayer (int pX, int pZ, bool pAnimate, void (*pFuncPtr) (int, G
 	}
 	else if (door != nullptr)//The new position contains a door
 	{
-		if (!door->enter ())
-		{
-			//we cannot enter the door
-			_currentTile [0] = _oldTile [0];
-			_currentTile [1] = _oldTile [1];
-			return false;
-		}
+		door->enter ();
+		//we cannot enter the door's space
+		_currentTile [0] = _oldTile [0];
+		_currentTile [1] = _oldTile [1];
 		return false;
 	}
 	else if (box != nullptr)//The new position contains a box
@@ -425,6 +423,7 @@ void Player::die ()
 	_wheelAnimator->stopAnimation ();
 	_wheelAnimator->playAnimation (1, false, false);
 	_baseAnimator->playAnimation (1, false, false, &stopFunctionPlayer, this);
+	JCPPEngine::SoundManager::PlaySound (new sf::Sound (*JCPPEngine::SoundManager::GetBuffer ("sounds/Death.wav")));
 }
 
 //Process input events

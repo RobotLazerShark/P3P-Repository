@@ -8,6 +8,7 @@
 #include <mge/materials/LitMaterial.hpp>
 #include <mge/objects/Light.hpp>
 #include <mge/materials/TextureMaterial.hpp>
+#include <JCPPEngine/SoundManager.hpp>
 
 
 //Static variables
@@ -110,6 +111,7 @@ void Npc::talk()
 				{
 					_glitchIntensity -= quest->fixIntensity;
 					_material->SetGlitchIntensity (_glitchIntensity);
+					JCPPEngine::SoundManager::PlaySound (new sf::Sound (*JCPPEngine::SoundManager::GetBuffer ("sounds/Repair.wav")));
 					//The item will remain in the player's inventory, so in lua dialog can respond to the completion of this quest
 					delete quest;
 					activeQuests [i] = nullptr;
@@ -146,6 +148,7 @@ void Npc::displayDialog (std::string pText)
 				{
 					_glitchIntensity -= quest->fixIntensity;
 					_material->SetGlitchIntensity (_glitchIntensity);
+					JCPPEngine::SoundManager::PlaySound (new sf::Sound (*JCPPEngine::SoundManager::GetBuffer ("sounds/repair.wav")));
 					//The item will remain in the player's inventory, so in lua dialog can respond to the completion of this quest
 					delete quest;
 					activeQuests [i] = nullptr;

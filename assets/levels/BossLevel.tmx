@@ -95,6 +95,7 @@
   </object>
   <object id="21" gid="63" x="960" y="768" width="64" height="64">
    <properties>
+    <property name="targettype" value="1"/>
     <property name="x" value="13"/>
     <property name="y" value="14"/>
    </properties>

@@ -2,6 +2,7 @@
 #include <P3P/Level.hpp>
 #include <P3P/objects/Player.hpp>
 #include <JCPPEngine/Random.hpp>
+#include <JCPPEngine/SoundManager.hpp>
 
 
 //Constructor
@@ -22,15 +23,33 @@ BreakingBlock::BreakingBlock(int pX, int pZ) : GameObject()
 	_position [0] = pX;
 	_position [1] = pZ;
 }
+BreakingBlock::~BreakingBlock ()
+{
+	if (_soundIndex != -1)
+	{
+		JCPPEngine::SoundManager::StopSoundLoop (_soundIndex);
+		_soundIndex = -1;
+	}
+}
 
 
 //Breaks this block (post-animation function)
-void breakBlock (int pAnimIndex, GameObject* pOwner)
+void stopFunctionBreakingBlock (int pAnimIndex, GameObject* pOwner)
 {
 	BreakingBlock* block = (BreakingBlock*)pOwner;
-
-	//mark for deletion
-	block->_delete = true;
+	switch (pAnimIndex)
+	{
+		case 1:
+			//mark for deletion
+			block->_delete = true;
+			break;
+		case 0:
+			JCPPEngine::SoundManager::StopSoundLoop (block->_soundIndex);
+			block->_soundIndex = -1;
+			break;
+		default:
+			break;
+	}
 }
 
 //Update loop
@@ -49,7 +68,8 @@ void BreakingBlock::update (float pStep, bool pUpdateWorldTransform)
 		if ((_breakLevel == 0) && Player::singletonInstance->_currentTile [0] == _position [0] && Player::singletonInstance->_currentTile [1] == _position [1])
 		{
 			_breakLevel = 1;
-			_animator->playAnimation (0, true);
+			_animator->playAnimation (0, true, &stopFunctionBreakingBlock, this);
+			_soundIndex = JCPPEngine::SoundManager::PlaySoundLoop (new sf::Sound (*JCPPEngine::SoundManager::GetBuffer ("sounds/Unstable.wav")));
 		}
 		//If the player was on us before, but not anymore, break
 		else if ((_breakLevel == 1) && (Player::singletonInstance->_currentTile[0] != _position[0] || Player::singletonInstance->_currentTile[1] != _position[1]))
@@ -57,7 +77,7 @@ void BreakingBlock::update (float pStep, bool pUpdateWorldTransform)
 			_breakLevel = 2;
 			//remove the block from array
 			Level::map->baseTiles [_position [0]] [_position [1]] = (int)nullptr;
-			_animator->playAnimation (1, false, &breakBlock, this);
+			_animator->playAnimation (1, false, &stopFunctionBreakingBlock, this);
 
 			Stats::singletonInstance->data.platformsBroke++;
 			Stats::singletonInstance->refreshText();

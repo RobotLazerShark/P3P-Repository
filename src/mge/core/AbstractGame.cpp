@@ -104,12 +104,6 @@ void AbstractGame::initialize() {
     _initializeGlew();
     _initializeRenderer();
     _initializeWorld();
-
-	_window->pushGLStates ();
-	_window->draw (sf::Sprite (*JCPPEngine::TextureManager::GetTexture ("images/LoadingScreen2.png")));
-	_window->popGLStates ();
-	_window->display ();
-
     _initializeScene();
 
 	//Set up the event handler
@@ -143,6 +137,10 @@ void AbstractGame::_initializeWindow() {//FADE TOP ROW OF WALLS ALPHA TO 0
 	_window->draw (sf::Sprite (*JCPPEngine::TextureManager::GetTexture ("images/LoadingScreen1.png")));
 	_window->popGLStates ();
 	_window->display ();
+	//Draw the next image to the drawbuffer, but display it as late as possible
+	_window->pushGLStates ();
+	_window->draw (sf::Sprite (*JCPPEngine::TextureManager::GetTexture ("images/LoadingScreen2.png")));
+	_window->popGLStates ();
 }
 
 void AbstractGame::_printVersionInfo() {

@@ -13,11 +13,13 @@ class BreakingBlock : public GameObject
 {
 public:
 	BreakingBlock(int pX, int pZ);
+	~BreakingBlock ();
 	void update (float pStep, bool pUpdateWorldTransform = false) override;
 	//Preferably these variables would be private, but they are needed in a globalspace function
 	//They use the private name conventions because they should be used as such
 	int _position [2] = { 0, 0 };
 	bool _delete = false;
+	int _soundIndex = -1;
 private:
 	GameObject* _model = nullptr;
 	int _breakLevel = 0;
