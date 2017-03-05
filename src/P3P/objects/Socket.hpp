@@ -11,7 +11,7 @@
 class Socket : public GameObject
 {
 	public:
-		Socket(int pX, int pZ, int pOrientation, int pTargetX, int pTargetY);
+		Socket(int pX, int pZ, int pOrientation, ButtonTarget* pTarget);
 		void update(float pStep, bool pUpdateWorldTransform = false) override;
 
 		GameObject* _model = nullptr;
@@ -22,8 +22,7 @@ class Socket : public GameObject
 		int _orientation = 0;
 		int _currentTile[2] = { 0, 0 };
 		bool activated = false;
-		int _targetX = 0;
-		int _targetY = 0;
+		ButtonTarget* _target = nullptr;
 };
 
 #endif

@@ -2,6 +2,7 @@
 #include <P3P/Level.hpp>
 #include <P3P/objects/base objects/BoxSpot.hpp>
 #include <JCPPEngine/Random.hpp>
+#include <JCPPEngine/SoundManager.hpp>
 #include <mge/materials/TextureMaterial.hpp>
 
 
@@ -60,6 +61,7 @@ void stopFunctionBox (int pAnimIndex, GameObject* pOwner)
 	    {
 		    boxSpot->taken = true;
 		    box->_animator->playAnimation (4, false, false);
+		    JCPPEngine::SoundManager::PlaySound (new sf::Sound (*JCPPEngine::SoundManager::GetBuffer ("sounds/BoxSlotting.wav")));
 	    }
 	}
 	if (pAnimIndex != 4)

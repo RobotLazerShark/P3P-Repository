@@ -29,6 +29,11 @@ void MGEDemo::_initializeScene()
 	Mesh::load(config::MGE_MODEL_PATH + "Fan.obj");
 	Mesh::load(config::MGE_MODEL_PATH + "PowerBox.obj");
 	Mesh::load(config::MGE_MODEL_PATH + "BoxSpot.obj");
+	//Load large audio files
+	JCPPEngine::SoundManager::GetBuffer ("sounds/BossHurt.wav");
+	JCPPEngine::SoundManager::GetBuffer ("sounds/Death.wav");
+	JCPPEngine::SoundManager::GetBuffer ("sounds/Unstable.wav");
+	JCPPEngine::SoundManager::GetBuffer ("sounds/Fan.wav");
 
 	//add camera first (it will be updated last)
 	Camera* camera = new Camera ();
@@ -50,7 +55,7 @@ void MGEDemo::_initializeScene()
 	//camera->setBehaviour (new CameraOrbitBehaviour (10.0f, glm::radians (-60.0f), glm::radians (60.0f), 0.01f, _world));
 
 	//Set up P3P hub (starts the game)
-	_game = new Level (JCPPEngine::Random::Range (1, 4));
+	_game = new Level (JCPPEngine::Random::Range (1, 4), _window);
 }
 
 MGEDemo::~MGEDemo()

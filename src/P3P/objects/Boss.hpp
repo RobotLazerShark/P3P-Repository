@@ -24,7 +24,7 @@ class Boss : public GameObject
 		bool _dead = false;
 		GameObject* _model = nullptr;
 		LitMaterial* _faceMaterial = nullptr;
-		int liveCount = 1;
+		int liveCount = 5;
 		int _position[2] = { 0, 0 };
 		float _timer = 0;
 		const float SHOOTING_FREQUENCY = 1;

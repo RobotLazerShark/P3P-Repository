@@ -320,7 +320,7 @@ void GameObject::removeAll ()
 	{
 		GameObject* child = _children [0];
 		if (child == nullptr) continue;
-		remove (child);
+		child->setParent (nullptr);
 		delete child;
 		child = nullptr;
 	}

@@ -6,6 +6,7 @@
 #include <JCPPEngine/InputManager.hpp>
 #include <JCPPEngine/TextureManager.hpp>
 #include <JCPPEngine/FontManager.hpp>
+#include <JCPPEngine/SoundManager.hpp>
 #include <mge/objects/DoomAnimation.hpp>
 
 //Constructor
@@ -68,7 +69,7 @@ Collectable::Collectable(int pX, int pZ, std::string pName, std::string pDialog,
 
 	//Set up textbox (won't be visible yet)
 	_textBox = new sf::Sprite (*JCPPEngine::TextureManager::GetTexture ("images/TextBox.png"));
-	_text = new sf::Text (pDialog, *JCPPEngine::FontManager::GetFont ("fonts/Font2.ttf"), 35);
+	_text = new sf::Text (pDialog, *JCPPEngine::FontManager::GetFont ("fonts/Font3.ttf"), 35);
 	_text->setFillColor (sf::Color::White);
 	sf::FloatRect size = _text->getLocalBounds ();
 	_text->setOrigin (0, size.height * 0.5f);//Set origin at center
@@ -205,6 +206,20 @@ bool Collectable::collect (int pOldX, int pOldZ)
 	if (!_collected)
 	{
 		_collected = true;
+		if (_mark != nullptr)
+		{
+			_mark->setParent (nullptr);
+			delete _mark;
+			_mark = nullptr;
+		}
+		if (!_hasDialog)
+		{
+			JCPPEngine::SoundManager::PlaySound (new sf::Sound (*JCPPEngine::SoundManager::GetBuffer ("sounds/Collectable.wav")));
+		}
+		else
+		{
+			JCPPEngine::SoundManager::PlaySound (new sf::Sound (*JCPPEngine::SoundManager::GetBuffer ("sounds/Popup.wav")));
+		}
 		//Add this object to the player's inventory
 		for (int i = 0, size = Player::singletonInstance->inventory.size (); i < size; i ++)
 		{
@@ -216,12 +231,6 @@ bool Collectable::collect (int pOldX, int pOldZ)
 		if (!alreadyInInventory)
 		{
 			Player::singletonInstance->inventory.push_back (_name);
-			if (_mark != nullptr)
-			{
-				_mark->setParent (nullptr);
-				delete _mark;
-				_mark = nullptr;
-			}
 			Stats::singletonInstance->data.itemsCollected++;
 			Stats::singletonInstance->refreshText();
 		}

@@ -1,6 +1,7 @@
 #include <P3P/objects/Boss.hpp>
 #include <P3P/Level.hpp>
 #include <mge/materials/TextureMaterial.hpp>
+#include <JCPPEngine/SoundManager.hpp>
 
 //Static fields
 Boss* Boss::singletonInstance = nullptr;
@@ -29,20 +30,24 @@ Boss::Boss(int pX, int pZ) : GameObject()
 		delete singletonInstance;
 	}
 	singletonInstance = this;
+	//Play bosslevel music
+	JCPPEngine::SoundManager::PlayMusicLoop ("sounds/BackgroundLoop2.wav");
 
 	//Set up model
+	GameObject* modelParent = new GameObject ();//Prevent shadow animating with boss
+	modelParent->setParent (this);
 	_model = new GameObject("BossBody.obj");
 	_model->translate(glm::vec3(0, 2, 0));
 	_model->setMaterial(new LitMaterial("Boss.jpg"));
-	_model->setParent(this);
+	_model->setParent(modelParent);
 	_bodyAnimator = new AnimationBehaviour({ "BossFloat.txt" });
 	_model->setBehaviour(_bodyAnimator);
 	_bodyAnimator->playAnimation(0, true);
 
 	GameObject* shadow = new GameObject ("ShadowPlane.obj");
 	shadow->setMaterial (new TextureMaterial ("BossShadow.png"));
-	shadow->setParent (_model);
-	shadow->translate (glm::vec3 (0, -1.9f, 0));
+	shadow->setParent (modelParent);
+	shadow->translate (glm::vec3 (0, 0.1f, 0));
 	GameObject* faceModel = new GameObject ("BossFace.obj");
 	faceModel->setParent (_model);
 	_faceMaterial = new LitMaterial ("BossFace1.png");
@@ -79,6 +84,7 @@ Boss::~Boss()
 		delete proj;
 	}
 	projectiles.clear();
+	JCPPEngine::SoundManager::StopMusicLoop (0);
 	GameObject::~GameObject();
 }
 
@@ -101,6 +107,7 @@ void Boss::update(float pStep, bool pUpdateWorldTransform)
 
 	if (_dead)
 	{
+		JCPPEngine::SoundManager::PlaySound (new sf::Sound (*JCPPEngine::SoundManager::GetBuffer ("sounds/BossDeath.wav")));
 		setParent (nullptr);
 		delete this;
 	}
@@ -118,6 +125,7 @@ void Boss::update(float pStep, bool pUpdateWorldTransform)
 
 void Boss::shoot()
 {
+	JCPPEngine::SoundManager::PlaySound (new sf::Sound (*JCPPEngine::SoundManager::GetBuffer ("sounds/BossFire.wav")));
 	Projectile * proj = new Projectile(getWorldPosition(), Player::singletonInstance->_currentTile[0], Player::singletonInstance->_currentTile[1], this);
 	proj->setParent(Level::singletonInstance);
 	projectiles.push_back(proj);
@@ -129,6 +137,7 @@ void Boss::shoot()
 
 void Boss::damage()
 {
+	JCPPEngine::SoundManager::PlaySound (new sf::Sound (*JCPPEngine::SoundManager::GetBuffer ("sounds/BossHurt.wav")));
 	liveCount--;
 	if (liveCount <= 0)
 	{

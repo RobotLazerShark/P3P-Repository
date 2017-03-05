@@ -1,5 +1,6 @@
 #include <P3P/objects/base objects/Button.hpp>
 #include <P3P/Level.hpp>
+#include <JCPPEngine/SoundManager.hpp>
 
 Button::Button (int pX, int pZ, ButtonTarget* pTarget) : GameObject()
 {
@@ -24,14 +25,16 @@ void Button::update(float pStep, bool pUpdateWorldTransform)
 	if (_target != nullptr)
 	{
 		//activate buttontarget if it's not activated and something is standing on the platform 
-		if (!activated && Level::map->objectTiles[_position [0]][_position [1]] != (int)nullptr)
+		if (!activated && Level::map->objectTiles[_position [0]][_position [1]] != (int)nullptr && _target->setActive (true))
 		{
-			activated = _target->setActive (true);//Only switch state if switch succeeded
+			activated = true;//Only switch state if switch succeeded
+			JCPPEngine::SoundManager::PlaySound (new sf::Sound (*JCPPEngine::SoundManager::GetBuffer ("sounds/Button.wav")));
 		}
 		//deactivate buttontarget if it's activated and nothing is standing on the platform 
-		else if (activated && Level::map->objectTiles[_position [0]][_position [1]] == (int)nullptr)
+		else if (activated && Level::map->objectTiles[_position [0]][_position [1]] == (int)nullptr && _target->setActive (false))
 		{
-			activated = !_target->setActive (false);//Only switch state if switch succeeded
+			activated = false;//Only switch state if switch succeeded
+			JCPPEngine::SoundManager::PlaySound (new sf::Sound (*JCPPEngine::SoundManager::GetBuffer ("sounds/Button.wav")));
 		}
 	}
 

@@ -4,7 +4,7 @@
 #define _USE_MATH_DEFINES
 #include <math.h>
 
-Socket::Socket(int pX, int pZ, int pOrientation, int pTargetX, int pTargetY) : GameObject()
+Socket::Socket(int pX, int pZ, int pOrientation, ButtonTarget* pTarget) : GameObject()
 {
 	//Set up model
 	_model = new GameObject("Socket.obj");
@@ -33,9 +33,8 @@ Socket::Socket(int pX, int pZ, int pOrientation, int pTargetX, int pTargetY) : G
 	_currentTile[0] = pX;
 	_currentTile[1] = pZ;
 
-	//save target position
-	_targetX = pTargetX;
-	_targetY = pTargetY;
+	//save target
+	_target = pTarget;
 }
 
 void Socket::update(float pStep, bool pUpdateWorldTransform)
@@ -79,11 +78,7 @@ void Socket::update(float pStep, bool pUpdateWorldTransform)
 		{
 			plug->plugged = true;
 			activated = true;
-			ButtonTarget* buttonTarget = dynamic_cast <ButtonTarget*> ((GameObject*)Level::singletonInstance->map->objectTiles[_targetX][_targetY]);
-			if (buttonTarget!=nullptr)
-			{
-				buttonTarget->setActive(true);
-			}
+			_target->setActive (true);
 			_model->setMaterial(onMaterial);
 			Stats::singletonInstance->data.socketsActivated++;
 			Stats::singletonInstance->refreshText();
