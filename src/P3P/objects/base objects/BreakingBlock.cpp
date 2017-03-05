@@ -78,6 +78,7 @@ void BreakingBlock::update (float pStep, bool pUpdateWorldTransform)
 			//remove the block from array
 			Level::map->baseTiles [_position [0]] [_position [1]] = (int)nullptr;
 			_animator->playAnimation (1, false, &stopFunctionBreakingBlock, this);
+			JCPPEngine::SoundManager::PlaySound (new sf::Sound (*JCPPEngine::SoundManager::GetBuffer ("sounds/Breaking.wav")));
 
 			Stats::singletonInstance->data.platformsBroke++;
 			Stats::singletonInstance->refreshText();
