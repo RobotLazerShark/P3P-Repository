@@ -57,7 +57,7 @@ Level::Level (int pPlayerSkin, sf::RenderWindow* pWindow)
 	transparencyLayer3->setParent (World::singletonInstance);
 
 	hud = new Hud();
-	setMap (_bossLevelNumber);
+	setMap (0);
 	loadMap ();
 }
 //Destructor

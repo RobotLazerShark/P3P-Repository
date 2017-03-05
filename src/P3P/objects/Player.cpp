@@ -116,7 +116,7 @@ Player::Player (int pX, int pZ, ProgressTracker* pProgressTracker, int pSkin) : 
 	wheelModel->setMaterial (new LitMaterial ("PlayerWheel.png"));
 	_shadow = new GameObject ("ShadowPlane.obj");
 	_shadow->setMaterial (new TextureMaterial ("PlayerShadow.png"));
-	_shadow->translate (glm::vec3 (0, -0.4f, 0));
+	_shadow->translate (glm::vec3 (0, -0.43f, 0));
 	_shadow->setParent (wheelModel);
 	GameObject* baseRotation = new GameObject ();
 	baseRotation->rotate (glm::radians (180.0f), glm::vec3 (0, 1, 0));

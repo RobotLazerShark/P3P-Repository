@@ -11,6 +11,10 @@ Projectile::Projectile(glm::vec3 pos, int targetX, int targetZ, Boss * pOwner) :
 	_model->badScale(glm::vec3 (0.25f, 0.25f, 0.75f));
 	_model->setMaterial(new TextureMaterial("Projectile.png"));
 	_model->setParent(this);
+	_targetIcon = new GameObject ("ShadowPlane.obj");
+	_targetIcon->setMaterial (new TextureMaterial ("ProjectileTarget.png"));
+	_targetIcon->setParent (Level::singletonInstance->transparencyLayer1);
+	_targetIcon->translate (glm::vec3 (targetX, 0.08f, targetZ));
 	
 	setWorldPosition(pos);
 	translate(glm::vec3(0, 1, 0));
@@ -62,8 +66,11 @@ void Projectile::update(float pStep, bool pUpdateWorldTransform)
 					setParent(nullptr);
 					delete this;
 				}
-				//move to owner
-				translate(glm::vec3(0, 0, -SPEED*pStep));
+				else
+				{
+					//move to owner
+					translate(glm::vec3(0, 0, -SPEED*pStep));
+				}
 			}
 		}
 		else
@@ -76,6 +83,9 @@ void Projectile::update(float pStep, bool pUpdateWorldTransform)
 				mirror->setActive(false);
 				_target = _startPosition;
 				reflected = true;
+				_targetIcon->setParent (nullptr);
+				delete _targetIcon;
+				_targetIcon = nullptr;
 				JCPPEngine::SoundManager::PlaySound (new sf::Sound (*JCPPEngine::SoundManager::GetBuffer ("sounds/ProjectileBounce.wav")));
 			}
 			//if reached player
@@ -97,5 +107,11 @@ void Projectile::explode()
 {
 	_owner->removeProjectile (this);
 	setParent(nullptr);
+	if (_targetIcon != nullptr)
+	{
+		_targetIcon->setParent (nullptr);
+		delete _targetIcon;
+		_targetIcon = nullptr;
+	}
 	delete this;
 }
