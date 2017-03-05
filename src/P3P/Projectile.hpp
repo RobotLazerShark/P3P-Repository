@@ -21,7 +21,7 @@ class Projectile : public GameObject
 	private:
 		Boss * _owner = nullptr;
 		GameObject* _model = nullptr;
-
+		GameObject* _targetIcon = nullptr;
 		int _targetTile[2];
 		glm::vec3 _startPosition = glm::vec3(0, 0, 0);
 		glm::vec3 _target = glm::vec3(0, 0, 0);
