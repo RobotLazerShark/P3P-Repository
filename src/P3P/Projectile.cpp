@@ -1,13 +1,14 @@
 #include <P3P/Projectile.hpp>
 #include <P3P/Level.hpp>
 #include <P3P/objects/Boss.hpp>
+#include <mge/materials/ColorMaterial.hpp>
 
 Projectile::Projectile(glm::vec3 pos, int targetX, int targetZ, Boss * pOwner) : GameObject()
 {
 	//Set up model
 	_model = new GameObject("cube_flat.obj");
-	_model->scale(0.5f);
-	_model->setMaterial(new LitMaterial(glm::vec3(1, 0, 0)));
+	_model->badScale(glm::vec3 (0.25f, 0.25f, 0.75f));
+	_model->setMaterial(new ColorMaterial(glm::vec3(1, 0, 0)));
 	_model->setParent(this);
 	
 	setWorldPosition(pos);

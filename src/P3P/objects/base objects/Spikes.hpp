@@ -8,7 +8,7 @@
 #include <mge/behaviours/AnimationBehaviour.hpp>
 #include <P3P/ButtonTarget.hpp>
 
-class Spikes : public GameObject
+class Spikes : public ButtonTarget
 {
 public:
 	Spikes(int pX, int pZ);

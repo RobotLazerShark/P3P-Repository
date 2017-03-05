@@ -24,6 +24,7 @@
 #include <mge/materials/TextureMaterial.hpp>
 #include <JCPPEngine/Random.hpp>
 #include <JCPPEngine/TextureManager.hpp>
+#include <JCPPEngine/SoundManager.hpp>
 
 
 //Static variables
@@ -33,7 +34,7 @@ Level* Level::singletonInstance = nullptr;
 
 
 //Constructor
-Level::Level (int pPlayerSkin)
+Level::Level (int pPlayerSkin, sf::RenderWindow* pWindow)
 {
 	if (singletonInstance != nullptr)
 	{
@@ -42,6 +43,8 @@ Level::Level (int pPlayerSkin)
 	singletonInstance = this;
 	_hudOverlay = new sf::Sprite (*JCPPEngine::TextureManager::GetTexture ("images/Hud.png"));
 	_playerSkin = pPlayerSkin;
+	pWindow->display ();
+	JCPPEngine::SoundManager::PlayMusicLoop ("sounds/BackgroundLoop.wav");
 
 	setParent (World::singletonInstance);
 	//Add transparency layers (transparent objects need to be rendered in correct order, before non-transparent objects)
@@ -204,6 +207,7 @@ bool Level::setMap (int pLevelNumber)
 	}
 	else if (_levelNumber == _bossLevelNumber)
 	{
+		JCPPEngine::SoundManager::StopMusicLoop (0);
 		map = LevelImporter::ReadFile ("BossLevel.tmx");
 	}
 	else
@@ -601,7 +605,7 @@ void Level::loadMap ()
 				case 33:
 					//Player
 					temp = new Player (x, y, progressTracker, _playerSkin);
-					temp->setParent (this);
+					temp->setParent (transparencyLayer1);
 					map->objectTiles [x] [y] = (int)temp;
 					if (_inventoryCopy.size () > 0)
 					{
@@ -764,13 +768,15 @@ void Level::loadMap ()
 				}
 				break;
 			case 60:
-				//Button: property = x & y of the object it (de)activates
+				//Button: property = target type & x & y of the object it (de)activates
 				if (std::stoi (object->properties [0]) > 0)
 				{
+					//Targettype = object tile
 					temp = new Button (object->x, object->z, (ButtonTarget*)map->objectTiles [std::stoi (object->properties [1])] [std::stoi (object->properties [2])]);
 				}
 				else
 				{
+					//Targettype = base tile
 					temp = new Button (object->x, object->z, (ButtonTarget*)map->baseTiles [std::stoi (object->properties [1])] [std::stoi (object->properties [2])]);
 				}
 				temp->setParent (this);
@@ -825,7 +831,16 @@ void Level::loadMap ()
 				progressTracker->doors.push_back ((Door*)temp);
 				break;
 			case 61: //Socket up
-				temp = new Socket(object->x, object->z, 1, std::stoi(object->properties[0]), std::stoi(object->properties[1]));
+				if (std::stoi (object->properties [0]) > 0)
+				{
+					//Targettype = object tile
+					temp = new Socket (object->x, object->z, 1, (ButtonTarget*)map->objectTiles [std::stoi (object->properties [1])] [std::stoi (object->properties [2])]);
+				}
+				else
+				{
+					//Targettype = base tile
+					temp = new Socket (object->x, object->z, 1, (ButtonTarget*)map->baseTiles [std::stoi (object->properties [1])] [std::stoi (object->properties [2])]);
+				}
 				temp->setParent(this);
 				if (map->objectTiles[object->x][object->z] != (int)nullptr)
 				{
@@ -836,7 +851,16 @@ void Level::loadMap ()
 				map->objectTiles[object->x][object->z] = (int)temp;
 				break;
 			case 62: //Socket down
-				temp = new Socket(object->x, object->z, 2, std::stoi(object->properties[0]), std::stoi(object->properties[1]));
+				if (std::stoi (object->properties [0]) > 0)
+				{
+					//Targettype = object tile
+					temp = new Socket (object->x, object->z, 2, (ButtonTarget*)map->objectTiles [std::stoi (object->properties [1])] [std::stoi (object->properties [2])]);
+				}
+				else
+				{
+					//Targettype = base tile
+					temp = new Socket (object->x, object->z, 2, (ButtonTarget*)map->baseTiles [std::stoi (object->properties [1])] [std::stoi (object->properties [2])]);
+				}
 				temp->setParent(this);
 				if (map->objectTiles[object->x][object->z] != (int)nullptr)
 				{
@@ -847,7 +871,16 @@ void Level::loadMap ()
 				map->objectTiles[object->x][object->z] = (int)temp;
 				break;
 			case 63: //Socket right
-				temp = new Socket(object->x, object->z, 3, std::stoi(object->properties[0]), std::stoi(object->properties[1]));
+				if (std::stoi (object->properties [0]) > 0)
+				{
+					//Targettype = object tile
+					temp = new Socket (object->x, object->z, 3, (ButtonTarget*)map->objectTiles [std::stoi (object->properties [1])] [std::stoi (object->properties [2])]);
+				}
+				else
+				{
+					//Targettype = base tile
+					temp = new Socket (object->x, object->z, 3, (ButtonTarget*)map->baseTiles [std::stoi (object->properties [1])] [std::stoi (object->properties [2])]);
+				}
 				temp->setParent(this);
 				if (map->objectTiles[object->x][object->z] != (int)nullptr)
 				{
@@ -858,7 +891,16 @@ void Level::loadMap ()
 				map->objectTiles[object->x][object->z] = (int)temp;
 				break;
 			case 64: //Socket left
-				temp = new Socket(object->x, object->z, 4, std::stoi(object->properties[0]), std::stoi(object->properties[1]));
+				if (std::stoi (object->properties [0]) > 0)
+				{
+					//Targettype = object tile
+					temp = new Socket (object->x, object->z, 4, (ButtonTarget*)map->objectTiles [std::stoi (object->properties [1])] [std::stoi (object->properties [2])]);
+				}
+				else
+				{
+					//Targettype = base tile
+					temp = new Socket (object->x, object->z, 4, (ButtonTarget*)map->baseTiles [std::stoi (object->properties [1])] [std::stoi (object->properties [2])]);
+				}
 				temp->setParent(this);
 				if (map->objectTiles[object->x][object->z] != (int)nullptr)
 				{
@@ -873,7 +915,7 @@ void Level::loadMap ()
 				temp->setParent(this);
 				hints.push_back((Hint*)temp);
 				break;
-			case 66: //prgress tracker for mini puzzle in boss level
+			case 66: //progress tracker for mini puzzle in boss level
 				bossPuzzleTracker = new ProgressTracker();
 				if (dynamic_cast <Mirror*> ((GameObject*)map->baseTiles[object->x][object->z]) != nullptr)
 				{

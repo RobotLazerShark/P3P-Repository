@@ -16,6 +16,8 @@ namespace JCPPEngine
 			static void PlayMusic (std::string pMusicFile);
 			static int PlaySoundLoop (sf::Sound* pSound);
 			static int PlayMusicLoop (std::string pMusicFile);
+			static int GetSoundLoopCount ();
+			static int GetMusicLoopCount ();
 			static void StopSoundLoop (int pSoundIndex);
 			static void StopMusicLoop (int pMusicIndex);
 			static void Update ();

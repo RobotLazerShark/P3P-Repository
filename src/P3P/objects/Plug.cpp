@@ -1,6 +1,7 @@
 #include <P3P/objects/Plug.hpp>
 #include <P3P/Level.hpp>
 #include <mge/materials/TextureMaterial.hpp>
+#include <JCPPEngine/SoundManager.hpp>
 #define _USE_MATH_DEFINES
 #include <math.h>
 
@@ -14,7 +15,6 @@ Plug::Plug(int pX, int pZ, int pOrientation) : GameObject()
 	GameObject* shadow = new GameObject ("ShadowPlane.obj");
 	shadow->setMaterial (new TextureMaterial ("PlugShadow.png"));
 	shadow->translate (glm::vec3 (0, 0.1f, 0));
-	shadow->setParent (_model);
 
 	GameObject* rotationOffset = new GameObject ();
 	rotationOffset->setParent (_model);
@@ -24,6 +24,7 @@ Plug::Plug(int pX, int pZ, int pOrientation) : GameObject()
 	_subAnimator = new AnimationBehaviour ({ "Plug.txt" });
 	subModel->setBehaviour (_subAnimator);
 	subModel->setParent(rotationOffset);
+	shadow->setParent(subModel);
 
 	translate(glm::vec3(pX * Level::TILESIZE, 0, pZ * Level::TILESIZE));
 
@@ -150,6 +151,7 @@ void Plug::update(float pStep, bool pUpdateWorldTransform)
 	{
 		_subAnimator-> playAnimation(0, false, false);
 		playedPluggingAnimation = true;
+		JCPPEngine::SoundManager::PlaySound (new sf::Sound (*JCPPEngine::SoundManager::GetBuffer ("sounds/Plugging.wav")));
 	}
 }
 

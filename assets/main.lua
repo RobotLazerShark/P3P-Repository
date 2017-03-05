@@ -118,7 +118,7 @@ function explainControls ()
 	text = text.."\n|f you sEÈ à c0MpuTéR, wa|k úP to ït ANd 1'll çõnta©T you"
 	Npc.updateDialog (text)
 	Lua.wait (pause)
-	text = text.."\nW¡tH fùrhTËr íñstRüçti0ns. Yoú'l1 nëEd tHe he|p."
+	text = text.."\nw¡tH fùrhTËr íñstRüçti0ns. Yoú'l1 nëEd tHe he|p."
 	Npc.updateDialog (text)
 	Player.giveQuest ("QuestItem1", 0.5)
 	Player.waitForKey ()

@@ -11,6 +11,7 @@ class Fan : public ButtonTarget
 {
 	public:
 		Fan(int pX, int pZ, int pXDirection, int pYDirection, bool pReversed);
+		~Fan ();
 		void update(float pStep, bool pUpdateWorldTransform = false) override;
 		void move(int pX, int pZ);
 		bool setActive (bool pActive);
@@ -27,6 +28,7 @@ class Fan : public ButtonTarget
 		int _position[2] = { 0, 0 };
 		int _direction[2] = { 0, 0 };
 		bool _active = false;
+		int _soundIndex = -1;
 		AnimationBehaviour* _animator = nullptr;
 		//_visibleArea size is bigger than actual visible area is
 		//because we need to store first object outside visible area to check if we can move a box there

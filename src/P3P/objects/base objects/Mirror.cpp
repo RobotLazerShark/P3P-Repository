@@ -5,14 +5,18 @@
 Mirror::Mirror(int pX, int pZ) : ButtonTarget()
 {
 	//Set up model
-	_model = new GameObject("MirrorBase.obj");
-	_model->setMaterial(new LitMaterial("MirrorBase.png"));
-	_model->setParent(this);
-	GameObject* mirrorTop = new GameObject ("MirrorTop.obj");
-	mirrorTop->setMaterial (new LitMaterial ("MirrorBase.png"));
-	mirrorTop->setParent (_model);
+	GameObject* mirrorBase = new GameObject("MirrorBase.obj");
+	mirrorBase->setMaterial(new LitMaterial("MirrorBase.png"));
+	mirrorBase->setParent(this);
+	GameObject* floortile = new GameObject ("Floor1.obj");
+	floortile->setMaterial (new LitMaterial ("Floor1.png"));
+	floortile->translate (glm::vec3 (0, -0.05f, 0));
+	floortile->setParent (mirrorBase);
+	_model = new GameObject ("MirrorTop.obj");
+	_model->setMaterial (new LitMaterial ("MirrorBase.png"));
+	_model->setParent (mirrorBase);
 	GameObject* mirrorOffset = new GameObject ();
-	mirrorOffset->setParent (mirrorTop);
+	mirrorOffset->setParent (_model);
 	mirrorOffset->translate (glm::vec3 (0, 0.7f, 0));
 	GameObject* mirror = new GameObject ("Mirror.obj");
 	mirror->setMaterial (new LitMaterial ("Mirror.png", 250));
@@ -58,7 +62,7 @@ void Mirror::update(float pStep, bool pUpdateWorldTransform)
 {
 	GameObject::update(pStep, pUpdateWorldTransform);
 	
-	if (Boss::singletonInstance != nullptr && !_facingBoss)
+	if (!broken && Boss::singletonInstance != nullptr && !_facingBoss)
 	{
 		glm::vec3 bossPosFlat = Boss::singletonInstance->getWorldPosition();
 		bossPosFlat.y = 0;
@@ -68,7 +72,7 @@ void Mirror::update(float pStep, bool pUpdateWorldTransform)
 		glm::vec3 forward = glm::normalize(glm::cross(glm::vec3(0, 1, 0), glm::normalize(posFlat - bossPosFlat)));  
 		glm::vec3 right = glm::normalize(glm::cross(glm::vec3(0, 1, 0), forward));
 		glm::vec3 up = glm::cross(forward, right);
-		setTransform(glm::mat4(glm::vec4(right, 0), glm::vec4(up, 0), glm::vec4(forward, 0), glm::vec4(getWorldPosition(), 1)));
+		_model->setTransform(glm::mat4(glm::vec4(right, 0), glm::vec4(up, 0), glm::vec4(forward, 0), glm::vec4(0,0,0, 1)));
 
 		_facingBoss = true;
 	}

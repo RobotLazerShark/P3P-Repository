@@ -2,6 +2,7 @@
 #include <P3P/Level.hpp>
 #include <P3P/Moveable.hpp>
 #include <P3P/objects/Player.hpp>
+#include <JCPPEngine/SoundManager.hpp>
 
 
 Fan::Fan(int pX, int pZ, int pXDirection, int pYDirection, bool pReversed) : ButtonTarget()
@@ -63,6 +64,12 @@ Fan::Fan(int pX, int pZ, int pXDirection, int pYDirection, bool pReversed) : But
 			pathBlocked = true;
 		}
 	}
+	_soundIndex = JCPPEngine::SoundManager::PlaySoundLoop (new sf::Sound (*JCPPEngine::SoundManager::GetBuffer ("sounds/Fan.wav")));
+}
+Fan::~Fan ()
+{
+	JCPPEngine::SoundManager::StopSoundLoop (_soundIndex);
+	_soundIndex = -1;
 }
 
 void Fan::move(int pX, int pZ)
