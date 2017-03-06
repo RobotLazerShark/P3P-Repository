@@ -2,6 +2,7 @@
 #include <P3P/Level.hpp>
 #include <P3P/objects/Player.hpp>
 #include <JCPPEngine/Random.hpp>
+#include <JCPPEngine/SoundManager.hpp>
 
 
 //Constructor
@@ -62,7 +63,7 @@ void Spikes::update(float pStep, bool pUpdateWorldTransform)
 	{
 		_timer = 0;
 		_spikesUp = !_spikesUp;
-
+	//	JCPPEngine::SoundManager::PlaySound (new sf::Sound (*JCPPEngine::SoundManager::GetBuffer ("sounds/Spikes.wav")))
 		if (_spikesUp)
 		{
 			_animator->playAnimation (0);

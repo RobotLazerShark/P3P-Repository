@@ -19,7 +19,6 @@ class Level : public GameObject
 {
 	protected:
 		int _levelNumber = -1;
-		int _levelKey = 1;
 		bool _isHub = false;
 		int _nextLevel = -1;
 		std::vector <Gate*> _gates;
@@ -37,11 +36,10 @@ class Level : public GameObject
 		float _distribution = 1;
 
 	public:
+		int levelKey = 2;
 		int _bossLevelNumber = 3;
 		Level (int pPlayerSkin, sf::RenderWindow* pWindow);
 		~Level ();
-		void increaseLevelKey ();
-		int levelKey ();
 		bool isHub ();
 		bool levelCompleted = false;
 		bool setMap (int pLevelNumber);

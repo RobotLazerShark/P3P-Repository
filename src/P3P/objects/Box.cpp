@@ -109,6 +109,14 @@ bool Box::move (int pX, int pZ, bool pAnimate)
 	    {
 	        animation = 1 + pX;
 	    }
+	    if (_powered)
+	    {
+	        //JCPPEngine::SoundManager::PlaySound (new sf::Sound (*JCPPEngine::SoundManager::GetBuffer ("sounds/PowerBoxMoving.wav")));
+	    }
+	    else
+	    {
+	        //JCPPEngine::SoundManager::PlaySound (new sf::Sound (*JCPPEngine::SoundManager::GetBuffer ("sounds/BoxMoving.wav")));
+	    }
 	    _animator->playAnimation (animation, false, true, &stopFunctionBox, this);
     }
     else
@@ -154,6 +162,14 @@ bool Box::move (int pX, int pZ, bool pAnimate, void (*pFuncPtr) (int, GameObject
 	    else if (pZ == 0 && pX != 0)
 	    {
 	        animation = 1 + pX;
+	    }
+	    if (_powered)
+	    {
+	        //JCPPEngine::SoundManager::PlaySound (new sf::Sound (*JCPPEngine::SoundManager::GetBuffer ("sounds/PowerBoxMoving.wav")));
+	    }
+	    else
+	    {
+	        //JCPPEngine::SoundManager::PlaySound (new sf::Sound (*JCPPEngine::SoundManager::GetBuffer ("sounds/BoxMoving.wav")));
 	    }
 	    _animator->playAnimation (animation, false, true, &stopFunctionBox, this);
     }

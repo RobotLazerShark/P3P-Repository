@@ -1,6 +1,7 @@
 #include <P3P/objects/Gate.hpp>
 #include <P3P/Level.hpp>
 #include <P3P/objects/Player.hpp>
+#include <JCPPEngine/SoundManager.hpp>
 
 
 //Constructor
@@ -45,6 +46,7 @@ bool Gate::setActive (bool pActive)
 		//make gate position in array empty
 		Level::map->objectTiles[_position [0]][_position [1]] = (int)nullptr;
 		_animator->playAnimation (0);
+		//JCPPEngine::SoundManager::PlaySound (new sf::Sound (*JCPPEngine::SoundManager::GetBuffer ("sounds/GateUp.wav")));
 	}
 	else
 	{
@@ -54,11 +56,13 @@ bool Gate::setActive (bool pActive)
 			//put gate back into array
 			Level::map->objectTiles[_position [0]][_position [1]] = (int)this;
 			_animator->playAnimation (1);
+			//JCPPEngine::SoundManager::PlaySound (new sf::Sound (*JCPPEngine::SoundManager::GetBuffer ("sounds/GateDown.wav")));
 		}
 		//if gate tile is taken by the player
 		else if(Player::singletonInstance->_currentTile [0] == _position [0] && Player::singletonInstance->_currentTile [1] == _position [1])
 		{
 			_animator->playAnimation (1);
+			//JCPPEngine::SoundManager::PlaySound (new sf::Sound (*JCPPEngine::SoundManager::GetBuffer ("sounds/GateDown.wav")));
 			//Kill the player
 			Player::singletonInstance->die ();
 		}

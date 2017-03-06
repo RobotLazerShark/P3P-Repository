@@ -18,9 +18,6 @@ class Hud : public GameObject, public JCPPEngine::AbstractListener
 		std::vector<sf::Drawable*> getAllDrawables();
 		void disable();
 		void enable();
-		static Hud* singletonInstance;
-
-		int state;
 	private:
 		std::vector<HudButton*> buttons;
 		bool _active = true;

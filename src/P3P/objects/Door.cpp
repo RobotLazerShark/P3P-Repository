@@ -1,6 +1,7 @@
 #include "P3P/objects/Door.hpp"
 #include <mge/core/World.hpp>
 #include <P3P/Level.hpp>
+#include <JCPPEngine/SoundManager.hpp>
 
 
 //Constructor
@@ -123,8 +124,9 @@ void Door::open ()
     {
 	return;
     }
-    if (Level::singletonInstance->levelKey () >= _nextLevelNumber)
+    if (Level::singletonInstance->levelKey >= _nextLevelNumber)
     {
+	//JCPPEngine::SoundManager::PlaySound (new sf::Sound (*JCPPEngine::SoundManager::GetBuffer ("sounds/DoorOpening.wav")));
 	_barsLeftAnimator->playAnimation (0);
 	_barsRightAnimator->playAnimation (0);
 	_doorLeftAnimator->playAnimation (0);

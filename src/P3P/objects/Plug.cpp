@@ -94,6 +94,7 @@ bool Plug::move(int pX, int pZ, bool pAnimate) //return false if can't move(when
 			{
 				animation = 1 + pX;
 			}
+		//	JCPPEngine::SoundManager::PlaySound (new sf::Sound (*JCPPEngine::SoundManager::GetBuffer ("sounds/PlugMoving.wav")));
 			_animator->playAnimation(animation, false, true, &stopFunctionPlug, this);
 		}
 		else
@@ -132,6 +133,7 @@ bool Plug::move(int pX, int pZ, bool pAnimate, void (*pFuncPtr) (int, GameObject
 			{
 				animation = 1 + pX;
 			}
+		//	JCPPEngine::SoundManager::PlaySound (new sf::Sound (*JCPPEngine::SoundManager::GetBuffer ("sounds/PlugMoving.wav")));
 			_animator->playAnimation(animation, false, true, &stopFunctionPlug, this);
 		}
 		else

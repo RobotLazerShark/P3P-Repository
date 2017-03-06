@@ -27,6 +27,7 @@
 #include <JCPPEngine/TextureManager.hpp>
 #include "P3P/BossCameraAnchor.hpp"
 #include <JCPPEngine/SoundManager.hpp>
+#include <P3P/SceneFader.hpp>
 
 //Static variables
 const float Level::TILESIZE = 1;
@@ -118,6 +119,7 @@ void Level::update (float pStep, bool pUpdateWorldTransform)
 
 	//Remove items from drawbuffer
 	drawBuffer.clear();
+	drawBuffer.push_back (SceneFader::singletonInstance->sprite);
 	drawBuffer.push_back (_hudOverlay);
 	for (sf::Drawable * drawable : hud->getAllDrawables())
 	{
@@ -161,18 +163,6 @@ void Level::render (sf::RenderWindow* pWindow)
 bool Level::isHub ()
 {
 	return _isHub;
-}
-
-//////////////////////////////|	LEVEL ACCESS
-//Increase the amount of levels the player has access to
-void Level::increaseLevelKey ()
-{
-	_levelKey ++;
-}
-//Get the current levelkey
-int Level::levelKey ()
-{
-	return _levelKey;
 }
 
 
@@ -973,11 +963,19 @@ void Level::loadMap ()
 	anchors.clear();
 
 	hud->enable();
+	if (!_reloading)
+	{
+		SceneFader::singletonInstance->fade (false);
+	}
 }
 
 //Delete all objects in the level
 void Level::clear ()
 {
+	if (!_reloading)
+	{
+		SceneFader::singletonInstance->fade (true);
+	}
 	//Copy important lists
 	if (Player::singletonInstance != nullptr && Player::singletonInstance->inventory.size () > 0)
 	{

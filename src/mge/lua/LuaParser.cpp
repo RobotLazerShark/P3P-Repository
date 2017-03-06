@@ -2455,7 +2455,7 @@ int checkInventory (lua_State* pLua)
 //Give the player a quest. Before this quest can be completed, all previous quests have to be completed first.
 int giveQuest (lua_State* pLua)
 {
-	if (lua_isstring (pLua, -2) && lua_isnumber (pLua, -1) && Npc::singletonInstance != nullptr)
+	if (Npc::singletonInstance != nullptr && lua_isstring (pLua, -2) && lua_isnumber (pLua, -1))
 	{
 		Npc::singletonInstance->addQuest (new Quest ("", lua_tostring (pLua, -2), lua_tonumber (pLua, -1)));
 	}
@@ -2507,6 +2507,15 @@ int isHub (lua_State* pLua)
 	lua_settop (pLua, 0);
 	lua_pushboolean (pLua, Level::singletonInstance->isHub ());
 	return 1;
+}
+//Change the level key
+int setLevelKey (lua_State* pLua)
+{
+	if (lua_isinteger (pLua, -1))
+	{
+		Level::singletonInstance->levelKey = lua_tointeger (pLua, -1);
+	}
+	return 0;
 }
 //Load the boss level
 int loadBossLevel (lua_State* pLua)
@@ -2908,6 +2917,9 @@ int open_levellib (lua_State* pLua)
 	lua_newtable (pLua);
 	lua_pushstring (pLua, "isHub");
 	lua_pushcfunction (pLua, &isHub);
+	lua_settable (pLua, -3);
+	lua_pushstring (pLua, "setKey");
+	lua_pushcfunction (pLua, &setLevelKey);
 	lua_settable (pLua, -3);
 	lua_pushstring (pLua, "loadBossLevel");
 	lua_pushcfunction (pLua, &loadBossLevel);

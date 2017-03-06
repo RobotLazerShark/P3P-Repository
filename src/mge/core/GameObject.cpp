@@ -14,6 +14,8 @@ using namespace std;
 GameObject::GameObject(std::string pName, glm::vec3 pPosition )
 :	_name( pName ), _transform( glm::translate( pPosition ) ),_children()
 {
+	_dirtyWorldTransform = true;
+	_updateChildTransforms = true;
 }
 //Constructor with position and axis-aligned box collider
 GameObject::GameObject (string pName, glm::vec3 pPosition, glm::vec3 pHalfExtents, glm::vec3 pCenterOffset, bool pBigBox, bool pStatic)

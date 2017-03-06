@@ -7,6 +7,7 @@
 #include <iostream>
 #include <string>
 #include <mge/core/AbstractGame.hpp>
+#include <P3P/SceneFader.hpp>
 
 class Level;
 
@@ -21,6 +22,7 @@ class MGEDemo: public AbstractGame
 		virtual void _initializeScene();
 	private:
 		Level* _game = nullptr;
+		SceneFader* _fader = nullptr;
 		MGEDemo(const MGEDemo&);
 		MGEDemo& operator=(const MGEDemo&);
 };

@@ -275,10 +275,6 @@ bool Player::movePlayer (int pX, int pZ, bool pAnimate)
     if (_progressTracker->checkWin () && !Level::singletonInstance->levelCompleted)
     {
         Level::singletonInstance->levelCompleted = true;
-        if (_progressTracker->boxSpots.size () > 0)
-        {
-            Level::singletonInstance->increaseLevelKey ();
-        }
     }
 	Stats::singletonInstance->data.metersWalked++;
 	Stats::singletonInstance->refreshText();
@@ -392,10 +388,6 @@ bool Player::movePlayer (int pX, int pZ, bool pAnimate, void (*pFuncPtr) (int, G
     if (_progressTracker->checkWin () && !Level::singletonInstance->levelCompleted)
     {
         Level::singletonInstance->levelCompleted = true;
-        if (_progressTracker->boxSpots.size () > 0)
-        {
-            Level::singletonInstance->increaseLevelKey ();
-        }
     }
 	Stats::singletonInstance->data.metersWalked++;
 	Stats::singletonInstance->refreshText();

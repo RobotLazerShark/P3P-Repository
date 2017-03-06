@@ -12,7 +12,7 @@ function main ()
 	then
 		if Player.completedQuests () == 0 and not explainedControls
 		then
-			explainControls ()
+		--	explainControls ()
 		elseif Npc.isTalking ()--You have to walk up to the Npc to talk to him
 		then
 			if Player.questTalks () > 0
@@ -121,6 +121,7 @@ function explainControls ()
 	text = text.."\nw¡tH fùrhTËr íñstRüçti0ns. Yoú'l1 nëEd tHe he|p."
 	Npc.updateDialog (text)
 	Player.giveQuest ("QuestItem1", 0.5)
+	Level.setKey (2);--unlock level 1, room 1 and 2
 	Player.waitForKey ()
 	Npc.stopDialog ()--Hide the textbox and text
 	Player.lock (false);--The player is now allowed to move again
@@ -164,6 +165,7 @@ function explainQuest (pCurrentQuest, pGiveNewQuest)
 		if pGiveNewQuest
 		then
 			Player.giveQuest ("Item 2", 0.5)
+			Level.setKey (4)--unlock room 4
 		end
 		Npc.stopDialog ()
 		Player.lock (false)

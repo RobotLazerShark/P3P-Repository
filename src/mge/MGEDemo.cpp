@@ -56,6 +56,8 @@ void MGEDemo::_initializeScene()
 	//camera->setBehaviour (new CameraOrbitBehaviour (10.0f, glm::radians (-60.0f), glm::radians (60.0f), 0.01f, _world));
 
 	//Set up P3P hub (starts the game)
+	_fader = new SceneFader (_window);
+	_fader->setParent (_world);
 	_game = new Level (JCPPEngine::Random::Range (1, 4), _window);
 }
 
@@ -63,4 +65,5 @@ MGEDemo::~MGEDemo()
 {
 	_game->clear ();
 	delete _game;
+	delete _fader;
 }

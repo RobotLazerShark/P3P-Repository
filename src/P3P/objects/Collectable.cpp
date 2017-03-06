@@ -18,8 +18,8 @@ Collectable::Collectable(int pX, int pZ, std::string pName, bool pMark) : GameOb
 
 	if (pMark)
 	{
-		_mark = new DoomAnimation (glm::vec3 (0, 0.5f, 0), "Mark.png", 64, 64, 0.08f);
-		_mark->setParent (this);
+		_mark = new DoomAnimation (glm::vec3 (pX, 0.5f, pZ), "Mark.png", 64, 64, 0.08f);
+		_mark->setParent (Level::singletonInstance->transparencyLayer2);
 	}
 
 	//Set up model
@@ -45,8 +45,8 @@ Collectable::Collectable(int pX, int pZ, std::string pName, std::string pDialog,
 	{
 		if (pMark)
 		{
-			_mark = new DoomAnimation (glm::vec3 (0, 1.25f, 0.4f), "Mark.png", 64, 64, 0.08f);
-			_mark->setParent (this);
+			_mark = new DoomAnimation (glm::vec3 (pX, 1.5f, pZ), "Mark.png", 64, 64, 0.08f);
+			_mark->setParent (Level::singletonInstance->transparencyLayer3);
 		}
 		_model = new GameObject ("Computer.obj");
 		_model->setMaterial (new LitMaterial ("Computer.png"));
@@ -57,8 +57,8 @@ Collectable::Collectable(int pX, int pZ, std::string pName, std::string pDialog,
 	{
 		if (pMark)
 		{
-			_mark = new DoomAnimation (glm::vec3 (0, 0.25f, 0), "Mark.png", 64, 64, 0.08f);
-			_mark->setParent (this);
+			_mark = new DoomAnimation (glm::vec3 (pX, 0.25f,pZ), "Mark.png", 64, 64, 0.08f);
+			_mark->setParent (Level::singletonInstance->transparencyLayer2);
 		}
 		_model = new GameObject ("cube_flat.obj");
 		_model->setMaterial(new LitMaterial(glm::vec3(0.6f,0.6f,0)));
