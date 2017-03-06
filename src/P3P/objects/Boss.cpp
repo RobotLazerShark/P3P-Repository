@@ -2,6 +2,7 @@
 #include <P3P/Level.hpp>
 #include <mge/materials/TextureMaterial.hpp>
 #include <JCPPEngine/SoundManager.hpp>
+#include <JCPPEngine/Random.hpp>
 
 //Static fields
 Boss* Boss::singletonInstance = nullptr;
@@ -118,7 +119,16 @@ void Boss::update(float pStep, bool pUpdateWorldTransform)
 		if (_timer >= SHOOTING_FREQUENCY)
 		{
 			_timer -= SHOOTING_FREQUENCY;
-			shoot();
+			if (_bulletCount <= 5)
+			{
+				shoot();
+				_bulletCount++;
+			}
+			else
+			{
+				superAttack();
+				_bulletCount = 0;
+			}
 		}
 	}
 }
@@ -126,7 +136,7 @@ void Boss::update(float pStep, bool pUpdateWorldTransform)
 void Boss::shoot()
 {
 	JCPPEngine::SoundManager::PlaySound (new sf::Sound (*JCPPEngine::SoundManager::GetBuffer ("sounds/BossFire.wav")));
-	Projectile * proj = new Projectile(getWorldPosition(), Player::singletonInstance->_currentTile[0], Player::singletonInstance->_currentTile[1], this);
+	Projectile * proj = new Projectile(getWorldPosition(), Player::singletonInstance->_currentTile[0], Player::singletonInstance->_currentTile[1], this, true);
 	proj->setParent(Level::singletonInstance);
 	projectiles.push_back(proj);
 	//Play shooting animation
@@ -143,5 +153,79 @@ void Boss::damage()
 	{
 		singletonInstance = nullptr;
 		_dead = true;
+	}
+}
+
+void Boss::superAttack()
+{
+	int attackPosition = JCPPEngine::Random::Range(1, 4);
+	int reverser;
+	if (JCPPEngine::Random::Range(0, 1)) {
+		reverser = -1;
+	}
+	else {
+		reverser = 1;
+	}
+
+	int attackStartPosition[2] = { 0,0 };
+	int tileSize = Level::TILESIZE;
+
+	//get starting tile of the super attack
+	switch (attackPosition)
+	{
+	case 1:
+		attackStartPosition[0] = _position[0];
+		attackStartPosition[1] = _position[1] - (_superAttackSize / 2)* reverser;
+		break;
+	case 2:
+		attackStartPosition[0] = _position[0] - (_superAttackSize / 2)* reverser;
+		attackStartPosition[1] = _position[1] - (_superAttackSize / 2)* reverser;
+		break;
+	case 3:
+		attackStartPosition[0] = _position[0] - (_superAttackSize / 2)* reverser;
+		attackStartPosition[1] = _position[1];
+		break;
+	case 4:
+		attackStartPosition[0] = _position[0] - (_superAttackSize / 2)* reverser;
+		attackStartPosition[1] = _position[1] + (_superAttackSize / 2)* reverser;
+		break;
+	}
+	glm::vec3 projStartingPosition = glm::vec3(attackStartPosition[0] * tileSize, 5, attackStartPosition[1] * tileSize);
+
+	//spawn projectiles
+	for (int i = 0; i < _superAttackSize; i++)
+	{
+		int skipBoss = 0;
+		if (i == 3) //if we are on top of the boss - skip this tile
+		{
+			skipBoss = tileSize;
+		}
+		if (i != 0)
+		{
+			switch (attackPosition)
+			{
+			case 1:
+				projStartingPosition = projStartingPosition + glm::vec3(0, 0.5f, reverser* tileSize + reverser*skipBoss);
+				break;
+			case 2:
+				projStartingPosition = projStartingPosition + glm::vec3(reverser* tileSize + reverser*skipBoss, 0.5f, reverser* tileSize + reverser*skipBoss);
+				break;
+			case 3:
+				projStartingPosition = projStartingPosition + glm::vec3((reverser* tileSize) + reverser*skipBoss, 0.5f, 0);
+				break;
+			case 4:
+				projStartingPosition = projStartingPosition + glm::vec3(reverser* tileSize + reverser*skipBoss, 0.5f, -(reverser* tileSize + reverser*skipBoss));
+				break;
+			}
+		}
+
+		Projectile * proj = new Projectile(projStartingPosition, projStartingPosition.x / tileSize, projStartingPosition.z / tileSize, this, false);
+		proj->setParent(Level::singletonInstance);
+		projectiles.push_back(proj);
+
+		//Play shooting animation, should be changed to boss super attack animation
+		_barrel1Animator->playAnimation(1, false, false);
+		_barrel2Animator->playAnimation(1, false, false, &stopFunctionBoss, this);
+		_noFire = true;
 	}
 }
