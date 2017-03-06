@@ -19,7 +19,7 @@ class ThirdPersonCameraBehaviour : public AbstractBehaviour
 		float _distanceProjectionLength = 0;
 		bool _start = true;
 		glm::vec3 _distanceVector; 
-		const float SPEED = 2; //unit per sec
+		const float SPEED = 1.9f; //unit per sec
 
 		bool inTransition = false;
 		glm::vec3 _targetTransitionPos = glm::vec3(0, 0, 0);

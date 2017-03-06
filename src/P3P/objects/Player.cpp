@@ -121,13 +121,13 @@ Player::Player (int pX, int pZ, ProgressTracker* pProgressTracker, int pSkin) : 
 	GameObject* baseRotation = new GameObject ();
 	baseRotation->rotate (glm::radians (180.0f), glm::vec3 (0, 1, 0));
 	baseRotation->setParent (_model);
-	GameObject* baseModel = new GameObject ("PlayerBase.obj");
-	baseModel->setParent (baseRotation);
-	baseModel->setMaterial (new LitMaterial ("PlayerBase"+to_string (pSkin)+".png"));
+	_baseModel = new GameObject ("PlayerBase.obj");
+	_baseModel->setParent (baseRotation);
+	_baseModel->setMaterial (new LitMaterial ("PlayerBase"+to_string (pSkin)+".png"));
 	_wheelAnimator = new AnimationBehaviour ({ "PlayerWheel.txt", "PlayerWheelDestruct.txt" });
 	_baseAnimator = new AnimationBehaviour ({ "PlayerBase.txt", "PlayerBaseDestruct.txt" });
 	wheelModel->setBehaviour (_wheelAnimator);
-	baseModel->setBehaviour (_baseAnimator);
+	_baseModel->setBehaviour (_baseAnimator);
 	_rotationAnimator = new AnimationBehaviour
 	({
 		"PlayerRotationUpLeft.txt","PlayerRotationUpRight.txt","PlayerRotationUpDown.txt",
@@ -147,6 +147,7 @@ Player::Player (int pX, int pZ, ProgressTracker* pProgressTracker, int pSkin) : 
 	_noMove = true;
 	_rotationAnimator->playAnimation(12, false, &stopFunctionPlayer, this);
 	JCPPEngine::SoundManager::PlaySound (new sf::Sound (*JCPPEngine::SoundManager::GetBuffer ("sounds/Spawn.wav")));
+
 }
 
 //Destructor
@@ -620,4 +621,13 @@ bool Player::hasItem (std::string pItemName)
 		}
 	}
 	return false;
+}
+
+glm::vec3 Player::getActualWorldPosition()
+{
+	if (_baseAnimator->isPlaying() || oldActualWorldPosition == glm::vec3(0,0,0))
+	{
+		oldActualWorldPosition = _baseModel->getWorldPosition();
+	}
+	return oldActualWorldPosition;
 }
