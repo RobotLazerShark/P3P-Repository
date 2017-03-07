@@ -35,7 +35,7 @@ class AbstractGame : public JCPPEngine::AbstractListener
         virtual ~AbstractGame();
 
         static float Time ();
-	void showCursor (bool pShowCursor);
+	static void showCursor (bool pShowCursor);
 	static int windowWidth;
 	static int windowHeight;
 	static int windowHalfWidth;
@@ -49,6 +49,7 @@ class AbstractGame : public JCPPEngine::AbstractListener
         virtual void run();
         //process any sfml window events
         virtual void ProcessEvent (sf::Event pEvent);
+        sf::RenderWindow* _window = nullptr;  //sfml window to render into
 
     protected:
 
@@ -73,7 +74,6 @@ class AbstractGame : public JCPPEngine::AbstractListener
         //render all game objects in the display root
         virtual void _render();
 
-		sf::RenderWindow* _window = nullptr;  //sfml window to render into
 		Renderer* _renderer = nullptr;        //the renderer class to render the world
 		World* _world = nullptr;              //the root game object that represents our scene
 		float _fps = 0;                 //stores the real fps

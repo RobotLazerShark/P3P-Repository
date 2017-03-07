@@ -3,6 +3,7 @@
 #include <P3P/Level.hpp>
 #include <JCPPEngine/MouseEvent.hpp>
 #include <JCPPEngine/InputManager.hpp>
+#include <mge/core/AbstractGame.hpp>
 
 
 //---------------button press functions---------------------
@@ -80,6 +81,8 @@ void continueFunction()
 		Stats::singletonInstance->setActive(statsOn);
 	}
 	Hud::singletonInstance->setState(oldState);
+	AbstractGame::showCursor (false);
+	Player::singletonInstance->blockMovement = false;
 }
 
 //------------------------------------------------------------

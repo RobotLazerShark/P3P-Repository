@@ -1000,7 +1000,7 @@ void Level::loadMap ()
 	}
 	anchors.clear();
 
-	hud->enable();
+//	hud->enable();
 	if (!_reloading)
 	{
 	//	SceneFader::singletonInstance->fade (false);

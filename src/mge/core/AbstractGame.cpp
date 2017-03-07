@@ -30,9 +30,9 @@ float AbstractGame::Time ()
 }
 void AbstractGame::showCursor (bool pShowCursor)
 {
-	if (_window != nullptr)
+	if (AbstractGame::singletonInstance->_window != nullptr)
 	{
-		_window->setMouseCursorVisible (pShowCursor);
+		AbstractGame::singletonInstance->_window->setMouseCursorVisible (pShowCursor);
 	}
 }
 

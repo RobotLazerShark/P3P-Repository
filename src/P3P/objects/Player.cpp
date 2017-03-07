@@ -10,6 +10,7 @@
 #include <JCPPEngine/Random.hpp>
 #include <JCPPEngine/SoundManager.hpp>
 #include <mge/materials/TextureMaterial.hpp>
+#include <mge/core/AbstractGame.hpp>
 
 
 //Static variables
@@ -453,6 +454,10 @@ void Player::ProcessEvent (JCPPEngine::Event* pEvent)
 			break;
 		case sf::Keyboard::Key::R:
 			die ();
+			return;
+		case sf::Keyboard::Key::P:
+			blockMovement = true;
+			AbstractGame::showCursor (true);
 			return;
 		case sf::Keyboard::Key::F:
 

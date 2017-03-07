@@ -19,7 +19,7 @@ Collectable::Collectable(int pX, int pZ, std::string pName, bool pMark) : GameOb
 
 	if (pMark)
 	{
-		_mark = new DoomAnimation (glm::vec3 (pX, 0.5f, pZ), "Mark.png", 64, 64, 0.08f);
+		_mark = new DoomAnimation (glm::vec3 (pX, 0.4f, pZ), "Mark.png", 64, 64, 0.08f);
 		_mark->setParent (Level::singletonInstance->transparencyLayer2);
 	}
 
