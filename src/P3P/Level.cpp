@@ -131,7 +131,7 @@ void Level::update (float pStep, bool pUpdateWorldTransform)
 	//If we have to load a different level, do that here.
 	//By having the reload function set a flag instead of directly reload the level,
 	//there won't be any issues with objects being deleted when the function returns.
-	if (_nextLevel != -1)
+	if (_nextLevel != -1)// && SceneFader::singletonInstance->levelIsAllowedToReload)
 	{
 		clear ();
 		if (!setMap (_nextLevel))
@@ -664,12 +664,11 @@ void Level::loadMap ()
 					}
 					break;
 				case 40:
-					//Wall block
+					//ServerRack
 					temp = new GameObject ("ServerRack.obj");
 					temp->setMaterial (new LitMaterial ("ServerRack.png"));
 					temp->setParent (this);
 					temp->translate(glm::vec3(TILESIZE * x, 0, TILESIZE * y));
-					temp->rotate (glm::radians (JCPPEngine::Random::Range (0, 3) * 90.0f), glm::vec3 (0, 1, 0));
 					map->objectTiles[x][y] = (int)temp;
 					break;
 				case 41: //Fan right
@@ -732,6 +731,39 @@ void Level::loadMap ()
 					temp->setParent(this);
 					map->objectTiles[x][y] = (int)temp;
 					break;
+				case 53: // interior wall corner
+				case 54:
+				case 55:
+				case 56:
+					temp = new GameObject("WallInteriorCorner.obj");
+					temp->setMaterial(new LitMaterial("InteriorWall.png"));
+					temp->setParent(this);
+					temp->translate(glm::vec3(TILESIZE * x, 0, TILESIZE * y));
+					temp->rotate(glm::radians(180.0f), glm::vec3(0, 1, 0));
+					temp->rotate(glm::radians(-90.0f)*(map->objectTiles[x][y] - 53), glm::vec3(0, 1, 0));
+					map->objectTiles[x][y] = (int)temp;
+					break;
+				case 57: // interior wall stop
+				case 58:
+				case 59:
+				case 60:
+					temp = new GameObject("WallInteriorStop.obj");
+					temp->setMaterial(new LitMaterial("InteriorWall.png"));
+					temp->setParent(this);
+					temp->translate(glm::vec3(TILESIZE * x, 0, TILESIZE * y));
+					temp->rotate(glm::radians(90.0f), glm::vec3(0, 1, 0));
+					temp->rotate(glm::radians(-90.0f)*(map->objectTiles[x][y] - 57), glm::vec3(0, 1, 0));
+					map->objectTiles[x][y] = (int)temp;
+					break;
+				case 61: // interior wall hallway
+				case 62:
+					temp = new GameObject("WallInteriorHallway.obj");
+					temp->setMaterial(new LitMaterial("InteriorWall.png"));
+					temp->setParent(this);
+					temp->translate(glm::vec3(TILESIZE * x, 0, TILESIZE * y));
+					temp->rotate(glm::radians(-90.0f)*(map->objectTiles[x][y] - 61), glm::vec3(0, 1, 0));
+					map->objectTiles[x][y] = (int)temp;
+					break;
 				default:
 					map->objectTiles[x][y] = (int)nullptr;
 					break;
@@ -747,7 +779,7 @@ void Level::loadMap ()
 		object = map->xmlObjects [i];
 		switch (object->type)
 		{
-			case 58:
+			case 66:
 				//Camera: property = distance & height or height & intensity
 				switch (std::stoi (object->properties [0]))
 				{
@@ -770,7 +802,7 @@ void Level::loadMap ()
 						break;
 				}
 				break;
-			case 60:
+			case 68:
 				//Button: property = target type & x & y of the object it (de)activates
 				if (std::stoi (object->properties [0]) > 0)
 				{
@@ -792,7 +824,7 @@ void Level::loadMap ()
 				}
 				map->baseTiles [object->x] [object->z] = (int)temp;
 				break;
-			case 59:
+			case 67:
 				//Collectable: property = name & stay & dialog
 				if (object->properties.size () > 1)
 				{
@@ -819,7 +851,7 @@ void Level::loadMap ()
 				}
 				map->objectTiles [object->x] [object->z] = (int)temp;
 				break;
-			case 57:
+			case 65:
 				//Door: property = number of level to load & orientation
 				temp = new Door (object->x, object->z, std::stoi (object->properties [0]), std::stoi (object->properties [1]));
 				temp->setParent (this);
@@ -833,7 +865,7 @@ void Level::loadMap ()
 				map->objectTiles [object->x] [object->z] = (int)temp;
 				progressTracker->doors.push_back ((Door*)temp);
 				break;
-			case 61: //Socket up
+			case 69: //Socket up
 				if (std::stoi (object->properties [0]) > 0)
 				{
 					//Targettype = object tile
@@ -853,7 +885,7 @@ void Level::loadMap ()
 				}
 				map->objectTiles[object->x][object->z] = (int)temp;
 				break;
-			case 62: //Socket down
+			case 70: //Socket down
 				if (std::stoi (object->properties [0]) > 0)
 				{
 					//Targettype = object tile
@@ -873,7 +905,7 @@ void Level::loadMap ()
 				}
 				map->objectTiles[object->x][object->z] = (int)temp;
 				break;
-			case 63: //Socket right
+			case 71: //Socket right
 				if (std::stoi (object->properties [0]) > 0)
 				{
 					//Targettype = object tile
@@ -893,7 +925,7 @@ void Level::loadMap ()
 				}
 				map->objectTiles[object->x][object->z] = (int)temp;
 				break;
-			case 64: //Socket left
+			case 72: //Socket left
 				if (std::stoi (object->properties [0]) > 0)
 				{
 					//Targettype = object tile
@@ -913,12 +945,12 @@ void Level::loadMap ()
 				}
 				map->objectTiles[object->x][object->z] = (int)temp;
 				break;
-			case 65: //hints
+			case 73: //hints
 				temp = new Hint(object->x, object->z, object->properties[0]);
 				temp->setParent(this);
 				hints.push_back((Hint*)temp);
 				break;
-			case 66: //progress tracker for mini puzzle in boss level
+			case 74: //progress tracker for mini puzzle in boss level
 				bossPuzzleTracker = new ProgressTracker();
 				if (dynamic_cast <Mirror*> ((GameObject*)map->baseTiles[object->x][object->z]) != nullptr)
 				{
@@ -945,7 +977,7 @@ void Level::loadMap ()
 				}
 				bossPuzzlesTrackers.push_back(bossPuzzleTracker);
 				break;
-			case 67:
+			case 75:
 				anchors.push_back(new BossCameraAnchor(object->x*Level::TILESIZE, std::stoi(object->properties[1]),object->z*Level::TILESIZE, //pos
 					std::stoi(object->properties[3]), std::stoi(object->properties[2]), //rangeX
 					std::stoi(object->properties[5]), std::stoi(object->properties[4]), //rangeY
@@ -953,7 +985,7 @@ void Level::loadMap ()
 					));
 				//sdf
 				break;
-			case 68:
+			case 76:
 				temp = new Light (glm::vec3(1, 1, 0.8f), std::stof (object->properties [1])*10, glm::vec3 (object->x, 2.5f, object->z), glm::radians (std::stof (object->properties [0])), glm::vec2 (0.25f, 0.75f));
 				temp->setParent (transparencyLayer3);
 				break;
@@ -971,17 +1003,13 @@ void Level::loadMap ()
 	hud->enable();
 	if (!_reloading)
 	{
-		SceneFader::singletonInstance->fade (false);
+	//	SceneFader::singletonInstance->fade (false);
 	}
 }
 
 //Delete all objects in the level
 void Level::clear ()
 {
-	if (!_reloading)
-	{
-		SceneFader::singletonInstance->fade (true);
-	}
 	//Copy important lists
 	if (Player::singletonInstance != nullptr && Player::singletonInstance->inventory.size () > 0)
 	{
@@ -1089,6 +1117,8 @@ void Level::clear ()
 void Level::loadLevel (int pLevelNumber)
 {
 	_nextLevel = pLevelNumber;
+//	SceneFader::singletonInstance->fade(true);
+	Player::singletonInstance->_noMove = true;
 }
 
 //Reload the current level

@@ -46,27 +46,27 @@
 </data>
  </layer>
  <objectgroup name="Object Layer 1">
-  <object id="20" gid="57" x="384" y="192" width="64" height="64">
+  <object id="20" gid="65" x="384" y="192" width="64" height="64">
    <properties>
     <property name="LevelNumber" value="0"/>
     <property name="Orientation" value="2"/>
    </properties>
   </object>
-  <object id="21" gid="58" x="576" y="704" width="64" height="64">
+  <object id="21" gid="66" x="576" y="704" width="64" height="64">
    <properties>
     <property name="Behaviour" value="1"/>
     <property name="Distance" value="8"/>
     <property name="Height" value="6"/>
    </properties>
   </object>
-  <object id="32" gid="59" x="576" y="192" width="64" height="64">
+  <object id="32" gid="67" x="576" y="192" width="64" height="64">
    <properties>
     <property name="Name" value="Chat2"/>
     <property name="Stay" value="1"/>
     <property name="Text" value="G1¡t©hèd B0t:|TheRe! ¡t sH0u1d bé S0mëwHerè ¡ñ thát pILe 0F sçräpS!"/>
    </properties>
   </object>
-  <object id="33" gid="59" x="512" y="192" width="64" height="64">
+  <object id="33" gid="67" x="512" y="192" width="64" height="64">
    <properties>
     <property name="Name" value="QuestItem1"/>
    </properties>

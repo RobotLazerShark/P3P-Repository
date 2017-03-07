@@ -46,20 +46,20 @@
 </data>
  </layer>
  <objectgroup name="Object Layer 1">
-  <object id="20" gid="57" x="896" y="640" width="64" height="64">
+  <object id="20" gid="65" x="896" y="640" width="64" height="64">
    <properties>
     <property name="LevelNumber" value="2"/>
     <property name="Orientation" value="3"/>
    </properties>
   </object>
-  <object id="21" gid="58" x="576" y="704" width="64" height="64">
+  <object id="21" gid="66" x="576" y="704" width="64" height="64">
    <properties>
     <property name="Behaviour" value="1"/>
     <property name="Distance" value="8"/>
     <property name="Height" value="6"/>
    </properties>
   </object>
-  <object id="32" gid="59" x="640" y="448" width="64" height="64">
+  <object id="32" gid="67" x="640" y="448" width="64" height="64">
    <properties>
     <property name="Name" value="Chat1"/>
     <property name="Stay" value="1"/>

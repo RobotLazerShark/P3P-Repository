@@ -46,21 +46,21 @@
 </data>
  </layer>
  <objectgroup name="Object Layer 1">
-  <object id="12" gid="59" x="192" y="448" width="64" height="64">
+  <object id="12" gid="67" x="192" y="448" width="64" height="64">
    <properties>
     <property name="Name" value="StoryItem1"/>
     <property name="Stay" value="0"/>
     <property name="Text" value="Test report:|New model shows promise, the AI seems to learn fast.|Current test data indicates near-human levels of intelligence.|We will squeeze every last drop of potential out of this thing."/>
    </properties>
   </object>
-  <object id="13" gid="58" x="640" y="960" width="64" height="64">
+  <object id="13" gid="66" x="640" y="960" width="64" height="64">
    <properties>
     <property name="Behaviour" value="1"/>
     <property name="Distance" value="8"/>
     <property name="Height" value="6.5"/>
    </properties>
   </object>
-  <object id="14" gid="57" x="832" y="704" width="64" height="64">
+  <object id="14" gid="65" x="832" y="704" width="64" height="64">
    <properties>
     <property name="Level number" value="4"/>
     <property name="Orientation" value="3"/>
