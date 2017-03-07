@@ -14,7 +14,7 @@ public:
 	Npc(int pX, int pZ);
 	~Npc ();
 	void talk();
-	void displayDialog (std::string pText);
+	void displayDialog (std::string pText, bool pNpcTalking = true);
 	void updateDialog (std::string pText);
 	void stopDialog ();
 	void addQuest (Quest * newQuest);

@@ -1,7 +1,7 @@
 time = 0
 -
-time = 0:30
+time = 0:20
 -
-time = 2:30
+time = 2:10
 position = 0, 0, 0.245
 --

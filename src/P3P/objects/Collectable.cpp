@@ -7,6 +7,7 @@
 #include <JCPPEngine/TextureManager.hpp>
 #include <JCPPEngine/FontManager.hpp>
 #include <JCPPEngine/SoundManager.hpp>
+#include <JCPPEngine/Random.hpp>
 #include <mge/objects/DoomAnimation.hpp>
 
 //Constructor
@@ -23,11 +24,10 @@ Collectable::Collectable(int pX, int pZ, std::string pName, bool pMark) : GameOb
 	}
 
 	//Set up model
-	_model = new GameObject ("cube_flat.obj");
-	_model->setMaterial(new LitMaterial(glm::vec3(0.6f,0.6f,0)));
-	_model->translate(glm::vec3(0, 0.25f, 0));
-	_model->scale(0.5f);
+	_model = new GameObject ("RepairTools.obj");
+	_model->setMaterial(new LitMaterial("RepairTools.png"));
 	_model->setParent (this);
+	_model->rotate (glm::radians (JCPPEngine::Random::Range (1, 3) * 90.0f), glm::vec3 (0, 1, 0));
 
 	translate(glm::vec3(pX * Level::TILESIZE, 0, pZ * Level::TILESIZE));
 	_position [0] = pX;
@@ -203,6 +203,14 @@ std::string Collectable::getName ()
 bool Collectable::collect (int pOldX, int pOldZ)
 {
 	bool alreadyInInventory = false;
+	if (!_hasDialog)
+	{
+		JCPPEngine::SoundManager::PlaySound (new sf::Sound (*JCPPEngine::SoundManager::GetBuffer ("sounds/Collectable.wav")));
+	}
+	else
+	{
+		JCPPEngine::SoundManager::PlaySound (new sf::Sound (*JCPPEngine::SoundManager::GetBuffer ("sounds/Popup.wav")));
+	}
 	if (!_collected)
 	{
 		_collected = true;
@@ -211,14 +219,6 @@ bool Collectable::collect (int pOldX, int pOldZ)
 			_mark->setParent (nullptr);
 			delete _mark;
 			_mark = nullptr;
-		}
-		if (!_hasDialog)
-		{
-			JCPPEngine::SoundManager::PlaySound (new sf::Sound (*JCPPEngine::SoundManager::GetBuffer ("sounds/Collectable.wav")));
-		}
-		else
-		{
-			JCPPEngine::SoundManager::PlaySound (new sf::Sound (*JCPPEngine::SoundManager::GetBuffer ("sounds/Popup.wav")));
 		}
 		//Add this object to the player's inventory
 		for (int i = 0, size = Player::singletonInstance->inventory.size (); i < size; i ++)

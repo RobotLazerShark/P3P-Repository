@@ -32,9 +32,15 @@ void MGEDemo::_initializeScene()
 	//Load large audio files
 	JCPPEngine::SoundManager::GetBuffer ("sounds/BossHurt.wav");
 	JCPPEngine::SoundManager::GetBuffer ("sounds/Death.wav");
+	JCPPEngine::SoundManager::GetBuffer ("sounds/Spawn.wav");
+	JCPPEngine::SoundManager::GetBuffer ("sounds/DoorOpening.wav");
 	JCPPEngine::SoundManager::GetBuffer ("sounds/Unstable.wav");
 	JCPPEngine::SoundManager::GetBuffer ("sounds/Fan.wav");
 	JCPPEngine::SoundManager::GetBuffer ("sounds/NpcTalking.wav");
+	JCPPEngine::SoundManager::GetBuffer ("sounds/PlayerMoving.wav");
+	JCPPEngine::SoundManager::GetBuffer ("sounds/PowerBoxMoving.wav");
+	//JCPPEngine::SoundManager::GetBuffer ("sounds/BoxMoving.wav");
+	JCPPEngine::SoundManager::GetBuffer ("sounds/PlugMoving.wav");
 
 	//add camera first (it will be updated last)
 	Camera* camera = new Camera ();

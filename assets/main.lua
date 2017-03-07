@@ -12,7 +12,7 @@ function main ()
 	then
 		if Player.completedQuests () == 0 and not explainedControls
 		then
-		--	explainControls ()
+			explainControls ()
 		elseif Npc.isTalking ()--You have to walk up to the Npc to talk to him
 		then
 			if Player.questTalks () > 0
@@ -32,7 +32,7 @@ function explainControls ()
 	pause = 0.3
 	Player.lock (true);--Prevent the player from moving about while we're talking
 	Lua.wait (1.5)--wait for everything to get set up, and for the player to get used to what (s)he's seeing.
-	Npc.showDialog (text)
+	Npc.showDialog (text, false)
 	Lua.wait (pause)
 	text = text.."\n\tNo backups found."
 	Npc.updateDialog (text)
@@ -95,7 +95,7 @@ function explainControls ()
 	Npc.updateDialog (text)
 	Player.waitForKey ()--This will pause the lua program until SPACE has been pressed.
 	text = "G|¡t©h:"
-	Npc.updateDialog (text)
+	Npc.showDialog (text, true)
 	Lua.wait (pause)
 	text = text.."\nWäkE up! I neED y0uR hE|p!"
 	Npc.updateDialog (text)
@@ -176,11 +176,10 @@ function explainQuest (pCurrentQuest, pGiveNewQuest)
 		text = "Evil Bot:"
 		Npc.showDialog (text)
 		Lua.wait (pause)
+		Sound ("EvilLaugh.wav")
 		text = text.."Finally, I am whole again!\n"
 		Npc.updateDialog (text)
-		Lua.wait (pause)
-		text = text.."*Ominous laughter*"
-		Npc.updateDialog (text)
+		Lua.wait (1.5)
 		Player.waitForKey ()
 		Npc.stopDialog ()
 		Player.lock (false)

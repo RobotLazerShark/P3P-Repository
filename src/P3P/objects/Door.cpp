@@ -2,6 +2,7 @@
 #include <mge/core/World.hpp>
 #include <P3P/Level.hpp>
 #include <JCPPEngine/SoundManager.hpp>
+#include <JCPPEngine/Random.hpp>
 
 
 //Constructor
@@ -126,7 +127,9 @@ void Door::open ()
     }
     if (Level::singletonInstance->levelKey >= _nextLevelNumber)
     {
-	//JCPPEngine::SoundManager::PlaySound (new sf::Sound (*JCPPEngine::SoundManager::GetBuffer ("sounds/DoorOpening.wav")));
+	sf::Sound* sound = new sf::Sound (*JCPPEngine::SoundManager::GetBuffer ("sounds/DoorOpening.wav"));
+	sound->setPitch (1 + (JCPPEngine::Random::Value () - 0.5f) * 0.5f);
+	JCPPEngine::SoundManager::PlaySound (sound);
 	_barsLeftAnimator->playAnimation (0);
 	_barsRightAnimator->playAnimation (0);
 	_doorLeftAnimator->playAnimation (0);

@@ -2,17 +2,18 @@
 #include <P3P/Level.hpp>
 #include <P3P/objects/Player.hpp>
 #include <JCPPEngine/SoundManager.hpp>
+#include <JCPPEngine/Random.hpp>
 
 
 //Constructor
 Gate::Gate(int pX, int pZ) : ButtonTarget ()
 {
 	//Set up model
-	_model = new GameObject("cube_flat.obj");
-	_model->translate(glm::vec3(0, 0.5f, 0));
+	_model = new GameObject("GateFrame.obj");
+	_model->setMaterial (new LitMaterial ("GateFrame.png"));
 	_model->setParent(this);
-	GameObject* subModel = new GameObject ("cube_flat.obj");
-	subModel->setMaterial(new LitMaterial("Gate.jpg"));
+	GameObject* subModel = new GameObject ("Gate.obj");
+	subModel->setMaterial(new LitMaterial("Gate.png"));
 	subModel->setParent (_model);
 	_animator = new AnimationBehaviour ({ "GateUp.txt", "GateDown.txt" }, false);
 	subModel->setBehaviour (_animator);
@@ -46,7 +47,9 @@ bool Gate::setActive (bool pActive)
 		//make gate position in array empty
 		Level::map->objectTiles[_position [0]][_position [1]] = (int)nullptr;
 		_animator->playAnimation (0);
-		//JCPPEngine::SoundManager::PlaySound (new sf::Sound (*JCPPEngine::SoundManager::GetBuffer ("sounds/GateUp.wav")));
+		sf::Sound* sound = new sf::Sound (*JCPPEngine::SoundManager::GetBuffer ("sounds/GateUp.wav"));
+		sound->setPitch (1 + (JCPPEngine::Random::Value () - 0.5f) * 0.5f);
+		JCPPEngine::SoundManager::PlaySound (sound);
 	}
 	else
 	{
@@ -56,13 +59,17 @@ bool Gate::setActive (bool pActive)
 			//put gate back into array
 			Level::map->objectTiles[_position [0]][_position [1]] = (int)this;
 			_animator->playAnimation (1);
-			//JCPPEngine::SoundManager::PlaySound (new sf::Sound (*JCPPEngine::SoundManager::GetBuffer ("sounds/GateDown.wav")));
+			sf::Sound* sound = new sf::Sound (*JCPPEngine::SoundManager::GetBuffer ("sounds/GateDown.wav"));
+			sound->setPitch (1 + (JCPPEngine::Random::Value () - 0.5f) * 0.5f);
+			JCPPEngine::SoundManager::PlaySound (sound);
 		}
 		//if gate tile is taken by the player
 		else if(Player::singletonInstance->_currentTile [0] == _position [0] && Player::singletonInstance->_currentTile [1] == _position [1])
 		{
 			_animator->playAnimation (1);
-			//JCPPEngine::SoundManager::PlaySound (new sf::Sound (*JCPPEngine::SoundManager::GetBuffer ("sounds/GateDown.wav")));
+			sf::Sound* sound = new sf::Sound (*JCPPEngine::SoundManager::GetBuffer ("sounds/GateDown.wav"));
+			sound->setPitch (1 + (JCPPEngine::Random::Value () - 0.5f) * 0.5f);
+			JCPPEngine::SoundManager::PlaySound (sound);
 			//Kill the player
 			Player::singletonInstance->die ();
 		}

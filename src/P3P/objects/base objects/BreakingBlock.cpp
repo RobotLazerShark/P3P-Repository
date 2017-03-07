@@ -68,8 +68,8 @@ void BreakingBlock::update (float pStep, bool pUpdateWorldTransform)
 		if ((_breakLevel == 0) && Player::singletonInstance->_currentTile [0] == _position [0] && Player::singletonInstance->_currentTile [1] == _position [1])
 		{
 			_breakLevel = 1;
-			_animator->playAnimation (0, true, &stopFunctionBreakingBlock, this);
 			_soundIndex = JCPPEngine::SoundManager::PlaySoundLoop (new sf::Sound (*JCPPEngine::SoundManager::GetBuffer ("sounds/Unstable.wav")));
+			_animator->playAnimation (0, true, &stopFunctionBreakingBlock, this);
 		}
 		//If the player was on us before, but not anymore, break
 		else if ((_breakLevel == 1) && (Player::singletonInstance->_currentTile[0] != _position[0] || Player::singletonInstance->_currentTile[1] != _position[1]))
@@ -77,8 +77,8 @@ void BreakingBlock::update (float pStep, bool pUpdateWorldTransform)
 			_breakLevel = 2;
 			//remove the block from array
 			Level::map->baseTiles [_position [0]] [_position [1]] = (int)nullptr;
-			_animator->playAnimation (1, false, &stopFunctionBreakingBlock, this);
 			JCPPEngine::SoundManager::PlaySound (new sf::Sound (*JCPPEngine::SoundManager::GetBuffer ("sounds/Breaking.wav")));
+			_animator->playAnimation (1, false, &stopFunctionBreakingBlock, this);
 
 			Stats::singletonInstance->data.platformsBroke++;
 			Stats::singletonInstance->refreshText();

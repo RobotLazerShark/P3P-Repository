@@ -1,5 +1,5 @@
 time = 0
 -
-time = 1:30
+time = 1:20
 position = 0, 0, -0.55
 --

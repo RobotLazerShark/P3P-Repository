@@ -3,6 +3,7 @@
 #include <P3P/Moveable.hpp>
 #include <P3P/objects/Player.hpp>
 #include <JCPPEngine/SoundManager.hpp>
+#include <JCPPEngine/Random.hpp>
 
 
 Fan::Fan(int pX, int pZ, int pXDirection, int pYDirection, bool pReversed) : ButtonTarget()
@@ -64,6 +65,10 @@ Fan::Fan(int pX, int pZ, int pXDirection, int pYDirection, bool pReversed) : But
 			pathBlocked = true;
 		}
 	}
+	sf::Sound* sound = new sf::Sound (*JCPPEngine::SoundManager::GetBuffer ("sounds/PlayerMoving.wav"));
+	sound->setPitch (1 + (JCPPEngine::Random::Value () - 0.5f) * 0.5f);
+	sound->setVolume (30 + JCPPEngine::Random::Range (-10, 10));
+	_soundIndex = JCPPEngine::SoundManager::PlaySoundLoop (sound);
 	_soundIndex = JCPPEngine::SoundManager::PlaySoundLoop (new sf::Sound (*JCPPEngine::SoundManager::GetBuffer ("sounds/Fan.wav")));
 }
 Fan::~Fan ()

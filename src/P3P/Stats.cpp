@@ -8,15 +8,11 @@ Stats* Stats::singletonInstance = nullptr;
 
 Stats::Stats()
 {
-	if (singletonInstance != nullptr)
-	{
-		delete singletonInstance;
-	}
 	singletonInstance = this;
 
 	//set sprite
 	_sprite = new sf::Sprite(*JCPPEngine::TextureManager::GetTexture ("mge/textures/Stats.png"));
-	_sprite->setPosition(sf::Vector2f(690, 4 * 95));
+	_sprite->setPosition(sf::Vector2f(190, 4 * 95));
 
 	//set all texts
 	loadFromFile();
@@ -29,7 +25,7 @@ Stats::Stats()
 	_texts.push_back(new sf::Text("questsCompleted", *JCPPEngine::FontManager::GetFont("fonts/Font1.ttf")));
 	for (int i = 0; i < _texts.size(); i++)
 	{
-		_texts[i]->setPosition(sf::Vector2f(690, 4 * 95 + 30 * i));
+		_texts[i]->setPosition(sf::Vector2f(190, 4 * 95 + 30 * i));
 	}
 	data.itemsCollected = 0;
 	data.questsCompleted = 0;
