@@ -41,9 +41,6 @@ class Player : public GameObject, public JCPPEngine::AbstractListener
 		glm::vec3 _modelOrientation = glm::vec3 (0, 0, 0);
 		AnimationBehaviour* _rotationAnimator = nullptr;
 		int controlsMode = 0;
-
-		glm::vec3 getActualWorldPosition();
-		glm::vec3 oldActualWorldPosition;
 	protected:
 
     private:
@@ -52,8 +49,6 @@ class Player : public GameObject, public JCPPEngine::AbstractListener
 		GameObject* _shadow = nullptr;
 		AnimationBehaviour* _wheelAnimator = nullptr;
 		AnimationBehaviour* _baseAnimator = nullptr;
-
-		GameObject* _baseModel = nullptr;
 };
 
 #endif // PLAYER_H
