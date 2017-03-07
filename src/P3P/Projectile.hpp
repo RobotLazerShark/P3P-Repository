@@ -12,7 +12,8 @@ class Boss;
 class Projectile : public GameObject
 {
 	public:
-		Projectile(glm::vec3 pos, int targetX, int targetZ, Boss * pOwner, bool pNormalProjectile);
+		Projectile(glm::vec3 pos, int targetX, int targetZ, Boss * pOwner);
+		~Projectile ();
 		void update(float pStep, bool pUpdateWorldTransform = false) override;
 		void explode();
 
@@ -27,8 +28,6 @@ class Projectile : public GameObject
 		glm::vec3 _target = glm::vec3(0, 0, 0);
 		const float SPEED = 4; //units per sec
 		bool reflected = false;
-
-		bool _normalProjectile = true;
 };
 
 #endif

@@ -53,7 +53,7 @@ Npc::Npc(int pX, int pZ) : GameObject()
 	_text->setOrigin (0, size.height * 0.5f);//Set origin at center
 	_text->setPosition (AbstractGame::windowHalfWidth*0.6f, AbstractGame::windowHalfHeight);
 
-	translate(glm::vec3(pX * Level::TILESIZE, 0, pZ * Level::TILESIZE));
+	translate(glm::vec3(pX * Level::TILESIZE + 0.5f, 0, pZ * Level::TILESIZE + 0.5f));
 	position [0] = pX;
 	position [1] = pZ;
 
@@ -134,10 +134,17 @@ void Npc::talk()
 	}
 }
 //Show npc dialog (regardless of where player is)
-void Npc::displayDialog (std::string pText)
+void Npc::displayDialog (std::string pText, bool pNpcTalking)
 {
 	talking = true;
-	_soundIndex = JCPPEngine::SoundManager::PlaySoundLoop (new sf::Sound (*JCPPEngine::SoundManager::GetBuffer ("sounds/NpcTalking.wav")));
+	if (pNpcTalking)
+	{
+		_soundIndex = JCPPEngine::SoundManager::PlaySoundLoop (new sf::Sound (*JCPPEngine::SoundManager::GetBuffer ("sounds/NpcTalking.wav")));
+	}
+	else
+	{
+		JCPPEngine::SoundManager::PlaySound (new sf::Sound (*JCPPEngine::SoundManager::GetBuffer ("sounds/Popup.wav")));
+	}
 	_playerPosition [0] = Player::singletonInstance->_currentTile [0];
 	_playerPosition [1] = Player::singletonInstance->_currentTile [1];
 	_text->setString (pText);
@@ -156,7 +163,7 @@ void Npc::displayDialog (std::string pText)
 				{
 					_glitchIntensity -= quest->fixIntensity;
 					_material->SetGlitchIntensity (_glitchIntensity);
-					JCPPEngine::SoundManager::PlaySound (new sf::Sound (*JCPPEngine::SoundManager::GetBuffer ("sounds/repair.wav")));
+					JCPPEngine::SoundManager::PlaySound (new sf::Sound (*JCPPEngine::SoundManager::GetBuffer ("sounds/Repair.wav")));
 					//The item will remain in the player's inventory, so in lua dialog can respond to the completion of this quest
 					delete quest;
 					activeQuests [i] = nullptr;
@@ -182,8 +189,11 @@ void Npc::updateDialog (std::string pText)
 void Npc::stopDialog ()
 {
 	talking = false;
-	JCPPEngine::SoundManager::StopSoundLoop (_soundIndex);
-	_soundIndex = -1;
+	if (_soundIndex != -1)
+	{
+		JCPPEngine::SoundManager::StopSoundLoop (_soundIndex);
+		_soundIndex = -1;
+	}
 	_text->setString ("...");
 	_playerPosition [0] = -1;
 	_playerPosition [1] = -1;

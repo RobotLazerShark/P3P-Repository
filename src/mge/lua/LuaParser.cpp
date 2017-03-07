@@ -2465,7 +2465,11 @@ int giveQuest (lua_State* pLua)
 //Show dialog (even though player may not be near)
 int showDialog (lua_State* pLua)
 {
-	if (lua_isstring (pLua, -1) && Npc::singletonInstance != nullptr)
+	if (lua_isstring (pLua, -2) && lua_isboolean (pLua, -1) && Npc::singletonInstance != nullptr)
+	{
+		Npc::singletonInstance->displayDialog (lua_tostring (pLua, -2), lua_toboolean (pLua, -1));
+	}
+	else if (lua_isstring (pLua, -1) && Npc::singletonInstance != nullptr)
 	{
 		if (!Npc::singletonInstance->talking)
 		{
@@ -2484,10 +2488,7 @@ int updateDialog (lua_State* pLua)
 {
 	if (lua_isstring (pLua, -1) && Npc::singletonInstance != nullptr)
 	{
-		if (Npc::singletonInstance->talking)
-		{
-			Npc::singletonInstance->updateDialog (lua_tostring (pLua, -1));
-		}
+		Npc::singletonInstance->updateDialog (lua_tostring (pLua, -1));
 	}
 	lua_settop (pLua, 0);
 	return 0;

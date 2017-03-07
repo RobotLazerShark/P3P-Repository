@@ -32,12 +32,7 @@ class Boss : public GameObject
 		AnimationBehaviour* _barrel1Animator = nullptr;
 		AnimationBehaviour* _barrel2Animator = nullptr;
 		AnimationBehaviour* _bodyAnimator = nullptr;
-		int _bulletCount = 0;
-
-		int _superAttackSize = 6;
-
 		void shoot();
-		void superAttack();
 };
 
 #endif

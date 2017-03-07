@@ -2,6 +2,7 @@
 #include <P3P/Level.hpp>
 #include <mge/materials/TextureMaterial.hpp>
 #include <JCPPEngine/SoundManager.hpp>
+#include <JCPPEngine/Random.hpp>
 #define _USE_MATH_DEFINES
 #include <math.h>
 
@@ -94,7 +95,9 @@ bool Plug::move(int pX, int pZ, bool pAnimate) //return false if can't move(when
 			{
 				animation = 1 + pX;
 			}
-		//	JCPPEngine::SoundManager::PlaySound (new sf::Sound (*JCPPEngine::SoundManager::GetBuffer ("sounds/PlugMoving.wav")));
+			sf::Sound* sound = new sf::Sound (*JCPPEngine::SoundManager::GetBuffer ("sounds/PlugMoving.wav"));
+			sound->setPitch (1 + (JCPPEngine::Random::Value () - 0.5f) * 0.5f);
+			JCPPEngine::SoundManager::PlaySound (sound);
 			_animator->playAnimation(animation, false, true, &stopFunctionPlug, this);
 		}
 		else
@@ -133,7 +136,9 @@ bool Plug::move(int pX, int pZ, bool pAnimate, void (*pFuncPtr) (int, GameObject
 			{
 				animation = 1 + pX;
 			}
-		//	JCPPEngine::SoundManager::PlaySound (new sf::Sound (*JCPPEngine::SoundManager::GetBuffer ("sounds/PlugMoving.wav")));
+			sf::Sound* sound = new sf::Sound (*JCPPEngine::SoundManager::GetBuffer ("sounds/PlugMoving.wav"));
+			sound->setPitch (1 + (JCPPEngine::Random::Value () - 0.5f) * 0.5f);
+			JCPPEngine::SoundManager::PlaySound (sound);
 			_animator->playAnimation(animation, false, true, &stopFunctionPlug, this);
 		}
 		else
@@ -151,9 +156,9 @@ void Plug::update(float pStep, bool pUpdateWorldTransform)
 	GameObject::update(pStep, pUpdateWorldTransform);
 	if (plugged && !_animator->isPlaying() && !playedPluggingAnimation)
 	{
+		JCPPEngine::SoundManager::PlaySound (new sf::Sound (*JCPPEngine::SoundManager::GetBuffer ("sounds/Plugging.wav")));
 		_subAnimator-> playAnimation(0, false, false);
 		playedPluggingAnimation = true;
-		JCPPEngine::SoundManager::PlaySound (new sf::Sound (*JCPPEngine::SoundManager::GetBuffer ("sounds/Plugging.wav")));
 	}
 }
 

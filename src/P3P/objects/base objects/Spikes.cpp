@@ -63,7 +63,10 @@ void Spikes::update(float pStep, bool pUpdateWorldTransform)
 	{
 		_timer = 0;
 		_spikesUp = !_spikesUp;
-	//	JCPPEngine::SoundManager::PlaySound (new sf::Sound (*JCPPEngine::SoundManager::GetBuffer ("sounds/Spikes.wav")))
+		sf::Sound* sound = new sf::Sound (*JCPPEngine::SoundManager::GetBuffer ("sounds/Spikes.wav"));
+		sound->setPitch (1 + (JCPPEngine::Random::Value () - 0.5f) * 0.5f);
+		sound->setVolume (25 + JCPPEngine::Random::Range (-10, 10));
+		JCPPEngine::SoundManager::PlaySound (sound);
 		if (_spikesUp)
 		{
 			_animator->playAnimation (0);

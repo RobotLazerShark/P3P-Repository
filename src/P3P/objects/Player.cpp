@@ -270,6 +270,9 @@ bool Player::movePlayer (int pX, int pZ, bool pAnimate)
     {
         translate (glm::vec3 (pX * Level::TILESIZE, 0, pZ * Level::TILESIZE));
     }
+    sf::Sound* sound = new sf::Sound (*JCPPEngine::SoundManager::GetBuffer ("sounds/PlayerMoving.wav"));
+    sound->setPitch (1 + (JCPPEngine::Random::Value () - 0.5f) * 0.5f);
+    JCPPEngine::SoundManager::PlaySound (sound);
 
     //check for win
     if (_progressTracker->checkWin () && !Level::singletonInstance->levelCompleted)
@@ -383,6 +386,9 @@ bool Player::movePlayer (int pX, int pZ, bool pAnimate, void (*pFuncPtr) (int, G
     {
         translate (glm::vec3 (pX * Level::TILESIZE, 0, pZ * Level::TILESIZE));
     }
+    sf::Sound* sound = new sf::Sound (*JCPPEngine::SoundManager::GetBuffer ("sounds/PlayerMoving.wav"));
+    sound->setPitch (1 + (JCPPEngine::Random::Value () - 0.5f) * 0.5f);
+    JCPPEngine::SoundManager::PlaySound (sound);
 
     //check for win
     if (_progressTracker->checkWin () && !Level::singletonInstance->levelCompleted)

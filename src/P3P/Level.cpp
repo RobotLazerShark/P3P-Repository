@@ -28,6 +28,7 @@
 #include "P3P/BossCameraAnchor.hpp"
 #include <JCPPEngine/SoundManager.hpp>
 #include <P3P/SceneFader.hpp>
+#include <mge/objects/Light.hpp>
 
 //Static variables
 const float Level::TILESIZE = 1;
@@ -801,12 +802,12 @@ void Level::loadMap ()
 					}
 					else//Create dialog pickup
 					{
-						temp = new Collectable (object->x, object->z, object->properties [0], object->properties [2], true, _levelNumber == 3);
+						temp = new Collectable (object->x, object->z, object->properties [0], object->properties [2], false, _levelNumber == 3);
 					}
 				}
 				else//Create quest item
 				{
-					temp = new Collectable (object->x, object->z, object->properties [0], true);//_levelNumber == 2);
+					temp = new Collectable (object->x, object->z, object->properties [0], true);
 				}
 				temp->setParent (this);
 				//If there is an object already in this place, delete it.
@@ -951,6 +952,11 @@ void Level::loadMap ()
 					std::stoi(object->properties[0]) //controlsMode
 					));
 				//sdf
+				break;
+			case 68:
+				temp = new Light (glm::vec3(1, 1, 0.8f), std::stof (object->properties [1])*10, glm::vec3 (object->x, 2.5f, object->z), glm::radians (std::stof (object->properties [0])), glm::vec2 (0.25f, 0.75f));
+				temp->setParent (transparencyLayer3);
+				break;
 			default:
 				break;
 		}
