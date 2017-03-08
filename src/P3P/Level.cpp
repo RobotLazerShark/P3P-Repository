@@ -58,7 +58,8 @@ Level::Level (int pPlayerSkin, sf::RenderWindow* pWindow)
 	transparencyLayer3 = new GameObject ();
 	transparencyLayer3->setParent (World::singletonInstance);
 
-	hud = new Hud();
+	hud = new Hud(pWindow);
+	hud->setParent(this);
 	setMap (0);
 	loadMap ();
 }
@@ -1000,7 +1001,7 @@ void Level::loadMap ()
 	}
 	anchors.clear();
 
-//	hud->enable();
+	hud->enable();
 	if (!_reloading)
 	{
 	//	SceneFader::singletonInstance->fade (false);

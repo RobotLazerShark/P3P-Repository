@@ -10,20 +10,39 @@
 class Hud : public GameObject, public JCPPEngine::AbstractListener
 {
 	public:
-		Hud();
+		Hud(sf::RenderWindow* pWindow);
 		~Hud();
 		void update(float pStep, bool pUpdateWorldTransform = false) override;
 		void setState(int state);
+
 		void ProcessEvent(JCPPEngine::Event* pEvent) override;
+		void ProcessEvent(sf::Event pEvent) override;
+
 		std::vector<sf::Drawable*> getAllDrawables();
 		void disable();
 		void enable();
+		void pressButton(int button);
+
 		static Hud* singletonInstance;
 
 		int state;
+
+		sf::Sprite * _levelPauseSprite = nullptr;
+		sf::Sprite * _hubPauseSprite = nullptr;
+		sf::Sprite * _statsSprite = nullptr;
+
+		bool showPauseMenu = false;
+
+		bool blockStatsReturn = false;
+		
 	private:
 		std::vector<HudButton*> buttons;
 		bool _active = true;
+		bool _debugMode = false;
+
+		float _statsReturnBlockedFor = 0;
+		float _statsBlockingTime = 0.5f;
+		
 };
 
 #endif

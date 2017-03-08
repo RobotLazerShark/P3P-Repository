@@ -10,6 +10,7 @@
 bool statsOn = false;
 int hintIndex = -1;
 int oldState = 0;
+int oldPauseState = 0;
 
 void reloadFunction()
 {
@@ -54,22 +55,40 @@ void hintFunction()
 
 void statsFunction()
 {
+	oldPauseState = Hud::singletonInstance->state;
+	Hud::singletonInstance->blockStatsReturn = true;
+
 	statsOn = !statsOn;
 	if (Stats::singletonInstance != nullptr)
 	{
 		Stats::singletonInstance->setActive(statsOn);
 	}
+	Hud::singletonInstance->setState(6);
+	Hud::singletonInstance->_levelPauseSprite->setColor(sf::Color(255, 255, 255, 0));
+	Hud::singletonInstance->_hubPauseSprite->setColor(sf::Color(255, 255, 255, 0));
+	Hud::singletonInstance->_statsSprite->setColor(sf::Color(255, 255, 255, 255));
 }
 
 void levelPauseFunction()
 {
 	oldState = Hud::singletonInstance->state;
+
 	Hud::singletonInstance->setState(4);
+	Hud::singletonInstance->showPauseMenu = true;
+	Hud::singletonInstance->_levelPauseSprite->setColor(sf::Color(255, 255, 255, 255));
+	Hud::singletonInstance->_hubPauseSprite->setColor(sf::Color(255, 255, 255, 0));
+	Hud::singletonInstance->_statsSprite->setColor(sf::Color(255, 255, 255, 0));
 }
 void hubPauseFunction()
 {
 	oldState = Hud::singletonInstance->state;
+
 	Hud::singletonInstance->setState(5);
+	Hud::singletonInstance->showPauseMenu = true;
+	Hud::singletonInstance->_levelPauseSprite->setColor(sf::Color(255, 255, 255, 0));
+	Hud::singletonInstance->_hubPauseSprite->setColor(sf::Color(255, 255, 255, 255));
+	Hud::singletonInstance->_statsSprite->setColor(sf::Color(255, 255, 255, 0));
+	
 	//TODO: pause game.
 }
 
@@ -81,8 +100,40 @@ void continueFunction()
 		Stats::singletonInstance->setActive(statsOn);
 	}
 	Hud::singletonInstance->setState(oldState);
+	Hud::singletonInstance->_levelPauseSprite->setColor(sf::Color(255, 255, 255, 0));
+	Hud::singletonInstance->_hubPauseSprite->setColor(sf::Color(255, 255, 255, 0));
+	Hud::singletonInstance->_statsSprite->setColor(sf::Color(255, 255, 255, 0));
+
 	AbstractGame::showCursor (false);
 	Player::singletonInstance->blockMovement = false;
+}
+
+void statsReturnFunctin()
+{
+	if (!Hud::singletonInstance->blockStatsReturn)
+	{
+		statsOn = false;
+
+		if (Stats::singletonInstance != nullptr)
+		{
+			Stats::singletonInstance->setActive(statsOn);
+		}
+
+		Hud::singletonInstance->setState(oldPauseState);
+		switch (oldPauseState)
+		{
+		case 4: //level
+			Hud::singletonInstance->_levelPauseSprite->setColor(sf::Color(255, 255, 255, 255));
+			Hud::singletonInstance->_hubPauseSprite->setColor(sf::Color(255, 255, 255, 0));
+			Hud::singletonInstance->_statsSprite->setColor(sf::Color(255, 255, 255, 0));
+			break;
+		case 5: //hub
+			Hud::singletonInstance->_levelPauseSprite->setColor(sf::Color(255, 255, 255, 0));
+			Hud::singletonInstance->_hubPauseSprite->setColor(sf::Color(255, 255, 255, 255));
+			Hud::singletonInstance->_statsSprite->setColor(sf::Color(255, 255, 255, 0));
+			break;
+		}
+	}
 }
 
 //------------------------------------------------------------
@@ -90,7 +141,7 @@ void continueFunction()
 //static variables
 Hud* Hud::singletonInstance = nullptr;
 
-Hud::Hud()
+Hud::Hud(sf::RenderWindow* pWindow)
 {
 	if (singletonInstance != nullptr)
 	{
@@ -98,28 +149,54 @@ Hud::Hud()
 	}
 	singletonInstance = this;
 
-	//create buttons
-	buttons.push_back(new HudButton("mge/textures/PauseButton.png", sf::Vector2f(0, 0), &levelPauseFunction)); //0
-	buttons.push_back(new HudButton("mge/textures/PauseButton.png", sf::Vector2f(0, 0), &hubPauseFunction)); //1
-	buttons.push_back(new HudButton("mge/textures/ReloadButton.png", sf::Vector2f(0, 95), &reloadFunction)); //2
+	_levelPauseSprite = new sf::Sprite(*JCPPEngine::TextureManager::GetTexture("images/InLevel_NoSelection.png"));
+	_hubPauseSprite = new sf::Sprite(*JCPPEngine::TextureManager::GetTexture("images/InHUB_NoSelection.png"));
+	_statsSprite = new sf::Sprite(*JCPPEngine::TextureManager::GetTexture("images/Stats_NoSelection.png"));
 
-	buttons.push_back(new HudButton("mge/textures/HintButton.png", sf::Vector2f(500, 2 * 95), &hintFunction)); //3
-	buttons.push_back(new HudButton("mge/textures/ContinueButton.png", sf::Vector2f(500, 3 * 95), &continueFunction)); //4
-	buttons.push_back(new HudButton("mge/textures/StatsButton.png", sf::Vector2f(500, 4 * 95), &statsFunction)); //5
-	buttons.push_back(new HudButton("mge/textures/QuitToMenuButton.png", sf::Vector2f(500, 5 * 95), &quitToMenuFunction)); //6
-	buttons.push_back(new HudButton("mge/textures/QuitToHudButton.png", sf::Vector2f(500, 6* 95), &quitToHudFunction)); //7
+	sf::Vector2f* windowSize = new sf::Vector2f(pWindow->getSize().x, pWindow->getSize().y);
+	sf::Vector2f* spriteSize = new sf::Vector2f(_levelPauseSprite->getTextureRect().width, _levelPauseSprite->getTextureRect().height);
+	sf::Vector2f spritePos = sf::Vector2f(windowSize->x / 2 - spriteSize->x / 2, windowSize->y / 2 - spriteSize->y / 2);
+
+	sf::Sprite * hitbox = new sf::Sprite(*JCPPEngine::TextureManager::GetTexture("images/ButtonHitBox.png"));
+	float hitBoxPosX = windowSize->x / 2 - hitbox->getTextureRect().width/2;
+
+	_hubPauseSprite->setPosition(spritePos);
+	_levelPauseSprite->setPosition(spritePos);
+	_statsSprite->setPosition(sf::Vector2f(windowSize->x / 2- _statsSprite->getTextureRect().width/2, windowSize->y / 2 - _statsSprite->getTextureRect().height / 2));
+
+	//create buttons
+	buttons.push_back(new HudButton("images/HudButtonHitBox.png","", sf::Vector2f(1680, 948), spritePos, &levelPauseFunction, _debugMode)); //0 level
+	buttons.push_back(new HudButton("images/HudButtonHitBox.png", "", sf::Vector2f(1680, 948), spritePos, &hubPauseFunction, _debugMode)); //1 hub
+	buttons.push_back(new HudButton("images/HudButtonHitBox.png", "", sf::Vector2f(1697, 65), spritePos, &reloadFunction, _debugMode)); //2
+	buttons.push_back(new HudButton("images/HudButtonHitBox.png", "", sf::Vector2f(120, 948), spritePos, &hintFunction, _debugMode)); //3
+	int hitBoxPosY = 434;
+	int step = 137;
+	buttons.push_back(new HudButton("images/ButtonHitBox.png", "images/InLevel_Continue.png", sf::Vector2f(hitBoxPosX, hitBoxPosY), spritePos, &continueFunction, _debugMode)); //4 level
+	buttons.push_back(new HudButton("images/ButtonHitBox.png", "images/InLevel_BacktoHUB.png", sf::Vector2f(hitBoxPosX, hitBoxPosY + step), spritePos, &quitToHudFunction, _debugMode)); //5  level
+	buttons.push_back(new HudButton("images/ButtonHitBox.png", "images/InLevel_BacktoMenu.png", sf::Vector2f(hitBoxPosX, hitBoxPosY + step*2), spritePos, &quitToMenuFunction, _debugMode)); //6 level
+	buttons.push_back(new HudButton("images/ButtonHitBox.png", "images/InLevel_Stats.png", sf::Vector2f(hitBoxPosX, hitBoxPosY + step*3), spritePos, &statsFunction, _debugMode)); //7 level
+	hitBoxPosY = 472;
+	step = 140;
+	buttons.push_back(new HudButton("images/ButtonHitBox.png", "images/InHUB_Continue.png", sf::Vector2f(hitBoxPosX, hitBoxPosY), spritePos, &continueFunction, _debugMode)); //8 hub
+	buttons.push_back(new HudButton("images/ButtonHitBox.png", "images/InHUB_BacktoMenu.png", sf::Vector2f(hitBoxPosX, hitBoxPosY + step), spritePos, &quitToMenuFunction, _debugMode)); //9 hub
+	buttons.push_back(new HudButton("images/ButtonHitBox.png", "images/InHUB_Stats.png", sf::Vector2f(hitBoxPosX, hitBoxPosY + step*2), spritePos, &statsFunction, _debugMode)); //10 hub
 	
+	buttons.push_back(new HudButton("images/StatsHitBox.png", "images/Stats.png", sf::Vector2f(_statsSprite->getPosition().x,765), sf::Vector2f(_statsSprite->getPosition().x, _statsSprite->getPosition().y), &statsReturnFunctin, _debugMode)); //11
+
 	registerForEvent(JCPPEngine::Event::EventType::MouseDown);
+	registerForEvent(sf::Event::MouseMoved);
+
 
 	if (Stats::singletonInstance == nullptr)
 	{
-		Stats * _stats = new Stats();
+		Stats * _stats = new Stats(sf::Vector2f (_statsSprite->getPosition().x, _statsSprite->getPosition().y));
 	}
 }
 
 Hud::~Hud()
 {
 	unregisterForEvent(JCPPEngine::Event::EventType::MouseDown);
+	unregisterForEvent(sf::Event::MouseMoved);
 	for (HudButton * button : buttons)
 	{
 		delete button;
@@ -137,6 +214,16 @@ Hud::~Hud()
 
 void Hud::update(float pStep, bool pUpdateWorldTransform)
 {
+	if (blockStatsReturn)
+	{
+		_statsReturnBlockedFor += pStep;
+		if (_statsReturnBlockedFor >= _statsBlockingTime)
+		{
+			_statsReturnBlockedFor = 0;
+			blockStatsReturn = false;
+		}
+	}
+
 	GameObject::update(pStep, pUpdateWorldTransform);
 }
 
@@ -153,26 +240,30 @@ void Hud::setState(int newState)
 		break;
 	case 1: //hub
 		buttons[1]->setActive(true);
+		buttons[2]->setActive(true);
+		buttons[3]->setActive(true);
 		break;
 	case 2: //normal level
 		buttons[0]->setActive(true);
-		buttons[1]->setActive(true);
 		buttons[2]->setActive(true);
+		buttons[3]->setActive(true);
 		break;
 	case 3://boss level
 		//todo
 		break;
 	case 4://level pause
-		buttons[3]->setActive(true);
 		buttons[4]->setActive(true);
 		buttons[5]->setActive(true);
 		buttons[6]->setActive(true);
 		buttons[7]->setActive(true);
 		break;
 	case 5://hub pause
-		buttons[4]->setActive(true);
-		buttons[5]->setActive(true);
-		buttons[6]->setActive(true);
+		buttons[8]->setActive(true);
+		buttons[9]->setActive(true);
+		buttons[10]->setActive(true);
+		break;
+	case 6://stats
+		buttons[11]->setActive(true);
 		break;
 	}
 }
@@ -186,19 +277,66 @@ void Hud::ProcessEvent(JCPPEngine::Event* pEvent)
 		return;
 	}
 	
-	sf::Vector2i mousePos = mouseDownEvent->position();
-
 	if (_active)
 	{
+		sf::Vector2f  mousePos =(sf::Vector2f) mouseDownEvent->position();
 		for (HudButton * button : buttons)
 		{
-			sf::Sprite * sprite = button->_sprite;
-			//if mouse is on top of a button
-			if (mousePos.x >= sprite->getPosition().x && mousePos.x <= sprite->getPosition().x + sprite->getTextureRect().width
-				&&mousePos.y >= sprite->getPosition().y && mousePos.y <= sprite->getPosition().y + sprite->getTextureRect().height)
+			button->tryPressing(mousePos);
+		}
+	}
+}
+
+void Hud::ProcessEvent(sf::Event pEvent)
+{
+	if (pEvent.type == sf::Event::MouseMoved)
+	{
+
+		if (_active)
+		{
+			bool atLeastOneButtonIsSelected = false;
+
+			sf::Vector2f mousePos = sf::Vector2f(pEvent.mouseMove.x, pEvent.mouseMove.y);
+			for (HudButton * button : buttons)
 			{
-				//press button
-				button->press();
+				if (button->tryHovering(mousePos))
+				{
+					atLeastOneButtonIsSelected = true;
+				}
+			}
+
+			if (!atLeastOneButtonIsSelected)
+			{
+				//show pause menu with no selection
+				switch (state)
+				{
+				case 4: //level
+					_levelPauseSprite->setColor(sf::Color(255, 255, 255, 255));
+					_hubPauseSprite->setColor(sf::Color(255, 255, 255, 0));
+					_statsSprite->setColor(sf::Color(255, 255, 255, 0));
+					break;
+				case 5: //hub
+					_levelPauseSprite->setColor(sf::Color(255, 255, 255, 0));
+					_hubPauseSprite->setColor(sf::Color(255, 255, 255, 255));
+					_statsSprite->setColor(sf::Color(255, 255, 255, 0));
+					break;
+				case 6: //stats
+					_levelPauseSprite->setColor(sf::Color(255, 255, 255, 0));
+					_hubPauseSprite->setColor(sf::Color(255, 255, 255, 0));
+					_statsSprite->setColor(sf::Color(255, 255, 255, 255));
+					break;
+				default:
+					_levelPauseSprite->setColor(sf::Color(255, 255, 255, 0));
+					_hubPauseSprite->setColor(sf::Color(255, 255, 255, 0));
+					_statsSprite->setColor(sf::Color(255, 255, 255, 0));
+					break;
+				}
+			}
+			else
+			{
+				_levelPauseSprite->setColor(sf::Color(255, 255, 255, 0));
+				_hubPauseSprite->setColor(sf::Color(255, 255, 255, 0));
+				_statsSprite->setColor(sf::Color(255, 255, 255, 0));
 			}
 		}
 	}
@@ -208,10 +346,17 @@ std::vector<sf::Drawable*> Hud::getAllDrawables()
 {
 	std::vector<sf::Drawable*> drawables;
 	
-	//get all button sprites
+	drawables.push_back(_levelPauseSprite);
+	drawables.push_back(_hubPauseSprite);
+	drawables.push_back(_statsSprite);
+
+	//get all buttons
 	for (HudButton * button : buttons)
 	{
-		drawables.push_back(button->_sprite);
+		for (sf::Drawable * drawable : button->getAllDrawables())
+		{
+			drawables.push_back(drawable);
+		}
 	}
 	//get all stats drawables
 	if (Stats::singletonInstance != nullptr)
@@ -229,6 +374,7 @@ std::vector<sf::Drawable*> Hud::getAllDrawables()
 			drawables.push_back(Level::singletonInstance->hints[hintIndex]->_text);
 		}
 	}
+	
 	return drawables;
 }
 
@@ -241,4 +387,29 @@ void Hud::disable()
 void Hud::enable()
 {
 	_active = true;
+}
+
+void Hud::pressButton(int button)
+{
+	switch (button)
+	{
+		case 1:
+			hintFunction();
+			break;
+		case 2:
+			switch (state)
+			{
+			case 1:
+				hubPauseFunction();
+				break;
+			case 2:
+				levelPauseFunction();
+				break;
+			default:
+				break;
+			}
+			break;
+		default:
+			break;
+	}
 }

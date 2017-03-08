@@ -6,13 +6,9 @@
 //Static variables
 Stats* Stats::singletonInstance = nullptr;
 
-Stats::Stats()
+Stats::Stats(sf::Vector2f statsPos)
 {
 	singletonInstance = this;
-
-	//set sprite
-	_sprite = new sf::Sprite(*JCPPEngine::TextureManager::GetTexture ("mge/textures/Stats.png"));
-	_sprite->setPosition(sf::Vector2f(190, 4 * 95));
 
 	//set all texts
 	loadFromFile();
@@ -25,7 +21,7 @@ Stats::Stats()
 	_texts.push_back(new sf::Text("questsCompleted", *JCPPEngine::FontManager::GetFont("fonts/Font1.ttf")));
 	for (int i = 0; i < _texts.size(); i++)
 	{
-		_texts[i]->setPosition(sf::Vector2f(190, 4 * 95 + 30 * i));
+		_texts[i]->setPosition(sf::Vector2f(statsPos.x+230, statsPos.y+10 + 65 * i));
 	}
 	data.itemsCollected = 0;
 	data.questsCompleted = 0;
@@ -42,7 +38,6 @@ Stats::~Stats()
 		delete text;
 	}
 	_texts.clear ();
-	delete _sprite;
 }
 
 void Stats::setActive(bool active) //hide/show drawable stuff
@@ -57,7 +52,6 @@ void Stats::setActive(bool active) //hide/show drawable stuff
 		alpha = 0;
 	}
 
-	_sprite->setColor(sf::Color(255, 255, 255, alpha));
 	for (sf::Text * text : _texts)
 	{
 		text->setColor(sf::Color(255, 255, 255, alpha));
@@ -67,7 +61,6 @@ void Stats::setActive(bool active) //hide/show drawable stuff
 std::vector<sf::Drawable*> Stats::getAllDrawables() //return all sf::Drawable objects;
 {
 	std::vector<sf::Drawable*> drawables;
-	drawables.push_back(_sprite);
 	for (sf::Text * text : _texts)
 	{
 		drawables.push_back(text);
@@ -152,10 +145,10 @@ void Stats::refreshText()
 {
 	_texts[0]->setString("deathcount: " + to_string(data.deathCount));
 	_texts[1]->setString("meters walked: " + to_string(data.metersWalked));
-	_texts[2]->setString("items colleced: " + to_string(data.itemsCollected) + "/10");
-	_texts[3]->setString("hints used: " + to_string(data.hintsUsed));
-	_texts[4]->setString("platforms broke: " + to_string(data.platformsBroke));
-	_texts[5]->setString("sockets activated:" +to_string(data.socketsActivated));
+	_texts[2]->setString("hints used: " + to_string(data.hintsUsed));
+	_texts[3]->setString("platforms broke: " + to_string(data.platformsBroke));
+	_texts[4]->setString("sockets activated:" +to_string(data.socketsActivated));
+	_texts[5]->setString("items colleced: " + to_string(data.itemsCollected) + "/10");
 	_texts[6]->setString("quests completed:" + to_string(data.questsCompleted) + "/5");
 
 	saveToFile();

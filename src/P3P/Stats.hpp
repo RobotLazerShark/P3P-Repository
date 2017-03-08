@@ -23,14 +23,13 @@ struct Data
 class Stats
 {
 public:
-	Stats();
+	Stats(sf::Vector2f statsPos);
 	~Stats();
 	void setActive(bool active);
 	void refreshText();
 
 	std::vector<sf::Drawable*> getAllDrawables();
 	static Stats* singletonInstance;
-	sf::Sprite * _sprite = nullptr;
 	Data data;
 
 private:

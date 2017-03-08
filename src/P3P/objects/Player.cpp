@@ -458,6 +458,10 @@ void Player::ProcessEvent (JCPPEngine::Event* pEvent)
 		case sf::Keyboard::Key::P:
 			blockMovement = true;
 			AbstractGame::showCursor (true);
+			Hud::singletonInstance->pressButton(2);
+			return;
+		case sf::Keyboard::Key::H:
+			Hud::singletonInstance->pressButton(1);
 			return;
 		case sf::Keyboard::Key::F:
 
