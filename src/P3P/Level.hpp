@@ -37,7 +37,7 @@ class Level : public GameObject
 		float _distribution = 1;
 	public:
 		int levelKey = 0;
-		int _bossLevelNumber = 10;
+		int _bossLevelNumber = 3;
 		Background* _background = nullptr;
 		Level (int pPlayerSkin, sf::RenderWindow* pWindow);
 		~Level ();

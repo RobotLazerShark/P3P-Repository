@@ -639,9 +639,10 @@ bool Player::hasItem (std::string pItemName)
 
 glm::vec3 Player::getActualWorldPosition()
 {
-	if (_baseAnimator->isPlaying() || _oldActualWorldPosition == glm::vec3(0, 0, 0))
+	if (_baseAnimator->isPlaying() || _oldActualWorldPosition == glm::vec3(0, 0, 0) && !_dead)
 	{
 		_oldActualWorldPosition = _baseModel->getWorldPosition();
+		_oldActualWorldPosition.y = 0;
 	}
 	return _oldActualWorldPosition;
 }

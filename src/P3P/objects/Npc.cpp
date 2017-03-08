@@ -64,11 +64,6 @@ Npc::~Npc ()
 	singletonInstance = nullptr;
 	delete _textBox;
 	delete _text;
-	if (_soundIndex != -1)
-	{
-		JCPPEngine::SoundManager::StopSoundLoop (_soundIndex);
-		_soundIndex = -1;
-	}
 	GameObject::~GameObject ();
 }
 
@@ -95,7 +90,7 @@ void Npc::update (float pStep, bool pUpdateWorldTransform)
 void Npc::talk()
 {
 	talking = true;//This variable is so we can check if the npc is talking to the player from lua
-	_soundIndex = JCPPEngine::SoundManager::PlaySoundLoop (new sf::Sound (*JCPPEngine::SoundManager::GetBuffer ("sounds/NpcTalking.wav")));
+	JCPPEngine::SoundManager::PlaySound (new sf::Sound (*JCPPEngine::SoundManager::GetBuffer ("sounds/NpcTalking.wav")));
 	_playerPosition [0] = Player::singletonInstance->_currentTile [0];
 	_playerPosition [1] = Player::singletonInstance->_currentTile [1];
 	questTalks ++;
@@ -132,7 +127,7 @@ void Npc::displayDialog (std::string pText, bool pNpcTalking)
 	talking = true;
 	if (pNpcTalking)
 	{
-		_soundIndex = JCPPEngine::SoundManager::PlaySoundLoop (new sf::Sound (*JCPPEngine::SoundManager::GetBuffer ("sounds/NpcTalking.wav")));
+		JCPPEngine::SoundManager::PlaySound (new sf::Sound (*JCPPEngine::SoundManager::GetBuffer ("sounds/NpcTalking.wav")));
 	}
 	else
 	{
@@ -182,11 +177,6 @@ void Npc::updateDialog (std::string pText)
 void Npc::stopDialog ()
 {
 	talking = false;
-	if (_soundIndex != -1)
-	{
-		JCPPEngine::SoundManager::StopSoundLoop (_soundIndex);
-		_soundIndex = -1;
-	}
 	_text->setString ("...");
 	_playerPosition [0] = -1;
 	_playerPosition [1] = -1;

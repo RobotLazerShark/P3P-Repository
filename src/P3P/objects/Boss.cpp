@@ -33,6 +33,7 @@ void stopFunctionEnd (int pAnimIndex, GameObject* pOwner)
 		case 0:
 			sound = new sf::Sound (*JCPPEngine::SoundManager::GetBuffer ("sounds/BossFire.wav"));
 			sound->setPitch (1 + (JCPPEngine::Random::Value () - 0.5f) * 0.5f);
+			sound->setVolume (40);
 			JCPPEngine::SoundManager::PlaySound (sound);
 			proj = new Projectile(boss->getWorldPosition(), boss->_position [0] + 50, boss->_position [1], boss);
 			proj->setParent(Level::singletonInstance);
@@ -130,10 +131,10 @@ void Boss::update(float pStep, bool pUpdateWorldTransform)
 {
 	GameObject::update(pStep, pUpdateWorldTransform);
 
-	if (_dead)
+	if (_dead && _shadow != nullptr)
 	{
+		Player::singletonInstance->blockMovement = true;
 		JCPPEngine::SoundManager::PlaySound (new sf::Sound (*JCPPEngine::SoundManager::GetBuffer ("sounds/BossDeath.wav")));
-		//Insert animation, only delete in stopfunction
 		_shadow->setParent (nullptr);
 		delete _shadow;
 		_cutSceneAnimator->playAnimation (0, false, false, &stopFunctionEnd, this);
@@ -154,6 +155,7 @@ void Boss::shoot()
 {
 	sf::Sound* sound = new sf::Sound (*JCPPEngine::SoundManager::GetBuffer ("sounds/BossFire.wav"));
 	sound->setPitch (1 + (JCPPEngine::Random::Value () - 0.5f) * 0.5f);
+	sound->setVolume (40);
 	JCPPEngine::SoundManager::PlaySound (sound);
 	Projectile * proj = new Projectile(getWorldPosition(), Player::singletonInstance->_currentTile[0], Player::singletonInstance->_currentTile[1], this);
 	proj->setParent(Level::singletonInstance);

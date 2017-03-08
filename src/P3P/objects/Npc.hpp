@@ -32,7 +32,6 @@ private:
 	int _playerPosition [2] = { -1, -1 };
 	sf::Sprite* _textBox = nullptr;
 	sf::Text* _text = nullptr;
-	int _soundIndex = -1;
 };
 
 #endif

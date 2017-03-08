@@ -95,8 +95,9 @@ bool Plug::move(int pX, int pZ, bool pAnimate) //return false if can't move(when
 			{
 				animation = 1 + pX;
 			}
-			sf::Sound* sound = new sf::Sound (*JCPPEngine::SoundManager::GetBuffer ("sounds/PlugMoving.wav"));
+			sf::Sound* sound = new sf::Sound (*JCPPEngine::SoundManager::GetBuffer ("sounds/BoxMoving.wav"));
 			sound->setPitch (1 + (JCPPEngine::Random::Value () - 0.5f) * 0.5f);
+			sound->setVolume (15);
 			JCPPEngine::SoundManager::PlaySound (sound);
 			_animator->playAnimation(animation, false, true, &stopFunctionPlug, this);
 		}
@@ -136,8 +137,9 @@ bool Plug::move(int pX, int pZ, bool pAnimate, void (*pFuncPtr) (int, GameObject
 			{
 				animation = 1 + pX;
 			}
-			sf::Sound* sound = new sf::Sound (*JCPPEngine::SoundManager::GetBuffer ("sounds/PlugMoving.wav"));
+			sf::Sound* sound = new sf::Sound (*JCPPEngine::SoundManager::GetBuffer ("sounds/BoxMoving.wav"));
 			sound->setPitch (1 + (JCPPEngine::Random::Value () - 0.5f) * 0.5f);
+			sound->setVolume (15);
 			JCPPEngine::SoundManager::PlaySound (sound);
 			_animator->playAnimation(animation, false, true, &stopFunctionPlug, this);
 		}

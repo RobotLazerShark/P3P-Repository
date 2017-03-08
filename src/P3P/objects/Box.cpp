@@ -63,6 +63,7 @@ void stopFunctionBox (int pAnimIndex, GameObject* pOwner)
 		    box->_animator->playAnimation (4, false, false);
 		    sf::Sound* sound = new sf::Sound (*JCPPEngine::SoundManager::GetBuffer ("sounds/BoxSlotting.wav"));
 		    sound->setPitch (1 + (JCPPEngine::Random::Value () - 0.5f) * 0.5f);
+		    sound->setVolume (40);
 		    JCPPEngine::SoundManager::PlaySound (sound);
 	    }
 	}
@@ -115,13 +116,15 @@ bool Box::move (int pX, int pZ, bool pAnimate)
 	    {
 	        sf::Sound* sound = new sf::Sound (*JCPPEngine::SoundManager::GetBuffer ("sounds/PowerBoxMoving.wav"));
 	        sound->setPitch (1 + (JCPPEngine::Random::Value () - 0.5f) * 0.5f);
+	        sound->setVolume (40);
 	        JCPPEngine::SoundManager::PlaySound (sound);
 	    }
 	    else
 	    {
-//	        sf::Sound* sound = new sf::Sound (*JCPPEngine::SoundManager::GetBuffer ("sounds/BoxMoving.wav"));
-//	        sound->setPitch (1 + (JCPPEngine::Random::Value () - 0.5f) * 0.5f);
-//	        JCPPEngine::SoundManager::PlaySound (sound);
+	        sf::Sound* sound = new sf::Sound (*JCPPEngine::SoundManager::GetBuffer ("sounds/BoxMoving.wav"));
+	        sound->setPitch (1 + (JCPPEngine::Random::Value () - 0.5f) * 0.5f);
+	        sound->setVolume (20);
+	        JCPPEngine::SoundManager::PlaySound (sound);
 	    }
 	    _animator->playAnimation (animation, false, true, &stopFunctionBox, this);
     }
@@ -173,13 +176,15 @@ bool Box::move (int pX, int pZ, bool pAnimate, void (*pFuncPtr) (int, GameObject
 	    {
 	        sf::Sound* sound = new sf::Sound (*JCPPEngine::SoundManager::GetBuffer ("sounds/PowerBoxMoving.wav"));
 	        sound->setPitch (1 + (JCPPEngine::Random::Value () - 0.5f) * 0.5f);
+	        sound->setVolume (40);
 	        JCPPEngine::SoundManager::PlaySound (sound);
 	    }
 	    else
 	    {
-//	        sf::Sound* sound = new sf::Sound (*JCPPEngine::SoundManager::GetBuffer ("sounds/BoxMoving.wav"));
-//	        sound->setPitch (1 + (JCPPEngine::Random::Value () - 0.5f) * 0.5f);
-//	        JCPPEngine::SoundManager::PlaySound (sound);
+	        sf::Sound* sound = new sf::Sound (*JCPPEngine::SoundManager::GetBuffer ("sounds/BoxMoving.wav"));
+	        sound->setPitch (1 + (JCPPEngine::Random::Value () - 0.5f) * 0.5f);
+	        sound->setVolume (20);
+	        JCPPEngine::SoundManager::PlaySound (sound);
 	    }
 	    _animator->playAnimation (animation, false, true, &stopFunctionBox, this);
     }

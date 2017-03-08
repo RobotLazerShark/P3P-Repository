@@ -70,7 +70,7 @@ Level::Level (int pPlayerSkin, sf::RenderWindow* pWindow)
 
 	hud = new Hud(pWindow);
 	hud->setParent(this);
-	setMap (0);
+	setMap (_bossLevelNumber);
 	loadMap ();
 }
 //Destructor
@@ -92,13 +92,6 @@ Level::~Level ()
 		delete hint;
 	}
 	hints.clear ();
-	for (int i = 0, size = _activeQuestsCopy.size (); i < size; i ++)
-	{
-		if (_activeQuestsCopy [i] != nullptr)
-		{
-			delete _activeQuestsCopy [i];
-		}
-	}
 	_activeQuestsCopy.clear ();
 	//Make sure there are no lingering singletons
 	if (Player::singletonInstance != nullptr)
@@ -594,7 +587,7 @@ void Level::loadMap ()
 					map->baseTiles [x] [y] = (int) temp;
 					break;
 				case 31:
-					//Wall pipe 1
+					//Wall with plant
 					position = glm::vec3 (TILESIZE * x, -0.05f, TILESIZE * y);
 					rotation = -90.0f;
 					temp = new GameObject ();
@@ -1023,13 +1016,6 @@ void Level::loadMap ()
 					}
 				}
 				bossPuzzlesTrackers.push_back(bossPuzzleTracker);
-				if (map->objectTiles[object->x][object->z] != (int)nullptr)
-				{
-					GameObject* block = (GameObject*)map->objectTiles[object->x][object->z];
-					block->setParent(nullptr);
-					delete block;
-				}
-				map->objectTiles[object->x][object->z] = (int)temp;
 				break;
 			case 75:
 				anchors.push_back(new BossCameraAnchor(object->x*Level::TILESIZE, std::stoi(object->properties[1]),object->z*Level::TILESIZE, //pos
@@ -1055,10 +1041,6 @@ void Level::loadMap ()
 	anchors.clear();
 
 	hud->enable();
-	if (!_reloading)
-	{
-	//	SceneFader::singletonInstance->fade (false);
-	}
 }
 
 //Delete all objects in the level

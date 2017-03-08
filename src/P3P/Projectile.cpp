@@ -7,8 +7,8 @@
 Projectile::Projectile(glm::vec3 pos, int targetX, int targetZ, Boss * pOwner) : GameObject()
 {
 	//Set up model
-	_model = new GameObject("cube_flat.obj");
-	_model->badScale(glm::vec3 (0.25f, 0.25f, 0.75f));
+	_model = new GameObject("Projectile.obj");
+	_model->badScale(glm::vec3 (3, 3, 1));
 	_model->setMaterial(new TextureMaterial("Projectile.png"));
 	_model->setParent(this);
 	_targetIcon = new GameObject ("ShadowPlane.obj");

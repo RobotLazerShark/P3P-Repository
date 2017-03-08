@@ -142,7 +142,7 @@ function explainQuest (pCurrentQuest, pGiveNewQuest)
 		Npc.stopDialog ()
 		Player.lock (false)
 	elseif pCurrentQuest == 2
-	then
+--[[	then
 		Player.lock (true)
 		text = "Glitched Bot:"
 		Npc.showDialog (text)
@@ -170,7 +170,7 @@ function explainQuest (pCurrentQuest, pGiveNewQuest)
 		Npc.stopDialog ()
 		Player.lock (false)
 	elseif pCurrentQuest > 2
-	then
+]]	then
 		--The last quest has been completed
 		Player.lock (true)
 		text = "Evil Bot:"

@@ -77,6 +77,7 @@ namespace JCPPEngine
 					return -1;
 				}
 				_loopingMusic [i]->setLoop (true);
+				_loopingMusic [i]->setVolume (150);
 				_loopingMusic [i]->play ();
 				return i;
 			}

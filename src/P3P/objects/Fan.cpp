@@ -71,11 +71,10 @@ Fan::Fan(int pX, int pZ, int pXDirection, int pYDirection, bool pReversed) : But
 
 	if (fanSoundLoops == 0)
 	{
-		sf::Sound* sound = new sf::Sound (*JCPPEngine::SoundManager::GetBuffer ("sounds/PlayerMoving.wav"));
+		sf::Sound* sound = new sf::Sound (*JCPPEngine::SoundManager::GetBuffer ("sounds/Fan.wav"));
 		sound->setPitch (1 + (JCPPEngine::Random::Value () - 0.5f) * 0.5f);
-		sound->setVolume (30 + JCPPEngine::Random::Range (-10, 10));
+		sound->setVolume (40);
 		_soundIndex = JCPPEngine::SoundManager::PlaySoundLoop (sound);
-		_soundIndex = JCPPEngine::SoundManager::PlaySoundLoop (new sf::Sound (*JCPPEngine::SoundManager::GetBuffer ("sounds/Fan.wav")));
 		fanSoundLoops ++;
 	}
 }
@@ -85,6 +84,7 @@ Fan::~Fan ()
 	{
 		JCPPEngine::SoundManager::StopSoundLoop (_soundIndex);
 		_soundIndex = -1;
+		fanSoundLoops --;
 	}
 }
 

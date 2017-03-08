@@ -44,7 +44,7 @@ void MGEDemo::_initializeScene()
 	JCPPEngine::SoundManager::GetBuffer ("sounds/NpcTalking.wav");
 	JCPPEngine::SoundManager::GetBuffer ("sounds/PlayerMoving.wav");
 	JCPPEngine::SoundManager::GetBuffer ("sounds/PowerBoxMoving.wav");
-	//JCPPEngine::SoundManager::GetBuffer ("sounds/BoxMoving.wav");
+	JCPPEngine::SoundManager::GetBuffer ("sounds/BoxMoving.wav");
 	JCPPEngine::SoundManager::GetBuffer ("sounds/PlugMoving.wav");
 
 	//add camera first (it will be updated last)
