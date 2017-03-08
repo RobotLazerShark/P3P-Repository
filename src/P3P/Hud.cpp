@@ -5,7 +5,7 @@
 #include <JCPPEngine/InputManager.hpp>
 #include <mge/core/AbstractGame.hpp>
 #include <P3P/Menu.hpp>
-
+#include <P3P/objects/Boss.hpp>
 
 //---------------button press functions---------------------
 bool statsOn = false;
@@ -83,6 +83,11 @@ void levelPauseFunction()
 	Hud::singletonInstance->_levelPauseSprite->setColor(sf::Color(255, 255, 255, 255));
 	Hud::singletonInstance->_hubPauseSprite->setColor(sf::Color(255, 255, 255, 0));
 	Hud::singletonInstance->_statsSprite->setColor(sf::Color(255, 255, 255, 0));
+
+	if (Boss::singletonInstance != nullptr)
+	{
+		Boss::singletonInstance->pause(true);
+	}
 }
 void hubPauseFunction()
 {
@@ -94,7 +99,10 @@ void hubPauseFunction()
 	Hud::singletonInstance->_hubPauseSprite->setColor(sf::Color(255, 255, 255, 255));
 	Hud::singletonInstance->_statsSprite->setColor(sf::Color(255, 255, 255, 0));
 	
-	//TODO: pause game.
+	if (Boss::singletonInstance != nullptr)
+	{
+		Boss::singletonInstance->pause(true);
+	}
 }
 
 void continueFunction()
@@ -111,6 +119,11 @@ void continueFunction()
 
 	AbstractGame::showCursor (false);
 	Player::singletonInstance->blockMovement = false;
+
+	if (Boss::singletonInstance != nullptr)
+	{
+		Boss::singletonInstance->pause(false);
+	}
 }
 
 void statsReturnFunctin()

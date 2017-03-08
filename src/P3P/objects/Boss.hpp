@@ -24,6 +24,9 @@ class Boss : public GameObject
 		AnimationBehaviour* _barrel2Animator = nullptr;
 		int _position[2] = { 0, 0 };
 		std::vector<Projectile*> projectiles;
+
+		void pause(bool active);
+
 	private:
 		bool _dead = false;
 		GameObject* _model = nullptr;
@@ -33,7 +36,14 @@ class Boss : public GameObject
 		float _timer = 0;
 		const float SHOOTING_FREQUENCY = 2.0f;
 		AnimationBehaviour* _bodyAnimator = nullptr;
+		AnimationBehaviour* _cutSceneAnimator = nullptr;
+
+		int _bulletCount = 0;
+		int _superAttackSize = 6;
 		void shoot();
+		void superAttack();
+
+		bool _pause = false;
 };
 
 #endif
