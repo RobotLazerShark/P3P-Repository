@@ -29,11 +29,10 @@ class Boss : public GameObject
 		GameObject* _model = nullptr;
 		LitMaterial* _faceMaterial = nullptr;
 		GameObject* _shadow = nullptr;
-		int liveCount = 4;
+		int liveCount = 1;
 		float _timer = 0;
 		const float SHOOTING_FREQUENCY = 2.0f;
 		AnimationBehaviour* _bodyAnimator = nullptr;
-		AnimationBehaviour* _cutSceneAnimator = nullptr;
 		void shoot();
 };
 

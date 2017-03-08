@@ -31,6 +31,7 @@
 #include <mge/objects/Light.hpp>
 #include <mge/util/ShaderDataUtil.hpp>
 #include <P3P/Background.hpp>
+#include <mge/core/AbstractGame.hpp>
 
 //Static variables
 const float Level::TILESIZE = 1;
@@ -51,6 +52,8 @@ Level::Level (int pPlayerSkin, sf::RenderWindow* pWindow)
 	JCPPEngine::SoundManager::PlayMusicLoop ("sounds/BackgroundLoop.wav");
 
 	_background = new Background ();
+	_endScreen = new sf::Sprite (*JCPPEngine::TextureManager::GetTexture ("images/EndScreen.png"));
+	_endScreen->setColor (sf::Color (255, 255, 255, 0));
 
 	//Add light
 	ShaderDataUtil::SetAmbientLight (glm::vec3 (0.8f, 0.9f, 1), 0.1f);
@@ -116,13 +119,36 @@ void Level::update (float pStep, bool pUpdateWorldTransform)
 		return;
 	}
 
+	if (_fading)
+	{
+		_endTimer += pStep;
+		drawBuffer.clear();
+		for (sf::Drawable * drawable : hud->getAllDrawables())
+		{
+			drawBuffer.push_back(drawable);
+		}
+		drawBuffer.push_back (_hudOverlay);
+		if (_endTimer >= 0.05f)
+		{
+			int alpha = _endScreen->getColor ().a + 1;
+			if (alpha <= 255)
+			{
+				_endScreen->setColor (sf::Color (255, 255, 255, alpha));
+				_endTimer = 0;
+			}
+			else
+			{
+				AbstractGame::singletonInstance->Stop ();
+			}
+		}
+		drawBuffer.push_back (_endScreen);
+		return;
+	}
+
 	//if it's boss level check mini puzzles
 	for (int i = 0; i < bossPuzzlesTrackers.size(); i++)
 	{
-		if (bossPuzzlesTrackers[i]->checkWin())
-		{
-			
-		}
+		bossPuzzlesTrackers[i]->checkWin();
 	}
 
 	//Remove items from drawbuffer
@@ -1160,4 +1186,10 @@ void Level::reloadLevel ()
 {
 	_nextLevel = _levelNumber;
 	_reloading = true;
+}
+
+//Fade to endscreen
+void Level::startFade ()
+{
+	_fading = true;
 }

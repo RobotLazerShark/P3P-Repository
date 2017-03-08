@@ -35,6 +35,9 @@ class Level : public GameObject
 		float _fadeMin = 1.75f;
 		float _fadeMax = 3;
 		float _distribution = 1;
+		sf::Sprite* _endScreen = nullptr;
+		bool _fading = false;
+		float _endTimer = 0;
 	public:
 		int levelKey = 0;
 		int _bossLevelNumber = 3;
@@ -48,6 +51,7 @@ class Level : public GameObject
 		void clear ();
 		void loadLevel (int pLevelNumber);
 		void reloadLevel ();
+		void startFade ();
 		static const float TILESIZE;
 		static LevelMap* map;
 		static Level* singletonInstance;

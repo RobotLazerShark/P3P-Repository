@@ -30,17 +30,11 @@ void stopFunctionEnd (int pAnimIndex, GameObject* pOwner)
 	sf::Sound* sound = nullptr;
 	switch (pAnimIndex)
 	{
-		case 0:
-			sound = new sf::Sound (*JCPPEngine::SoundManager::GetBuffer ("sounds/BossFire.wav"));
-			sound->setPitch (1 + (JCPPEngine::Random::Value () - 0.5f) * 0.5f);
-			sound->setVolume (40);
-			JCPPEngine::SoundManager::PlaySound (sound);
-			proj = new Projectile(boss->getWorldPosition(), boss->_position [0] + 50, boss->_position [1], boss);
-			proj->setParent(Level::singletonInstance);
-			boss->projectiles.push_back(proj);
-			//Play shooting animation
-			boss->_barrel1Animator->playAnimation (1, false, false);
-			boss->_barrel2Animator->playAnimation (1, false, false, &stopFunctionBoss, boss);
+		case 1:
+			JCPPEngine::SoundManager::StopMusicLoop (0);
+			JCPPEngine::SoundManager::Clean ();//Stop all playing sounds
+			JCPPEngine::SoundManager::PlaySound (new sf::Sound (*JCPPEngine::SoundManager::GetBuffer ("sounds/RecoveringMemory.wav")));
+			Level::singletonInstance->startFade ();
 			break;
 		default:
 			break;
@@ -60,13 +54,11 @@ Boss::Boss(int pX, int pZ) : GameObject()
 	//Set up model
 	GameObject* modelParent = new GameObject ();//Prevent shadow animating with boss
 	modelParent->setParent (this);
-	_cutSceneAnimator = new AnimationBehaviour ({"BossFinal.txt"});
-	modelParent->setBehaviour (_cutSceneAnimator);
 	_model = new GameObject("BossBody.obj");
 	_model->translate(glm::vec3(0, 2, 0));
 	_model->setMaterial(new LitMaterial("BossBody.png"));
 	_model->setParent(modelParent);
-	_bodyAnimator = new AnimationBehaviour({ "BossFloat.txt" });
+	_bodyAnimator = new AnimationBehaviour({ "BossFloat.txt", "BossFinal.txt" });
 	_model->setBehaviour(_bodyAnimator);
 	_bodyAnimator->playAnimation(0, true);
 
@@ -131,16 +123,19 @@ void Boss::update(float pStep, bool pUpdateWorldTransform)
 {
 	GameObject::update(pStep, pUpdateWorldTransform);
 
-	if (_dead && _shadow != nullptr)
+	if (_dead)
 	{
-		Player::singletonInstance->blockMovement = true;
-		JCPPEngine::SoundManager::PlaySound (new sf::Sound (*JCPPEngine::SoundManager::GetBuffer ("sounds/BossDeath.wav")));
-		_shadow->setParent (nullptr);
-		delete _shadow;
-		_cutSceneAnimator->playAnimation (0, false, false, &stopFunctionEnd, this);
+		if (_shadow != nullptr)
+		{
+			Player::singletonInstance->_noMove = true;
+			JCPPEngine::SoundManager::PlaySound (new sf::Sound (*JCPPEngine::SoundManager::GetBuffer ("sounds/BossDeath.wav")));
+			_shadow->setParent (nullptr);
+			delete _shadow;
+			_shadow = nullptr;
+			_bodyAnimator->playAnimation (1, false, false, &stopFunctionEnd, this);
+		}
 	}
-
-	if (!_noFire)
+	else if (!_noFire)
 	{
 		_timer += pStep;
 		if (_timer >= SHOOTING_FREQUENCY)
@@ -183,5 +178,12 @@ void Boss::damage()
 		_faceMaterial->SetTexture ("BossFace0.png");
 		singletonInstance = nullptr;
 		_dead = true;
+		for (Projectile * proj : projectiles)
+		{
+			proj->stopUpdating = true;
+			proj->setParent (nullptr);
+			delete proj;
+		}
+		projectiles.clear();
 	}
 }
