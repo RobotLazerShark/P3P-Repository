@@ -34,7 +34,11 @@ class Boss : public GameObject
 		const float SHOOTING_FREQUENCY = 2.0f;
 		AnimationBehaviour* _bodyAnimator = nullptr;
 		AnimationBehaviour* _cutSceneAnimator = nullptr;
+
+		int _bulletCount = 0;
+		int _superAttackSize = 6;
 		void shoot();
+		void superAttack();
 };
 
 #endif
