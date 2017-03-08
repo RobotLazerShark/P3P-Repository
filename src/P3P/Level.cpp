@@ -73,7 +73,7 @@ Level::Level (int pPlayerSkin, sf::RenderWindow* pWindow)
 
 	hud = new Hud(pWindow);
 	hud->setParent(this);
-	setMap (_bossLevelNumber);
+	setMap (0);
 	loadMap ();
 }
 //Destructor
