@@ -25,9 +25,9 @@ void PercentageFollowBehaviour::update(float pStep)
 		glm::vec3 newPosition = _initialPosition;
 		newPosition.x = _initialPosition.x * (1 - _intensity) + playerPos.x * _intensity;
 		newPosition.z = _initialPosition.z * (1 - _intensity) + playerPos.z * _intensity;
-		if (newPosition.z < playerPos.z + 3)
+		if (newPosition.z < playerPos.z + _distance)
 		{
-			newPosition.z = playerPos.z + 3;
+			newPosition.z = playerPos.z + _distance;
 		}
 		_owner->setLocalPosition (newPosition);
 		//look at player
@@ -51,9 +51,9 @@ void PercentageFollowBehaviour::update(float pStep)
 		glm::vec3 newPosition = _initialPosition;
 		newPosition.x = _initialPosition.x * (1 - _intensity) + playerPos.x * _intensity;
 		newPosition.z = _initialPosition.z * (1 - _intensity) + playerPos.z * _intensity;
-		if (newPosition.z < playerPos.z + 3)
+		if (newPosition.z < playerPos.z + _distance)
 		{
-			newPosition.z = playerPos.z + 3;
+			newPosition.z = playerPos.z + _distance;
 		}
 		_owner->setLocalPosition (newPosition);
 

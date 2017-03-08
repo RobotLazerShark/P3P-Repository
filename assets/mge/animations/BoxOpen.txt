@@ -1,0 +1,6 @@
+time = 0:00
+rotation = 0, 0, 0
+-
+time = 0:20
+rotation = 100, 0, 0
+--

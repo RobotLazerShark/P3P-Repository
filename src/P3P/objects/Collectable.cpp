@@ -60,10 +60,10 @@ Collectable::Collectable(int pX, int pZ, std::string pName, std::string pDialog,
 			_mark = new DoomAnimation (glm::vec3 (pX, 0.25f,pZ), "Mark.png", 64, 64, 0.08f);
 			_mark->setParent (Level::singletonInstance->transparencyLayer2);
 		}
-		_model = new GameObject ("cube_flat.obj");
-		_model->setMaterial(new LitMaterial(glm::vec3(0.6f,0.6f,0)));
-		_model->translate(glm::vec3(0, 0.25f, 0));
-		_model->scale(0.5f);
+		int type = JCPPEngine::Random::Range (0, 1);
+		_model = new GameObject ((type == 0) ? "Tablet.obj" : "Newspaper.obj");
+		_model->setMaterial(new LitMaterial((type == 0) ? "Tablet.png" : "Newspaper.png"));
+		_model->translate(glm::vec3(0, 0.1f, 0));
 	}
 	_model->setParent(this);
 

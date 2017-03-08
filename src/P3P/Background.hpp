@@ -11,8 +11,8 @@ class Background
 {
 	private:
 		sf::Text* _text = nullptr;
-		static const int CHARCOUNT_X = 174;
-		static const int CHARCOUNT_Y = 47;
+		static const int CHARCOUNT_X = 173;
+		static const int CHARCOUNT_Y = 46;
 		std::string _matrix [CHARCOUNT_X] [CHARCOUNT_Y];
 		std::string _chars [20] =
 		{

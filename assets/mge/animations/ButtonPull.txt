@@ -1,0 +1,6 @@
+time = 0:00
+position = 0, 0, 0.09
+-
+time = 0:40
+position = 0, 0, 0
+--

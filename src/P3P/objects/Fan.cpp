@@ -5,6 +5,7 @@
 #include <JCPPEngine/SoundManager.hpp>
 #include <JCPPEngine/Random.hpp>
 
+static int fanSoundLoops = 0;
 
 Fan::Fan(int pX, int pZ, int pXDirection, int pYDirection, bool pReversed) : ButtonTarget()
 {
@@ -12,24 +13,26 @@ Fan::Fan(int pX, int pZ, int pXDirection, int pYDirection, bool pReversed) : But
 	_reversed = pReversed;
 
 	//Set up model
-	_model = new GameObject("cube_flat.obj");
-	_model->translate(glm::vec3(0, 0.5f, 0));
+	_model = new GameObject("FanBase.obj");
 	//Rotate fan to face push/pull direction
 	if (pXDirection == 0)
 	{
-		_model->rotate (glm::radians (90.0f * pYDirection), glm::vec3 (0, 1, 0));
+		_model->rotate (glm::radians (-90.0f * pYDirection), glm::vec3 (0, 1, 0));
 	}
 	else if (pYDirection == 0)
 	{
 		_model->rotate(glm::radians((pXDirection < 0) ? 180.0f : 0.0f), glm::vec3(0, 1, 0));
 	}
 	_model->setParent(this);
-	GameObject* subModel = new GameObject ("cube_flat.obj");
-	subModel->setMaterial (new LitMaterial ("Black.png"));
+	GameObject* bladeOffset = new GameObject ();
+	bladeOffset->setParent (_model);
+	bladeOffset->translate (glm::vec3 (0, 0.5f, 0));
+	GameObject* subModel = new GameObject ("FanBlades.obj");
+	subModel->setMaterial (new LitMaterial ("FanBlades.png"));
 	_animator = new AnimationBehaviour ({ "Fan.txt", "FanReverse.txt" }, false);
 	subModel->setBehaviour (_animator);
-	subModel->setParent (_model);
-	_model->setMaterial (new LitMaterial (_reversed ? "FanR.png" : "Fan.png"));
+	subModel->setParent (bladeOffset);
+	_model->setMaterial (new LitMaterial (_reversed ? "FanBaseR.png" : "FanBase.png"));
 	_animator->playAnimation (_reversed ? 1 : 0, true);
 	translate(glm::vec3(pX * Level::TILESIZE, 0, pZ * Level::TILESIZE));
 
@@ -65,11 +68,16 @@ Fan::Fan(int pX, int pZ, int pXDirection, int pYDirection, bool pReversed) : But
 			pathBlocked = true;
 		}
 	}
-	sf::Sound* sound = new sf::Sound (*JCPPEngine::SoundManager::GetBuffer ("sounds/PlayerMoving.wav"));
-	sound->setPitch (1 + (JCPPEngine::Random::Value () - 0.5f) * 0.5f);
-	sound->setVolume (30 + JCPPEngine::Random::Range (-10, 10));
-	_soundIndex = JCPPEngine::SoundManager::PlaySoundLoop (sound);
-	_soundIndex = JCPPEngine::SoundManager::PlaySoundLoop (new sf::Sound (*JCPPEngine::SoundManager::GetBuffer ("sounds/Fan.wav")));
+
+	if (fanSoundLoops == 0)
+	{
+		sf::Sound* sound = new sf::Sound (*JCPPEngine::SoundManager::GetBuffer ("sounds/PlayerMoving.wav"));
+		sound->setPitch (1 + (JCPPEngine::Random::Value () - 0.5f) * 0.5f);
+		sound->setVolume (30 + JCPPEngine::Random::Range (-10, 10));
+		_soundIndex = JCPPEngine::SoundManager::PlaySoundLoop (sound);
+		_soundIndex = JCPPEngine::SoundManager::PlaySoundLoop (new sf::Sound (*JCPPEngine::SoundManager::GetBuffer ("sounds/Fan.wav")));
+		fanSoundLoops ++;
+	}
 }
 Fan::~Fan ()
 {
@@ -104,15 +112,40 @@ bool Fan::setActive (bool pActive)
 	{
 		_active = true;
 		_reversed = !_reversed;
-		_model->setMaterial (new LitMaterial (_reversed ? "FanR.png" : "Fan.png"));
+		_model->setMaterial (new LitMaterial (_reversed ? "FanBaseR.png" : "FanBase.png"));
 		_animator->playAnimation (_reversed ? 1 : 0, true);
 	}
 	else if (!pActive && _active)
 	{
-		_active = true;
+		_active = false;
 		_reversed = !_reversed;
-		_model->setMaterial (new LitMaterial (_reversed ? "FanR.png" : "Fan.png"));
+		_model->setMaterial (new LitMaterial (_reversed ? "FanBaseR.png" : "FanBase.png"));
 		_animator->playAnimation (_reversed ? 1 : 0, true);
+	}
+	bool pathBlocked = false;
+	_changeIndex = -1;
+	for (int i = 0; i < _visibleAreaSize; i++)
+	{
+		int tempX = _position[0] + _direction[0] * (i + 1);
+		int tempY = _position[1] + _direction[1] * (i + 1);
+		//if position of element in visible area isn't out of bounds
+		if
+		(
+			!pathBlocked &&
+			tempX >= 0 && tempX < Level::map->width &&
+			tempY >= 0 && tempY < Level::map->height &&
+			Level::map->baseTiles [tempX] [tempY] != (int)nullptr
+		)
+		{
+			//since we switched between pushing and pulling, all objects in the visible area are affected
+			_visibleArea [i] = (int)nullptr;
+		}
+		else 
+		{
+			//Make sure fan doesn't push/pull anything in(to) this spot and all further spots
+			_visibleArea [i] = -1;
+			pathBlocked = true;
+		}
 	}
 	return true;
 }

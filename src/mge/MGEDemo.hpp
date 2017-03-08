@@ -7,9 +7,10 @@
 #include <iostream>
 #include <string>
 #include <mge/core/AbstractGame.hpp>
-#include <P3P/SceneFader.hpp>
 
 class Level;
+class SceneFader;
+class Menu;
 
 class MGEDemo: public AbstractGame
 {
@@ -23,6 +24,7 @@ class MGEDemo: public AbstractGame
 	private:
 		Level* _game = nullptr;
 		SceneFader* _fader = nullptr;
+		Menu* _menu = nullptr;
 		MGEDemo(const MGEDemo&);
 		MGEDemo& operator=(const MGEDemo&);
 };

@@ -159,12 +159,12 @@ function explainQuest (pCurrentQuest, pGiveNewQuest)
 		text = text.."\n"
 		Npc.updateDialog (text)
 		Lua.wait (pause)
-		text = text.."\nI opened the door for you, its on the left.\n[NOTE: level not actually build yet!]"
+		text = text.."\nI opened the door for you, its on the left."
 		Npc.updateDialog (text)
 		Player.waitForKey ()
 		if pGiveNewQuest
 		then
-			Player.giveQuest ("Item 2", 0.5)
+			Player.giveQuest ("QuestItem2", 0.5)
 			Level.setKey (4)--unlock room 4
 		end
 		Npc.stopDialog ()
@@ -175,15 +175,24 @@ function explainQuest (pCurrentQuest, pGiveNewQuest)
 		Player.lock (true)
 		text = "Evil Bot:"
 		Npc.showDialog (text)
-		Lua.wait (pause)
-		Sound ("EvilLaugh.wav")
-		text = text.."Finally, I am whole again!\n"
+		Lua.wait (pause * 2)
+		text = text.."\nFinally, I am whole again!"
 		Npc.updateDialog (text)
-		Lua.wait (1.5)
+		Lua.wait (pause * 2)
+		text = text.."\nNow I can continue my plans of world domination!"
+		Npc.updateDialog (text)
+		Lua.wait (pause * 4)
+		text = text.."\nThe only thing left in my way is you..."
+		Npc.updateDialog (text)
+		Lua.wait (pause * 6)
+		Sound ("EvilLaugh.wav")
+		text = text.."\nHA HA HA HA HA HA HA HA"
+		Npc.updateDialog (text)
+		Lua.wait (pause * 2)
 		Player.waitForKey ()
 		Npc.stopDialog ()
 		Player.lock (false)
-		loadBossLevel ()
+		Level.loadBossLevel ()
 	end
 end
 
@@ -198,7 +207,8 @@ function getAnnoyed (pTalksHad)
 		text = "Glitched Bot:"
 		Npc.showDialog (text)
 		Lua.wait (pause)
-		Npc.showDialog ("Come on, I already told you what to do 3 times!")
+		text = text.."\nCome on, I already told you what to do 3 times!"
+		Npc.updateDialog (text)
 		Player.waitForKey ()
 		Npc.stopDialog ()
 		Player.lock (false)

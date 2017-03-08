@@ -24,7 +24,7 @@ uniform vec4 spotPositions [10];
 uniform vec4 spotNormals [10];
 uniform float spotAngledots [10];
 uniform vec2 spotFalloffs [10];
-vec3 baseColor;
+vec4 baseColor;
 vec4 frag2CameraNormal;
 in vec4 fragWorldPosition;
 in vec4 fragWorldNormal;
@@ -81,6 +81,16 @@ vec3 getSpotContribution (vec3 pColor, vec4 pPosition, vec4 pNormal, float pAngl
 void main (void)
 {
 	float alpha = 1;
+
+	if (useTexture)
+	{
+		baseColor = texture2D (texture, fragUV);
+		alpha = baseColor.a;
+	}
+	else
+	{
+		baseColor = vec4 (color, 1);
+	}
 	if (fade)
 	{
 		if (fragWorldPosition.y > fadeMax)
@@ -97,15 +107,6 @@ void main (void)
 			alpha = (fragWorldPosition.y - fadeMin) / (fadeMax - fadeMin);
 			alpha = 1 - (distribution * alpha + (1 - distribution) * alpha * alpha);
 		}
-	}
-
-	if (useTexture)
-	{
-		baseColor = texture2D (texture, fragUV).rgb;
-	}
-	else
-	{
-		baseColor = color;
 	}
 	frag2CameraNormal = normalize (cameraPosition - fragWorldPosition);//Both have a W of 1, so it will become 0
 

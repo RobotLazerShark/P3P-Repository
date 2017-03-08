@@ -23,6 +23,28 @@ void stopFunctionBoss (int pAnimIndex, GameObject* pOwner)
 			break;
 	}
 }
+void stopFunctionEnd (int pAnimIndex, GameObject* pOwner)
+{
+	Boss* boss = (Boss*)pOwner;
+	Projectile* proj = nullptr;
+	sf::Sound* sound = nullptr;
+	switch (pAnimIndex)
+	{
+		case 0:
+			sound = new sf::Sound (*JCPPEngine::SoundManager::GetBuffer ("sounds/BossFire.wav"));
+			sound->setPitch (1 + (JCPPEngine::Random::Value () - 0.5f) * 0.5f);
+			JCPPEngine::SoundManager::PlaySound (sound);
+			proj = new Projectile(boss->getWorldPosition(), boss->_position [0] + 50, boss->_position [1], boss);
+			proj->setParent(Level::singletonInstance);
+			boss->projectiles.push_back(proj);
+			//Play shooting animation
+			boss->_barrel1Animator->playAnimation (1, false, false);
+			boss->_barrel2Animator->playAnimation (1, false, false, &stopFunctionBoss, boss);
+			break;
+		default:
+			break;
+	}
+}
 
 Boss::Boss(int pX, int pZ) : GameObject()
 {
@@ -37,29 +59,31 @@ Boss::Boss(int pX, int pZ) : GameObject()
 	//Set up model
 	GameObject* modelParent = new GameObject ();//Prevent shadow animating with boss
 	modelParent->setParent (this);
+	_cutSceneAnimator = new AnimationBehaviour ({"BossFinal.txt"});
+	modelParent->setBehaviour (_cutSceneAnimator);
 	_model = new GameObject("BossBody.obj");
 	_model->translate(glm::vec3(0, 2, 0));
-	_model->setMaterial(new LitMaterial("Boss.jpg"));
+	_model->setMaterial(new LitMaterial("BossBody.png"));
 	_model->setParent(modelParent);
 	_bodyAnimator = new AnimationBehaviour({ "BossFloat.txt" });
 	_model->setBehaviour(_bodyAnimator);
 	_bodyAnimator->playAnimation(0, true);
 
-	GameObject* shadow = new GameObject ("ShadowPlane.obj");
-	shadow->setMaterial (new TextureMaterial ("BossShadow.png"));
-	shadow->setParent (modelParent);
-	shadow->translate (glm::vec3 (0, 0.1f, 0));
+	_shadow = new GameObject ("ShadowPlane.obj");
+	_shadow->setMaterial (new TextureMaterial ("BossShadow.png"));
+	_shadow->setParent (modelParent);
+	_shadow->translate (glm::vec3 (0, 0.1f, 0));
 	GameObject* faceModel = new GameObject ("BossFace.obj");
 	faceModel->setParent (_model);
 	_faceMaterial = new LitMaterial ("BossFace1.png");
 	faceModel->setMaterial (_faceMaterial);
 	GameObject* barrel1Model = new GameObject ("BossBarrelBase.obj");
-	barrel1Model->setMaterial (new LitMaterial ("BossBarrelBase.png"));
+	barrel1Model->setMaterial (new LitMaterial ("BossGun.png"));
 	barrel1Model->setParent (_model);
 	_barrel1Animator = new AnimationBehaviour ({ "Barrel1Open.txt", "Barrel1Fire.txt" });
 	barrel1Model->setBehaviour (_barrel1Animator);
 	GameObject* barrel2Model = new GameObject ("BossBarrelEnd.obj");
-	barrel2Model->setMaterial (new LitMaterial ("BossBarrelEnd.png"));
+	barrel2Model->setMaterial (new LitMaterial ("BossGun.png"));
 	barrel2Model->setParent (barrel1Model);
 	_barrel2Animator = new AnimationBehaviour ({ "Barrel2Open.txt", "Barrel2Fire.txt" });
 	barrel2Model->setBehaviour (_barrel2Animator);
@@ -109,8 +133,10 @@ void Boss::update(float pStep, bool pUpdateWorldTransform)
 	if (_dead)
 	{
 		JCPPEngine::SoundManager::PlaySound (new sf::Sound (*JCPPEngine::SoundManager::GetBuffer ("sounds/BossDeath.wav")));
-		setParent (nullptr);
-		delete this;
+		//Insert animation, only delete in stopfunction
+		_shadow->setParent (nullptr);
+		delete _shadow;
+		_cutSceneAnimator->playAnimation (0, false, false, &stopFunctionEnd, this);
 	}
 
 	if (!_noFire)
@@ -142,8 +168,17 @@ void Boss::damage()
 {
 	JCPPEngine::SoundManager::PlaySound (new sf::Sound (*JCPPEngine::SoundManager::GetBuffer ("sounds/BossHurt.wav")));
 	liveCount--;
-	if (liveCount <= 0)
+	if (liveCount == 3)
 	{
+		_faceMaterial->SetTexture ("BossFace2.png");
+	}
+	else if (liveCount == 1)
+	{
+		_faceMaterial->SetTexture ("BossFace3.png");
+	}
+	else if (liveCount <= 0)
+	{
+		_faceMaterial->SetTexture ("BossFace0.png");
 		singletonInstance = nullptr;
 		_dead = true;
 	}
