@@ -19,6 +19,8 @@ class Projectile : public GameObject
 
 		bool stopUpdating = false;
 
+		void pause(bool active);
+		
 	private:
 		Boss * _owner = nullptr;
 		GameObject* _model = nullptr;
@@ -30,6 +32,8 @@ class Projectile : public GameObject
 		bool reflected = false;
 
 		bool _normalProjectile = true;
+
+		bool _pause = false;
 };
 
 #endif

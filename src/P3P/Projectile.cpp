@@ -61,77 +61,80 @@ Projectile::~Projectile ()
 void Projectile::update(float pStep, bool pUpdateWorldTransform)
 {
 	GameObject::update(pStep, pUpdateWorldTransform);
-	if (stopUpdating)
+	if (!_pause)
 	{
-		explode();
-	}
-	else
-	{
-		if (_normalProjectile)
+		if (stopUpdating)
 		{
-			//if distance to target bigger than step
-			if (glm::distance(getWorldPosition(), _target) >= SPEED*pStep)
+			explode();
+		}
+		else
+		{
+			if (_normalProjectile)
 			{
-				if (!reflected)
+				//if distance to target bigger than step
+				if (glm::distance(getWorldPosition(), _target) >= SPEED*pStep)
 				{
-					//move to target
-					translate(glm::vec3(0, 0, SPEED*pStep));
-				}
-				else
-				{
-					//if reached boss
-					if (glm::distance(getWorldPosition(), _target) < 1)
+					if (!reflected)
 					{
-						_owner->removeProjectile(this);
-						_owner->damage();
-						setParent(nullptr);
-						delete this;
+						//move to target
+						translate(glm::vec3(0, 0, SPEED*pStep));
 					}
 					else
 					{
-						//move to owner
-						translate(glm::vec3(0, 0, -SPEED*pStep));
+						//if reached boss
+						if (glm::distance(getWorldPosition(), _target) < 1)
+						{
+							_owner->removeProjectile(this);
+							_owner->damage();
+							setParent(nullptr);
+							delete this;
+						}
+						else
+						{
+							//move to owner
+							translate(glm::vec3(0, 0, -SPEED*pStep));
+						}
+					}
+				}
+				else
+				{
+					Mirror* mirror = dynamic_cast <Mirror*> ((GameObject*)Level::map->baseTiles[_targetTile[0]][_targetTile[1]]);
+					//if reached mirror
+					if (mirror != nullptr && mirror->up && !mirror->broken)
+					{
+						mirror->broken = true;
+						mirror->setActive(false);
+						_target = _startPosition;
+						reflected = true;
+						_targetIcon->setParent(nullptr);
+						delete _targetIcon;
+						_targetIcon = nullptr;
+						JCPPEngine::SoundManager::PlaySound(new sf::Sound(*JCPPEngine::SoundManager::GetBuffer("sounds/ProjectileBounce.wav")));
+					}
+					//if reached player
+					else if (Player::singletonInstance->_currentTile[0] == _targetTile[0] && Player::singletonInstance->_currentTile[1] == _targetTile[1])
+					{
+						explode();
+						Player::singletonInstance->die();
+					}
+					//if reached empty floor
+					else
+					{
+						explode();
 					}
 				}
 			}
-			else
+			else //super attack projectile
 			{
-				Mirror* mirror = dynamic_cast <Mirror*> ((GameObject*)Level::map->baseTiles[_targetTile[0]][_targetTile[1]]);
-				//if reached mirror
-				if (mirror != nullptr && mirror->up && !mirror->broken)
+				translate(glm::vec3(0, -0.1, 0));
+				if (getWorldPosition().y <= 0.5f)
 				{
-					mirror->broken = true;
-					mirror->setActive(false);
-					_target = _startPosition;
-					reflected = true;
-					_targetIcon->setParent(nullptr);
-					delete _targetIcon;
-					_targetIcon = nullptr;
-					JCPPEngine::SoundManager::PlaySound(new sf::Sound(*JCPPEngine::SoundManager::GetBuffer("sounds/ProjectileBounce.wav")));
-				}
-				//if reached player
-				else if (Player::singletonInstance->_currentTile[0] == _targetTile[0] && Player::singletonInstance->_currentTile[1] == _targetTile[1])
-				{
-					explode();
-					//Player::singletonInstance->die();
-				}
-				//if reached empty floor
-				else
-				{
+					if (Player::singletonInstance->_currentTile[0] == _targetTile[0] && Player::singletonInstance->_currentTile[1] == _targetTile[1])
+					{
+						Player::singletonInstance->die();
+					}
 					explode();
 				}
-			}
-		}
-		else //super attack projectile
-		{
-			translate(glm::vec3(0, -0.1, 0));
-			if (getWorldPosition().y <= 0.5f)
-			{
-				if (Player::singletonInstance->_currentTile[0] == _targetTile[0] && Player::singletonInstance->_currentTile[1] == _targetTile[1])
-				{
-					Player::singletonInstance->die();
-				}
-				explode();
 			}
 		}
 	}
@@ -148,4 +151,9 @@ void Projectile::explode()
 		_targetIcon = nullptr;
 	}
 	delete this;
+}
+
+void Projectile::pause(bool active)
+{
+	_pause = active;
 }

@@ -24,6 +24,9 @@ class Boss : public GameObject
 		AnimationBehaviour* _barrel2Animator = nullptr;
 		int _position[2] = { 0, 0 };
 		std::vector<Projectile*> projectiles;
+
+		void pause(bool active);
+
 	private:
 		bool _dead = false;
 		GameObject* _model = nullptr;
@@ -39,6 +42,8 @@ class Boss : public GameObject
 		int _superAttackSize = 6;
 		void shoot();
 		void superAttack();
+
+		bool _pause = false;
 };
 
 #endif

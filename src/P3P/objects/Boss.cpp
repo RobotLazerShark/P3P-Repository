@@ -131,30 +131,33 @@ void Boss::update(float pStep, bool pUpdateWorldTransform)
 {
 	GameObject::update(pStep, pUpdateWorldTransform);
 
-	if (_dead && _shadow != nullptr)
+	if (!_pause)
 	{
-		Player::singletonInstance->blockMovement = true;
-		JCPPEngine::SoundManager::PlaySound (new sf::Sound (*JCPPEngine::SoundManager::GetBuffer ("sounds/BossDeath.wav")));
-		_shadow->setParent (nullptr);
-		delete _shadow;
-		_cutSceneAnimator->playAnimation (0, false, false, &stopFunctionEnd, this);
-	}
-
-	if (!_noFire)
-	{
-		_timer += pStep;
-		if (_timer >= SHOOTING_FREQUENCY)
+		if (_dead && _shadow != nullptr)
 		{
-			_timer -= SHOOTING_FREQUENCY;
-			if (_bulletCount <= 2)
+			Player::singletonInstance->blockMovement = true;
+			JCPPEngine::SoundManager::PlaySound(new sf::Sound(*JCPPEngine::SoundManager::GetBuffer("sounds/BossDeath.wav")));
+			_shadow->setParent(nullptr);
+			delete _shadow;
+			_cutSceneAnimator->playAnimation(0, false, false, &stopFunctionEnd, this);
+		}
+
+		if (!_noFire)
+		{
+			_timer += pStep;
+			if (_timer >= SHOOTING_FREQUENCY)
 			{
-				shoot();
-				_bulletCount++;
-			}
-			else
-			{
-				superAttack();
-				_bulletCount = 0;
+				_timer -= SHOOTING_FREQUENCY;
+				if (_bulletCount <= 2)
+				{
+					shoot();
+					_bulletCount++;
+				}
+				else
+				{
+					superAttack();
+					_bulletCount = 0;
+				}
 			}
 		}
 	}
@@ -268,5 +271,14 @@ void Boss::superAttack()
 		_barrel1Animator->playAnimation(1, false, false);
 		_barrel2Animator->playAnimation(1, false, false, &stopFunctionBoss, this);
 		_noFire = true;
+	}
+}
+
+void Boss::pause(bool active)
+{
+	_pause = active;
+	for (Projectile * proj : projectiles)
+	{
+		proj->pause(_pause);
 	}
 }
