@@ -45,7 +45,7 @@ vec3 getSpecularContribution (vec3 pColor, vec4 pLight2FragNormal)
 //Calculates the diffuse contribution
 vec3 getDiffuseContribution (vec4 pFrag2LightNormal, vec3 pColor)
 {
-	return max (0, dot (pFrag2LightNormal, fragWorldNormal)) * pColor * baseColor;
+	return max (0, dot (pFrag2LightNormal, fragWorldNormal)) * pColor * baseColor.rgb;
 }
 //Calculates the contribution of this directional light to the total fragment color
 vec3 getDirectionalContribution (vec3 pColor, vec4 pNormal)
