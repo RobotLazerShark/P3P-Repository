@@ -69,8 +69,10 @@ Boss::Boss(int pX, int pZ) : GameObject()
 	_model->translate(glm::vec3(0, 2, 0));
 	_model->setMaterial(new LitMaterial("BossBody.png"));
 	_model->setParent(modelParent);
+	_model->rotate(glm::radians(90.), glm::vec3(0, 1, 0));
+
 	_bodyAnimator = new AnimationBehaviour({ "BossFloat.txt", "BossFinal.txt" });
-	_model->setBehaviour(_bodyAnimator);
+	modelParent->setBehaviour(_bodyAnimator);
 	_bodyAnimator->playAnimation(0, true);
 
 	_shadow = new GameObject ("ShadowPlane.obj");
@@ -139,19 +141,16 @@ void Boss::update(float pStep, bool pUpdateWorldTransform)
 		if (_shadow != nullptr)
 		{
 			Player::singletonInstance->_noMove = true;
-			JCPPEngine::SoundManager::PlaySound (new sf::Sound (*JCPPEngine::SoundManager::GetBuffer ("sounds/BossDeath.wav")));
-			_shadow->setParent (nullptr);
+			JCPPEngine::SoundManager::PlaySound(new sf::Sound(*JCPPEngine::SoundManager::GetBuffer("sounds/BossDeath.wav")));
+			_shadow->setParent(nullptr);
 			delete _shadow;
 			_shadow = nullptr;
-			_bodyAnimator->playAnimation (1, false, false, &stopFunctionEnd, this);
+			_bodyAnimator->playAnimation(1, false, false, &stopFunctionEnd, this);
 		}
 	}
-	else if (!_noFire)
+	else if (!_pause)
 	{
-		_timer += pStep;
-		if (_timer >= SHOOTING_FREQUENCY)
-	if (!_pause)
-	{
+		lookAt(Player::singletonInstance->getActualWorldPosition());
 		if (_dead && _shadow != nullptr)
 		{
 			Player::singletonInstance->blockMovement = true;
@@ -307,4 +306,17 @@ void Boss::pause(bool active)
 	{
 		proj->pause(_pause);
 	}
+}
+
+void Boss::lookAt(glm::vec3 pos)
+{
+	cout << "hello" << endl;
+	glm::vec2  direction = glm::vec2(pos.x - getWorldPosition().x, pos.z - getWorldPosition().z);
+
+	if (_oldDirection != glm::vec2(0, 0) && direction != glm::vec2(0, 0))
+	{
+		_model->rotate(atan2(_oldDirection.y, _oldDirection.x) - atan2(direction.y, direction.x), glm::vec3(0, 1, 0));
+	}
+
+	_oldDirection = direction;
 }

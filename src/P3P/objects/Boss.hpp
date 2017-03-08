@@ -26,6 +26,7 @@ class Boss : public GameObject
 		std::vector<Projectile*> projectiles;
 
 		void pause(bool active);
+		void lookAt(glm::vec3 pos);
 
 	private:
 		bool _dead = false;
@@ -44,6 +45,7 @@ class Boss : public GameObject
 		void superAttack();
 
 		bool _pause = false;
+		glm::vec2  _oldDirection;
 };
 
 #endif
