@@ -23,16 +23,16 @@ void ThirdPersonCameraBehaviour::update(float pStep)
 	if (_start && !inTransition)
 	{
 		//set correct camera start position
-		_owner->setWorldPosition(glm::vec3(_player->getWorldPosition().x, _height, _player->getWorldPosition().z + _distanceProjectionLength));
+		_owner->setWorldPosition(glm::vec3(_player->getActualWorldPosition().x, _height, _player->getActualWorldPosition().z + _distanceProjectionLength));
 		//save distanceVector (player--->camera vector)
-		_distanceVector = _owner->getLocalPosition() - _player->getWorldPosition();
+		_distanceVector = _owner->getLocalPosition() - _player->getActualWorldPosition();
 		lookAtPlayer();
 		_start = false;
 	}
 
 	if (!inTransition) //normal 3d person behaviour
 	{
-		glm::vec3 correctCameraPosition = _player->getWorldPosition() + _distanceVector;
+		glm::vec3 correctCameraPosition = _player->getActualWorldPosition() + _distanceVector;
 		//if camera position is'nt correct
 		if (_owner->getLocalPosition() != correctCameraPosition)
 		{
@@ -78,7 +78,7 @@ void ThirdPersonCameraBehaviour::startTransition(glm::vec3 targetPos, float time
 	_player = Player::singletonInstance;
 	_player->blockMovement = true;
 	_distanceProjectionLength = sqrt(_distance*_distance - _height*_height);
-	_distanceVector = glm::vec3(_player->getWorldPosition().x, _height, _player->getWorldPosition().z + _distanceProjectionLength) - _player->getWorldPosition();
+	_distanceVector = glm::vec3(_player->getActualWorldPosition().x, _height, _player->getActualWorldPosition().z + _distanceProjectionLength) - _player->getActualWorldPosition();
 
 	inTransition = true;
 	_targetTransitionPos = targetPos + _distanceVector;
