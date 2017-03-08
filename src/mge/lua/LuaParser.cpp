@@ -2506,7 +2506,14 @@ int stopDialog (lua_State* pLua)
 int isHub (lua_State* pLua)
 {
 	lua_settop (pLua, 0);
-	lua_pushboolean (pLua, Level::singletonInstance->isHub ());
+	if (Level::singletonInstance != nullptr)
+	{
+		lua_pushboolean (pLua, Level::singletonInstance->isHub ());
+	}
+	else
+	{
+		lua_pushboolean (pLua, false);
+	}
 	return 1;
 }
 //Change the level key

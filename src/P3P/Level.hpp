@@ -13,6 +13,7 @@
 class Quest;
 class Gate;
 class Collectable;
+class Background;
 
 
 class Level : public GameObject
@@ -34,10 +35,10 @@ class Level : public GameObject
 		float _fadeMin = 1.75f;
 		float _fadeMax = 3;
 		float _distribution = 1;
-
 	public:
 		int levelKey = 0;
-		int _bossLevelNumber = 3;
+		int _bossLevelNumber = 10;
+		Background* _background = nullptr;
 		Level (int pPlayerSkin, sf::RenderWindow* pWindow);
 		~Level ();
 		bool isHub ();
@@ -53,6 +54,7 @@ class Level : public GameObject
 		std::vector <sf::Drawable*>drawBuffer;
 		std::vector <Collectable*>deleteBuffer;
 		void update (float pStep, bool pUpdateWorldTransform = false) override;
+		static void renderBackground (sf::RenderWindow* pWindow);
 		static void render (sf::RenderWindow* pWindow);
 		Hud * hud = nullptr;
 		std::vector<Hint*> hints;

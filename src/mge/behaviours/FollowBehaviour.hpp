@@ -20,6 +20,7 @@ class PercentageFollowBehaviour : public AbstractBehaviour
 		float _curTargetPos [2] = { 0, 0 };
 		int _newTargetPos [2] = { 0, 0 };
 		float _smoothing = 0.9f;
+		float _distance = 4.5f;
 };
 
 #endif

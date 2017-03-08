@@ -29,6 +29,8 @@
 #include <JCPPEngine/SoundManager.hpp>
 #include <P3P/SceneFader.hpp>
 #include <mge/objects/Light.hpp>
+#include <mge/util/ShaderDataUtil.hpp>
+#include <P3P/Background.hpp>
 
 //Static variables
 const float Level::TILESIZE = 1;
@@ -46,8 +48,16 @@ Level::Level (int pPlayerSkin, sf::RenderWindow* pWindow)
 	singletonInstance = this;
 	_hudOverlay = new sf::Sprite (*JCPPEngine::TextureManager::GetTexture ("images/Hud.png"));
 	_playerSkin = pPlayerSkin;
-	pWindow->display ();
 	JCPPEngine::SoundManager::PlayMusicLoop ("sounds/BackgroundLoop.wav");
+
+	_background = new Background ();
+
+	//Add light
+	ShaderDataUtil::SetAmbientLight (glm::vec3 (0.8f, 0.9f, 1), 0.1f);
+	Light* dirLight = new Light (glm::vec3 (1, 1, 1), 0.45f);
+	dirLight->rotate (glm::radians (25.0f), glm::vec3 (0, 1, 0));
+	dirLight->rotate (glm::radians (45.0f), glm::vec3 (1, 0, 0));
+	dirLight->setParent (World::singletonInstance);
 
 	setParent (World::singletonInstance);
 	//Add transparency layers (transparent objects need to be rendered in correct order, before non-transparent objects)
@@ -68,6 +78,7 @@ Level::~Level ()
 	delete map;
 	delete hud;
 	delete _hudOverlay;
+	delete _background;
 	//delete bossPuzzletracker
 	for (ProgressTracker * bossPuzzleTracker : bossPuzzlesTrackers)
 	{
@@ -79,13 +90,13 @@ Level::~Level ()
 		hint->setParent(nullptr);
 		delete hint;
 	}
+	hints.clear ();
 	for (int i = 0, size = _activeQuestsCopy.size (); i < size; i ++)
 	{
-		if (_activeQuestsCopy [i] != nullptr)
-		{
-			delete _activeQuestsCopy [i];
-		}
+		delete _activeQuestsCopy [i];
+		_activeQuestsCopy [i] = nullptr;
 	}
+	_activeQuestsCopy.clear ();
 	//Make sure there are no lingering singletons
 	if (Player::singletonInstance != nullptr)
 	{
@@ -121,17 +132,17 @@ void Level::update (float pStep, bool pUpdateWorldTransform)
 	//Remove items from drawbuffer
 	drawBuffer.clear();
 	drawBuffer.push_back (SceneFader::singletonInstance->sprite);
-	drawBuffer.push_back (_hudOverlay);
 	for (sf::Drawable * drawable : hud->getAllDrawables())
 	{
 		drawBuffer.push_back(drawable);
 	}
+	drawBuffer.push_back (_hudOverlay);
 	GameObject::update(pStep, pUpdateWorldTransform);
 
 	//If we have to load a different level, do that here.
 	//By having the reload function set a flag instead of directly reload the level,
 	//there won't be any issues with objects being deleted when the function returns.
-	if (_nextLevel != -1)// && SceneFader::singletonInstance->levelIsAllowedToReload)
+	if (_nextLevel != -1)
 	{
 		clear ();
 		if (!setMap (_nextLevel))
@@ -146,6 +157,10 @@ void Level::update (float pStep, bool pUpdateWorldTransform)
 }
 
 
+void Level::renderBackground (sf::RenderWindow* pWindow)
+{
+	Level::singletonInstance->_background->render (pWindow);
+}
 void Level::render (sf::RenderWindow* pWindow)
 {
 	for (int i = 0, size = Level::singletonInstance->drawBuffer.size(); i < size; i++)
@@ -206,7 +221,7 @@ bool Level::setMap (int pLevelNumber)
 	else if (_levelNumber == _bossLevelNumber)
 	{
 		JCPPEngine::SoundManager::StopMusicLoop (0);
-		map = LevelImporter::ReadFile ("BossLevel.tmx");
+		map = LevelImporter::ReadFile ("BossLevelAlternativeCamera.tmx");
 	}
 	else
 	{
@@ -271,7 +286,7 @@ void Level::loadMap ()
 				case 10:
 				case 11:
 					//Wall pipe 1
-					position = glm::vec3 (TILESIZE * x, -0.05, TILESIZE * y);
+					position = glm::vec3 (TILESIZE * x, -0.05f, TILESIZE * y);
 					rotation = -90.0f * (map->baseTiles[x][y]-9);
 					temp = new GameObject ();
 					temp2 = new GameObject ("Pipe1.obj");
@@ -575,6 +590,35 @@ void Level::loadMap ()
 					temp->rotate (glm::radians (rotation), glm::vec3 (0, 1, 0));
 					map->baseTiles [x] [y] = (int) temp;
 					break;
+				case 31:
+					//Wall pipe 1
+					position = glm::vec3 (TILESIZE * x, -0.05f, TILESIZE * y);
+					rotation = -90.0f;
+					temp = new GameObject ();
+					temp2 = new GameObject ("Plant.obj");
+					temp2->setMaterial (new LitMaterial ("Plant.png"));
+					temp2->setParent (temp);
+					temp2 = new GameObject ("Wall.obj");
+					mat = new LitMaterial ("Wall.png");
+					mat->SetFade (true, _fadeMin, _fadeMax, _distribution);
+					temp2->setMaterial (mat);
+					temp2->translate (position);
+					temp2->rotate (glm::radians (rotation), glm::vec3 (0, 1, 0));
+					temp2->translate (glm::vec3 (-1, 1.55f, 0));
+					temp2->setParent (transparencyLayer2);
+					temp2 = new GameObject ("Wall.obj");
+					mat = new LitMaterial ("Wall.png");
+					mat->SetFade (true, _fadeMin, _fadeMax, _distribution);
+					temp2->setMaterial (mat);
+					temp2->translate (position);
+					temp2->rotate (glm::radians (rotation), glm::vec3 (0, 1, 0));
+					temp2->translate (glm::vec3 (-1, 2.55f, 0));
+					temp2->setParent (transparencyLayer3);
+					temp->setParent (this);
+					temp->translate (position);
+					temp->rotate (glm::radians (rotation), glm::vec3 (0, 1, 0));
+					map->baseTiles [x] [y] = (int)temp;
+					break;
 				case 32:
 					//Wall pipe 5
 					temp = new GameObject ();
@@ -692,7 +736,7 @@ void Level::loadMap ()
 					map->objectTiles[x][y] = (int)temp;
 					break;
 				case 45: //Fan reversed right
-					temp = new Fan(x, y, 0, 1, true);
+					temp = new Fan(x, y, 1, 0, true);
 					temp->setParent(this);
 					map->objectTiles[x][y] = (int)temp;
 					break;
@@ -976,6 +1020,13 @@ void Level::loadMap ()
 					}
 				}
 				bossPuzzlesTrackers.push_back(bossPuzzleTracker);
+				if (map->objectTiles[object->x][object->z] != (int)nullptr)
+				{
+					GameObject* block = (GameObject*)map->objectTiles[object->x][object->z];
+					block->setParent(nullptr);
+					delete block;
+				}
+				map->objectTiles[object->x][object->z] = (int)temp;
 				break;
 			case 75:
 				anchors.push_back(new BossCameraAnchor(object->x*Level::TILESIZE, std::stoi(object->properties[1]),object->z*Level::TILESIZE, //pos
@@ -1000,11 +1051,7 @@ void Level::loadMap ()
 	}
 	anchors.clear();
 
-//	hud->enable();
-	if (!_reloading)
-	{
-	//	SceneFader::singletonInstance->fade (false);
-	}
+	hud->enable();
 }
 
 //Delete all objects in the level
@@ -1117,8 +1164,6 @@ void Level::clear ()
 void Level::loadLevel (int pLevelNumber)
 {
 	_nextLevel = pLevelNumber;
-//	SceneFader::singletonInstance->fade(true);
-	Player::singletonInstance->_noMove = true;
 }
 
 //Reload the current level

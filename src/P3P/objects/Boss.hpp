@@ -20,18 +20,20 @@ class Boss : public GameObject
 		//Preferably these variables would be private, but they are needed in a globalspace function
 		//They use the private name conventions because they should be used as such
 		bool _noFire = false;
+		AnimationBehaviour* _barrel1Animator = nullptr;
+		AnimationBehaviour* _barrel2Animator = nullptr;
+		int _position[2] = { 0, 0 };
+		std::vector<Projectile*> projectiles;
 	private:
 		bool _dead = false;
 		GameObject* _model = nullptr;
 		LitMaterial* _faceMaterial = nullptr;
+		GameObject* _shadow = nullptr;
 		int liveCount = 4;
-		int _position[2] = { 0, 0 };
 		float _timer = 0;
 		const float SHOOTING_FREQUENCY = 2.0f;
-		std::vector<Projectile*> projectiles;
-		AnimationBehaviour* _barrel1Animator = nullptr;
-		AnimationBehaviour* _barrel2Animator = nullptr;
 		AnimationBehaviour* _bodyAnimator = nullptr;
+		AnimationBehaviour* _cutSceneAnimator = nullptr;
 		void shoot();
 };
 

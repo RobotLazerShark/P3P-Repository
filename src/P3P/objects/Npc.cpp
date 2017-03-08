@@ -24,9 +24,6 @@ Npc::Npc(int pX, int pZ) : GameObject()
 		delete singletonInstance;
 	}
 	singletonInstance = this;
-	Level::map->objectTiles [pX-1] [pZ-1] = (int)this;
-	Level::map->objectTiles [pX-1] [pZ] = (int)this;
-	Level::map->objectTiles [pX] [pZ-1] = (int)this;
 
 	//Set up model
 	_model = new GameObject("BossBrokenBase.obj");
@@ -65,10 +62,6 @@ Npc::~Npc ()
 {
 	singletonInstance->setParent (nullptr);
 	singletonInstance = nullptr;
-	Level::map->objectTiles [position [0]-1] [position[1] -1] = (int)nullptr;
-	Level::map->objectTiles [position[0] -1] [position[1]] = (int)nullptr;
-	Level::map->objectTiles [position[0]] [position[1] -1] = (int)nullptr;
-	Level::map->objectTiles [position[0]] [position[1]] = (int)nullptr;
 	delete _textBox;
 	delete _text;
 	if (_soundIndex != -1)

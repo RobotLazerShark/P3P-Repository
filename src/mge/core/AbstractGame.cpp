@@ -15,7 +15,6 @@ using namespace std;
 #include <JCPPEngine/InputManager.hpp>
 #include "mge/core/World.hpp"
 #include <P3P/Level.hpp>
-#include <P3P/Background.hpp>
 
 AbstractGame* AbstractGame::singletonInstance = nullptr;
 static float timeSinceProgramStart;
@@ -71,7 +70,6 @@ AbstractGame::~AbstractGame()
 {
     //dtor
 	singletonInstance = nullptr;
-	delete _background;
     if (_luaParser != nullptr)
     {
 	_luaParser->Clean ();
@@ -112,7 +110,6 @@ void AbstractGame::initialize() {
 	registerForEvent (sf::Event::Closed);
 	registerForEvent (sf::Event::Resized);
 	registerForEvent (sf::Event::KeyPressed);
-	_background = new Background ();
     cout << endl << "Engine initialized." << endl << endl;
 }
 
@@ -207,16 +204,23 @@ void AbstractGame::run ()
 				timeSinceLastUpdate -= timePerFrame;
 				_update (step);
 				//Update the lua program
-				if (_luaParser->Update (step))
+				if (_luaParser != nullptr && _luaParser->Update (step))
 				{
 					Stop ();
 					break;
 				}
 			}
 			ShaderDataUtil::UpdateCameraInfo ();
-			_background->render (_window);
-			_render ();
-			Level::render (_window);
+			if (Level::singletonInstance != nullptr)
+			{
+				Level::renderBackground (_window);
+				_render ();
+				Level::render (_window);
+			}
+			else
+			{
+				_render ();
+			}
 			if (_luaParser != nullptr)
 			{
 				_luaParser->Render ();

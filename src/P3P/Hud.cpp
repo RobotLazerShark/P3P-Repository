@@ -4,6 +4,7 @@
 #include <JCPPEngine/MouseEvent.hpp>
 #include <JCPPEngine/InputManager.hpp>
 #include <mge/core/AbstractGame.hpp>
+#include <P3P/Menu.hpp>
 
 
 //---------------button press functions---------------------
@@ -30,7 +31,11 @@ void quitToHudFunction()
 
 void quitToMenuFunction()
 {
-	
+	Menu::singletonInstance->_game->clear ();
+	delete Menu::singletonInstance->_game;
+	delete Menu::singletonInstance->_fader;
+	AbstractGame::showCursor (true);
+	Menu::singletonInstance->UnHide ();
 }
 
 void hintFunction()
