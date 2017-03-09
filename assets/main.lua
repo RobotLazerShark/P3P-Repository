@@ -103,13 +103,13 @@ function explainControls ()
 	text = text.."\n|'m verY unsTABle r¡ght ñ0w, as yOU ©àn see."
 	Npc.updateDialog (text)
 	Lua.wait (pause)
-	text = text.."\nI nEEd yoü To gET a pUñctúàt¡0n CHïp frõm roóm A2."
+	text = text.."\nI nEEd yoü To gET a pUñctúàt¡0n CHïp frõm roóm 1B,"
 	Npc.updateDialog (text)
 	Lua.wait (pause)
 	text = text.."\nìt sHoú1d Fï× My ©oms."
 	Npc.updateDialog (text)
 	Lua.wait (pause)
-	text = text.."\nI'll opEn thE dóor for y0u."
+	text = text.."\nI'll opEn thE dóor for y0u, iT's 0n thÈ r¡gHt."
 	Npc.updateDialog (text)
 	Lua.wait (pause)
 	text = text.."\n"
@@ -121,7 +121,7 @@ function explainControls ()
 	text = text.."\nw¡tH fùrhTËr íñstRüçti0ns. Yoú'l1 nëEd tHe he|p."
 	Npc.updateDialog (text)
 	Player.giveQuest ("QuestItem1", 0.5)
-	Level.setKey (2);--unlock level 1, room 1 and 2
+	Level.setKey (3);--unlock level 1, 2 and 3 (1A, 1B, 1C)
 	Player.waitForKey ()
 	Npc.stopDialog ()--Hide the textbox and text
 	Player.lock (false);--The player is now allowed to move again
@@ -142,7 +142,7 @@ function explainQuest (pCurrentQuest, pGiveNewQuest)
 		Npc.stopDialog ()
 		Player.lock (false)
 	elseif pCurrentQuest == 2
---[[	then
+	then
 		Player.lock (true)
 		text = "Glitched Bot:"
 		Npc.showDialog (text)
@@ -150,10 +150,13 @@ function explainQuest (pCurrentQuest, pGiveNewQuest)
 		text = text.."\nThanks, my coms are fully functional now!"
 		Npc.updateDialog (text)
 		Lua.wait (pause)
-		text = text.."\nNow I need you to find the next part, so I can patch my..."
+		text = text.."\nIf you can find all the parts to fix me completely,"
 		Npc.updateDialog (text)
 		Lua.wait (pause)
-		text = text.."\ncleanup protocols."
+		text = text.."\nI can retrieve your memory backup from the core server."
+		Npc.updateDialog (text)
+		Lua.wait (pause)
+		text = text.."\nBut first, I need you to find more parts."
 		Npc.updateDialog (text)
 		Lua.wait (pause)
 		text = text.."\n"
@@ -165,12 +168,12 @@ function explainQuest (pCurrentQuest, pGiveNewQuest)
 		if pGiveNewQuest
 		then
 			Player.giveQuest ("QuestItem2", 0.5)
-			Level.setKey (4)--unlock room 4
+			Level.setKey (6)--unlock 2A, 2B, 2C
 		end
 		Npc.stopDialog ()
 		Player.lock (false)
 	elseif pCurrentQuest > 2
-]]	then
+	then
 		--The last quest has been completed
 		Player.lock (true)
 		text = "Evil Bot:"
@@ -182,7 +185,7 @@ function explainQuest (pCurrentQuest, pGiveNewQuest)
 		text = text.."\nNow I can continue my plans of world domination!"
 		Npc.updateDialog (text)
 		Lua.wait (pause * 4)
-		text = text.."\nThe only thing left in my way is you..."
+		text = text.."\nThe only one left in my way is you..."
 		Npc.updateDialog (text)
 		Lua.wait (pause * 6)
 		Sound ("EvilLaugh.wav")
@@ -198,7 +201,7 @@ end
 
 --the player wants to talk again about a quest we already explained
 function getAnnoyed (pTalksHad)
-	if pTalksHad < 3--The first time we explain the quest is before we've actually given it to the player. So talkshad will be 1 less than the amount of times we've explained the quest.
+	if pTalksHad < 3--The first time we explain the quest is before we've actually given it to the player. So talks had will be 1 less than the amount of times we've explained the quest.
 	then
 		--explain the quest again
 		explainQuest (Player.completedQuests () + 1, false)
@@ -207,7 +210,7 @@ function getAnnoyed (pTalksHad)
 		text = "Glitched Bot:"
 		Npc.showDialog (text)
 		Lua.wait (pause)
-		text = text.."\nCome on, I already told you what to do 3 times!"
+		text = text.."\nCome on, I already told you what to do!"
 		Npc.updateDialog (text)
 		Player.waitForKey ()
 		Npc.stopDialog ()

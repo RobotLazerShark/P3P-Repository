@@ -12,16 +12,16 @@ Stats::Stats(sf::Vector2f statsPos)
 
 	//set all texts
 	loadFromFile();
-	_texts.push_back(new sf::Text("deathCount", *JCPPEngine::FontManager::GetFont("fonts/Font1.ttf")));
-	_texts.push_back(new sf::Text("metersWalked", *JCPPEngine::FontManager::GetFont("fonts/Font1.ttf")));
-	_texts.push_back(new sf::Text("itemsCollected", *JCPPEngine::FontManager::GetFont("fonts/Font1.ttf")));
-	_texts.push_back(new sf::Text("hintsUsed", *JCPPEngine::FontManager::GetFont("fonts/Font1.ttf")));
-	_texts.push_back(new sf::Text("platformsBroke", *JCPPEngine::FontManager::GetFont("fonts/Font1.ttf")));
-	_texts.push_back(new sf::Text("socketsActivated", *JCPPEngine::FontManager::GetFont("fonts/Font1.ttf")));
-	_texts.push_back(new sf::Text("questsCompleted", *JCPPEngine::FontManager::GetFont("fonts/Font1.ttf")));
+	_texts.push_back(new sf::Text("deathCount", *JCPPEngine::FontManager::GetFont("fonts/Font1.ttf"), 25));
+	_texts.push_back(new sf::Text("metersWalked", *JCPPEngine::FontManager::GetFont("fonts/Font1.ttf"), 25));
+	_texts.push_back(new sf::Text("itemsCollected", *JCPPEngine::FontManager::GetFont("fonts/Font1.ttf"), 25));
+	_texts.push_back(new sf::Text("hintsUsed", *JCPPEngine::FontManager::GetFont("fonts/Font1.ttf"), 25));
+	_texts.push_back(new sf::Text("platformsBroke", *JCPPEngine::FontManager::GetFont("fonts/Font1.ttf"), 25));
+	_texts.push_back(new sf::Text("socketsActivated", *JCPPEngine::FontManager::GetFont("fonts/Font1.ttf"), 25));
+	_texts.push_back(new sf::Text("questsCompleted", *JCPPEngine::FontManager::GetFont("fonts/Font1.ttf"), 25));
 	for (int i = 0; i < _texts.size(); i++)
 	{
-		_texts[i]->setPosition(sf::Vector2f(statsPos.x+230, statsPos.y+10 + 65 * i));
+		_texts[i]->setPosition(sf::Vector2f(statsPos.x+310, statsPos.y+140 + 45 * i));
 	}
 	data.itemsCollected = 0;
 	data.questsCompleted = 0;

@@ -187,19 +187,19 @@ Hud::Hud(sf::RenderWindow* pWindow)
 	buttons.push_back(new HudButton("images/HudButtonHitBox.png", "", sf::Vector2f(1680, 948), spritePos, &hubPauseFunction, _debugMode)); //1 hub
 	buttons.push_back(new HudButton("images/HudButtonHitBox.png", "", sf::Vector2f(1697, 65), spritePos, &reloadFunction, _debugMode)); //2
 	buttons.push_back(new HudButton("images/HudButtonHitBox.png", "", sf::Vector2f(120, 948), spritePos, &hintFunction, _debugMode)); //3
-	int hitBoxPosY = 434;
+	int hitBoxPosY = 380;
 	int step = 137;
 	buttons.push_back(new HudButton("images/ButtonHitBox.png", "images/InLevel_Continue.png", sf::Vector2f(hitBoxPosX, hitBoxPosY), spritePos, &continueFunction, _debugMode)); //4 level
 	buttons.push_back(new HudButton("images/ButtonHitBox.png", "images/InLevel_BacktoHUB.png", sf::Vector2f(hitBoxPosX, hitBoxPosY + step), spritePos, &quitToHudFunction, _debugMode)); //5  level
 	buttons.push_back(new HudButton("images/ButtonHitBox.png", "images/InLevel_BacktoMenu.png", sf::Vector2f(hitBoxPosX, hitBoxPosY + step*2), spritePos, &quitToMenuFunction, _debugMode)); //6 level
 	buttons.push_back(new HudButton("images/ButtonHitBox.png", "images/InLevel_Stats.png", sf::Vector2f(hitBoxPosX, hitBoxPosY + step*3), spritePos, &statsFunction, _debugMode)); //7 level
-	hitBoxPosY = 472;
+	hitBoxPosY = 410;
 	step = 140;
 	buttons.push_back(new HudButton("images/ButtonHitBox.png", "images/InHUB_Continue.png", sf::Vector2f(hitBoxPosX, hitBoxPosY), spritePos, &continueFunction, _debugMode)); //8 hub
 	buttons.push_back(new HudButton("images/ButtonHitBox.png", "images/InHUB_BacktoMenu.png", sf::Vector2f(hitBoxPosX, hitBoxPosY + step), spritePos, &quitToMenuFunction, _debugMode)); //9 hub
 	buttons.push_back(new HudButton("images/ButtonHitBox.png", "images/InHUB_Stats.png", sf::Vector2f(hitBoxPosX, hitBoxPosY + step*2), spritePos, &statsFunction, _debugMode)); //10 hub
 	
-	buttons.push_back(new HudButton("images/StatsHitBox.png", "images/Stats.png", sf::Vector2f(_statsSprite->getPosition().x,765), sf::Vector2f(_statsSprite->getPosition().x, _statsSprite->getPosition().y), &statsReturnFunctin, _debugMode)); //11
+	buttons.push_back(new HudButton("images/StatsHitBox.png", "images/Stats.png", sf::Vector2f(_statsSprite->getPosition().x,705), sf::Vector2f(_statsSprite->getPosition().x, _statsSprite->getPosition().y), &statsReturnFunctin, _debugMode)); //11
 
 	registerForEvent(JCPPEngine::Event::EventType::MouseDown);
 	registerForEvent(sf::Event::MouseMoved);

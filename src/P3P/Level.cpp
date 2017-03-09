@@ -212,24 +212,6 @@ bool Level::setMap (int pLevelNumber)
 	if (pLevelNumber != _levelNumber)
 	{
 		_levelNumber = pLevelNumber;
-		if (_levelNumber == 0 || _levelNumber == _bossLevelNumber)
-		{
-			_isHub = true;
-			levelCompleted = (_levelNumber == 0);
-			if (!_reloading)
-			{
-				hud->setState(1);
-			}
-		}
-		else
-		{
-			_isHub = false;
-			levelCompleted = false;
-			if (!_reloading)
-			{
-				hud->setState(2);
-			}
-		}
 	}
 
 	if (map != nullptr)
@@ -802,33 +784,85 @@ void Level::loadMap ()
 				case 54:
 				case 55:
 				case 56:
+					position = glm::vec3(TILESIZE * x, 0, TILESIZE * y);
+					rotation = -90*(map->objectTiles[x][y] - 55);
 					temp = new GameObject("WallInteriorCorner.obj");
-					temp->setMaterial(new LitMaterial("InteriorWall.png"));
+					temp->setMaterial(new LitMaterial("WallInteriorCorner.png"));
 					temp->setParent(this);
-					temp->translate(glm::vec3(TILESIZE * x, 0, TILESIZE * y));
-					temp->rotate(glm::radians(180.0f), glm::vec3(0, 1, 0));
-					temp->rotate(glm::radians(-90.0f)*(map->objectTiles[x][y] - 53), glm::vec3(0, 1, 0));
+					temp2 = new GameObject ("WallInteriorCorner.obj");
+					mat = new LitMaterial ("WallInteriorCorner.png");
+					mat->SetFade (true, _fadeMin, _fadeMax, _distribution);
+					temp2->setMaterial (mat);
+					temp2->translate (position);
+					temp2->rotate (glm::radians (rotation), glm::vec3 (0, 1, 0));
+					temp2->translate (glm::vec3 (0, 1, 0));
+					temp2->setParent (transparencyLayer2);
+					temp2 = new GameObject ("WallInteriorCorner.obj");
+					mat = new LitMaterial ("WallInteriorCorner.png");
+					mat->SetFade (true, _fadeMin, _fadeMax, _distribution);
+					temp2->setMaterial (mat);
+					temp2->translate (position);
+					temp2->rotate (glm::radians (rotation), glm::vec3 (0, 1, 0));
+					temp2->translate (glm::vec3 (0, 2, 0));
+					temp2->setParent (transparencyLayer3);
+					temp->translate(position);
+					temp->rotate(glm::radians(rotation), glm::vec3(0, 1, 0));
 					map->objectTiles[x][y] = (int)temp;
 					break;
 				case 57: // interior wall stop
 				case 58:
 				case 59:
 				case 60:
+					position = glm::vec3(TILESIZE * x, 0, TILESIZE * y);
+					rotation = -90 * (map->objectTiles [x] [y] - 58);
 					temp = new GameObject("WallInteriorStop.obj");
-					temp->setMaterial(new LitMaterial("InteriorWall.png"));
+					temp->setMaterial(new LitMaterial("WallInteriorStop.png"));
 					temp->setParent(this);
-					temp->translate(glm::vec3(TILESIZE * x, 0, TILESIZE * y));
-					temp->rotate(glm::radians(90.0f), glm::vec3(0, 1, 0));
-					temp->rotate(glm::radians(-90.0f)*(map->objectTiles[x][y] - 57), glm::vec3(0, 1, 0));
+					temp2 = new GameObject ("WallInteriorStop.obj");
+					mat = new LitMaterial ("WallInteriorStop.png");
+					mat->SetFade (true, _fadeMin, _fadeMax, _distribution);
+					temp2->setMaterial (mat);
+					temp2->translate (position);
+					temp2->rotate (glm::radians (rotation), glm::vec3 (0, 1, 0));
+					temp2->translate (glm::vec3 (0, 1, 0));
+					temp2->setParent (transparencyLayer2);
+					temp2 = new GameObject ("WallInteriorStop.obj");
+					mat = new LitMaterial ("WallInteriorStop.png");
+					mat->SetFade (true, _fadeMin, _fadeMax, _distribution);
+					temp2->setMaterial (mat);
+					temp2->translate (position);
+					temp2->rotate (glm::radians (rotation), glm::vec3 (0, 1, 0));
+					temp2->translate (glm::vec3 (0, 2, 0));
+					temp2->setParent (transparencyLayer3);
+					temp->translate(position);
+					temp->rotate(glm::radians(rotation), glm::vec3(0, 1, 0));
 					map->objectTiles[x][y] = (int)temp;
 					break;
 				case 61: // interior wall hallway
 				case 62:
+					position = glm::vec3(TILESIZE * x, 0, TILESIZE * y);
+					rotation = -90.0f * (map->objectTiles[x][y] - 61);
 					temp = new GameObject("WallInteriorHallway.obj");
-					temp->setMaterial(new LitMaterial("InteriorWall.png"));
+					temp->setMaterial(new LitMaterial("WallInteriorHallway.png"));
 					temp->setParent(this);
-					temp->translate(glm::vec3(TILESIZE * x, 0, TILESIZE * y));
-					temp->rotate(glm::radians(-90.0f)*(map->objectTiles[x][y] - 61), glm::vec3(0, 1, 0));
+					temp2 = new GameObject ("WallInteriorHallway.obj");
+					mat = new LitMaterial ("WallInteriorHallway.png");
+					mat->SetFade (true, _fadeMin, _fadeMax, _distribution);
+					temp2->setMaterial (mat);
+					temp2->translate (position);
+					temp2->rotate (glm::radians (rotation), glm::vec3 (0, 1, 0));
+					temp2->translate (glm::vec3 (0, 1, 0));
+					temp2->setParent (transparencyLayer2);
+					temp2 = new GameObject ("WallInteriorHallway.obj");
+					mat = new LitMaterial ("WallInteriorHallway.png");
+					mat->SetFade (true, _fadeMin, _fadeMax, _distribution);
+					temp2->setMaterial (mat);
+					temp2->translate (position);
+					temp2->rotate (glm::radians (rotation), glm::vec3 (0, 1, 0));
+					temp2->translate (glm::vec3 (0, 2, 0));
+					temp2->setParent (transparencyLayer3);
+					temp->translate(position);
+					temp->rotate(glm::radians(rotation), glm::vec3(0, 1, 0));
 					map->objectTiles[x][y] = (int)temp;
 					break;
 				default:
@@ -1066,6 +1100,25 @@ void Level::loadMap ()
 		((BossCameraBehaviour*)World::singletonInstance->getMainCamera()->getBehaviour())->anchors.push_back(anchor);
 	}
 	anchors.clear();
+
+	if (_levelNumber == 0 || _levelNumber == _bossLevelNumber)
+	{
+		_isHub = true;
+		levelCompleted = (_levelNumber == 0);
+		if (!_reloading)
+		{
+			hud->setState(1);
+		}
+	}
+	else
+	{
+		_isHub = false;
+		levelCompleted = false;
+		if (!_reloading)
+		{
+			hud->setState(2);
+		}
+	}
 }
 
 //Delete all objects in the level

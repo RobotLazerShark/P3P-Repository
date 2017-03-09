@@ -11,6 +11,11 @@ void NoPress()
 
 void ButtonPress()
 {
+	//Render a temporary image in case loading the level takes a little while
+	Menu::singletonInstance->renderWindow->pushGLStates();
+	Menu::singletonInstance->renderWindow->draw(sf::Sprite (*JCPPEngine::TextureManager::GetTexture ("images/NoSignal.jpg")));
+	Menu::singletonInstance->renderWindow->draw(sf::Sprite (*JCPPEngine::TextureManager::GetTexture ("images/Hud.png")));
+	Menu::singletonInstance->renderWindow->popGLStates();
 	//Set up P3P hub (starts the game)
 	Menu::singletonInstance->Hide ();
 	AbstractGame::showCursor (false);
@@ -222,23 +227,23 @@ void Menu::CreateButtons(Camera * pCamera) {
 
 	//Setup buttons
 	_buttonOne = new MenuButton("mge/textures/White.png", "Play_Button.obj",
-		sf::Vector2f(500, 100), pCamera->getTransform(), &ButtonPress, "ButtonPush.txt", "ButtonPull.txt", glm::vec3(-0.221f, 0.297f, -0.985f), 1, "PlayButton.png");
+		sf::Vector2f(500, 100), pCamera->getTransform(), &ButtonPress, "ButtonPush.txt", "ButtonPull.txt", glm::vec3(-0.221f, 0.297f, -0.985f), 1);
 	_buttonTwo = new MenuButton("mge/textures/White.png", "General_Button.obj",
-		sf::Vector2f(480, 420), pCamera->getTransform(), &ButtonOnePress, "ButtonPush.txt", "ButtonPull.txt", glm::vec3(-0.22f, -0.106f, -0.985f), 2, "GeneralButton.png");
+		sf::Vector2f(480, 420), pCamera->getTransform(), &ButtonOnePress, "ButtonPush.txt", "ButtonPull.txt", glm::vec3(-0.22f, -0.106f, -0.985f), 2);
 	_buttonThree = new MenuButton("mge/textures/White.png", "General_Button.obj",
-		sf::Vector2f(480, 630), pCamera->getTransform(), &ButtonTwoPress, "ButtonPush.txt", "ButtonPull.txt", glm::vec3(-0.22f, -0.43f, -0.985f), 3, "GeneralButton.png");
+		sf::Vector2f(480, 630), pCamera->getTransform(), &ButtonTwoPress, "ButtonPush.txt", "ButtonPull.txt", glm::vec3(-0.22f, -0.43f, -0.985f), 3);
 	_buttonBoxOne = new MenuButton("mge/textures/Default.png", "Play_Button_Case_2.obj",
-		sf::Vector2f(500, 100), pCamera->getTransform(), &NoPress, "BoxOpen.txt", "BoxClose.txt", glm::vec3(-0.22f, 0.4685f, -0.985f), 0, "PlayButton.png");
+		sf::Vector2f(500, 100), pCamera->getTransform(), &NoPress, "BoxOpen.txt", "BoxClose.txt", glm::vec3(-0.22f, 0.4685f, -0.985f), 0);
 	_buttonBoxTwo = new MenuButton("mge/textures/Default.png", "General_Button_Case.obj",
-		sf::Vector2f(480, 420), pCamera->getTransform(), &NoPress, "BoxOpen.txt", "BoxClose.txt", glm::vec3(-0.22f, -0.005f, -0.985f), 0, "PlayButton.png");
+		sf::Vector2f(480, 420), pCamera->getTransform(), &NoPress, "BoxOpen.txt", "BoxClose.txt", glm::vec3(-0.22f, -0.005f, -0.985f), 0);
 	_buttonBoxThree = new MenuButton("mge/textures/Default.png", "General_Button_Case.obj",
-		sf::Vector2f(480, 630), pCamera->getTransform(), &NoPress, "BoxOpen.txt", "BoxClose.txt", glm::vec3(-0.22f, -0.307f, -0.985f), 0, "PlayButton.png");
+		sf::Vector2f(480, 630), pCamera->getTransform(), &NoPress, "BoxOpen.txt", "BoxClose.txt", glm::vec3(-0.22f, -0.307f, -0.985f), 0);
 	_buttonLastSkin = new MenuButton("mge/textures/Default.png", "General_Button.obj",
-		sf::Vector2f(1160, 90), pCamera->getTransform(), &LastPress, "ButtonPush.txt", "ButtonPull.txt", glm::vec3(0.68f, 0.4f, -0.96f), 6, "CharacterSelectButton.png");
+		sf::Vector2f(1160, 90), pCamera->getTransform(), &LastPress, "ButtonPush.txt", "ButtonPull.txt", glm::vec3(0.68f, 0.4f, -0.96f), 6);
 	_buttonNextSkin = new MenuButton("mge/textures/Default.png", "General_Button.obj",
-		sf::Vector2f(1075, 120), pCamera->getTransform(), &NextPress, "ButtonPush.txt", "ButtonPull.txt", glm::vec3(0.57f, 0.35f, -0.96f), 5, "CharacterSelectButton.png");
+		sf::Vector2f(1075, 120), pCamera->getTransform(), &NextPress, "ButtonPush.txt", "ButtonPull.txt", glm::vec3(0.57f, 0.35f, -0.96f), 5);
 	_buttonSelectSkin = new MenuButton("mge/textures/Default.png", "Play_Button.obj",
-		sf::Vector2f(1250, 450), pCamera->getTransform(), &SelectPress, "ButtonPush.txt", "ButtonPull.txt", glm::vec3(0.84f, -0.15f, -0.92f), 4, "PlayButton.png");
+		sf::Vector2f(1250, 450), pCamera->getTransform(), &SelectPress, "ButtonPush.txt", "ButtonPull.txt", glm::vec3(0.84f, -0.15f, -0.92f), 4);
 
 	//Scale buttons
 	_buttonBoxOne->scale(2.25f);

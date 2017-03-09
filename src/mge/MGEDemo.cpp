@@ -34,12 +34,18 @@ void MGEDemo::_initializeScene()
 	Mesh::load(config::MGE_MODEL_PATH + "DoorLeft.obj");
 	Mesh::load(config::MGE_MODEL_PATH + "DoorRight.obj");
 	Mesh::load(config::MGE_MODEL_PATH + "DoorSupport.obj");
+	Mesh::load(config::MGE_MODEL_PATH + "Floor1.obj");
+	Mesh::load(config::MGE_MODEL_PATH + "Floor2.obj");
+	Mesh::load(config::MGE_MODEL_PATH + "Floor3.obj");
+	Mesh::load(config::MGE_MODEL_PATH + "Wall.obj");
 	//Load common/large audio files
 	JCPPEngine::SoundManager::GetBuffer ("sounds/BossHurt.wav");
+	JCPPEngine::SoundManager::GetBuffer ("sounds/BossFire.wav");
 	JCPPEngine::SoundManager::GetBuffer ("sounds/Death.wav");
 	JCPPEngine::SoundManager::GetBuffer ("sounds/Spawn.wav");
 	JCPPEngine::SoundManager::GetBuffer ("sounds/DoorOpening.wav");
 	JCPPEngine::SoundManager::GetBuffer ("sounds/Unstable.wav");
+	JCPPEngine::SoundManager::GetBuffer ("sounds/Breaking.wav");
 	JCPPEngine::SoundManager::GetBuffer ("sounds/Fan.wav");
 	JCPPEngine::SoundManager::GetBuffer ("sounds/NpcTalking.wav");
 	JCPPEngine::SoundManager::GetBuffer ("sounds/PlayerMoving.wav");
