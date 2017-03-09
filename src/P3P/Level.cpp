@@ -56,11 +56,11 @@ Level::Level (int pPlayerSkin, sf::RenderWindow* pWindow)
 	_endScreen->setColor (sf::Color (255, 255, 255, 0));
 
 	//Add light
-	ShaderDataUtil::SetAmbientLight (glm::vec3 (0.8f, 0.9f, 1), 0.1f);
-	Light* dirLight = new Light (glm::vec3 (1, 1, 1), 0.45f);
-	dirLight->rotate (glm::radians (25.0f), glm::vec3 (0, 1, 0));
-	dirLight->rotate (glm::radians (45.0f), glm::vec3 (1, 0, 0));
-	dirLight->setParent (World::singletonInstance);
+//	ShaderDataUtil::SetAmbientLight (glm::vec3 (0.8f, 0.9f, 1), 0.1f);
+//	Light* dirLight = new Light (glm::vec3 (1, 1, 1), 0.45f);
+//	dirLight->rotate (glm::radians (25.0f), glm::vec3 (0, 1, 0));
+//	dirLight->rotate (glm::radians (45.0f), glm::vec3 (1, 0, 0));
+//	dirLight->setParent (World::singletonInstance);
 
 	setParent (World::singletonInstance);
 	//Add transparency layers (transparent objects need to be rendered in correct order, before non-transparent objects)
@@ -175,6 +175,7 @@ void Level::update (float pStep, bool pUpdateWorldTransform)
 		loadMap ();
 		_nextLevel = -1;
 		_reloading = false;
+		hud->enable();
 	}
 }
 
@@ -1065,8 +1066,6 @@ void Level::loadMap ()
 		((BossCameraBehaviour*)World::singletonInstance->getMainCamera()->getBehaviour())->anchors.push_back(anchor);
 	}
 	anchors.clear();
-
-	hud->enable();
 }
 
 //Delete all objects in the level

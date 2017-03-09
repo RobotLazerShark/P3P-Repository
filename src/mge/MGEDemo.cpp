@@ -56,19 +56,19 @@ void MGEDemo::_initializeScene()
 
 	_window->display ();
 
-//	_menu = new Menu (camera, _window, _world);
-//	_menu->setParent (_world);//Menu crashes game on escape exit (is world deleted?) Menu's skinindex is not updated.
+	_menu = new Menu (camera, _window, _world);
+	_menu->setParent (_world);//Menu crashes game on escape exit (is world deleted?) Menu's skinindex is not updated.
 
 	//Set up P3P hub (starts the game)
-	_fader = new SceneFader (_window);
-	_fader->setParent (_world);
-	_game = new Level (1, _window);
+//	_fader = new SceneFader (_window);
+//	_fader->setParent (_world);
+//	_game = new Level (1, _window);
 }
 
 MGEDemo::~MGEDemo()
 {
-	_game->clear ();
-	delete _game;
-	delete _fader;
-//	delete _menu;
+//	_game->clear ();
+//	delete _game;
+//	delete _fader;
+	delete _menu;
 }

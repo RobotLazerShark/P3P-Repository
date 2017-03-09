@@ -49,6 +49,7 @@ public:
 	Menu(Camera * pCamera, sf::RenderWindow * pRend, World * pWorld);
 	~Menu();
 
+	void render ();
 	void ProcessEvent(JCPPEngine::Event* pEvent) override;
 	void update(float pStep, bool pUpdateWorldTransform = false) override;
 	void Hide();

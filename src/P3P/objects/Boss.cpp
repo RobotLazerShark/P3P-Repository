@@ -35,18 +35,6 @@ void stopFunctionEnd (int pAnimIndex, GameObject* pOwner)
 			JCPPEngine::SoundManager::Clean ();//Stop all playing sounds
 			JCPPEngine::SoundManager::PlaySound (new sf::Sound (*JCPPEngine::SoundManager::GetBuffer ("sounds/RecoveringMemory.wav")));
 			Level::singletonInstance->startFade ();
-		case 0:
-			sound = new sf::Sound (*JCPPEngine::SoundManager::GetBuffer ("sounds/BossFire.wav"));
-			sound->setPitch (1 + (JCPPEngine::Random::Value () - 0.5f) * 0.5f);
-			sound->setVolume (40);
-			JCPPEngine::SoundManager::PlaySound (sound);
-			proj = new Projectile(boss->getWorldPosition(), boss->_position [0] + 50, boss->_position [1], boss, true);
-			proj->setParent(Level::singletonInstance);
-			boss->projectiles.push_back(proj);
-			//Play shooting animation
-			boss->_barrel1Animator->playAnimation (1, false, false);
-			boss->_barrel2Animator->playAnimation (1, false, false, &stopFunctionBoss, boss);
-			break;
 		default:
 			break;
 	}
@@ -63,29 +51,29 @@ Boss::Boss(int pX, int pZ) : GameObject()
 	JCPPEngine::SoundManager::PlayMusicLoop ("sounds/BackgroundLoop2.wav");
 
 	//Set up model
-	GameObject* modelParent = new GameObject ();//Prevent shadow animating with boss
-	modelParent->setParent (this);
-	_model = new GameObject("BossBody.obj");
-	_model->translate(glm::vec3(0, 2, 0));
-	_model->setMaterial(new LitMaterial("BossBody.png"));
-	_model->setParent(modelParent);
-	_model->rotate(glm::radians(90.), glm::vec3(0, 1, 0));
+	_model = new GameObject ();//Prevent shadow animating with boss
+	_model->setParent (this);
+	GameObject* bodyModel = new GameObject("BossBody.obj");
+	bodyModel->translate(glm::vec3(0, 2, 0));
+	bodyModel->setMaterial(new LitMaterial("BossBody.png"));
+	bodyModel->setParent(_model);
+	_model->rotate(glm::radians(90.0f), glm::vec3(0, 1, 0));
 
 	_bodyAnimator = new AnimationBehaviour({ "BossFloat.txt", "BossFinal.txt" });
-	modelParent->setBehaviour(_bodyAnimator);
+	bodyModel->setBehaviour(_bodyAnimator);
 	_bodyAnimator->playAnimation(0, true);
 
-	_shadow = new GameObject ("ShadowPlane.obj");
-	_shadow->setMaterial (new TextureMaterial ("BossShadow.png"));
-	_shadow->setParent (modelParent);
-	_shadow->translate (glm::vec3 (0, 0.1f, 0));
+	GameObject* shadow = new GameObject ("ShadowPlane.obj");
+	shadow->setMaterial (new TextureMaterial ("BossShadow.png"));
+	shadow->setParent (_model);
+	shadow->translate (glm::vec3 (0, 0.1f, 0));
 	GameObject* faceModel = new GameObject ("BossFace.obj");
-	faceModel->setParent (_model);
+	faceModel->setParent (bodyModel);
 	_faceMaterial = new LitMaterial ("BossFace1.png");
 	faceModel->setMaterial (_faceMaterial);
 	GameObject* barrel1Model = new GameObject ("BossBarrelBase.obj");
 	barrel1Model->setMaterial (new LitMaterial ("BossGun.png"));
-	barrel1Model->setParent (_model);
+	barrel1Model->setParent (bodyModel);
 	_barrel1Animator = new AnimationBehaviour ({ "Barrel1Open.txt", "Barrel1Fire.txt" });
 	barrel1Model->setBehaviour (_barrel1Animator);
 	GameObject* barrel2Model = new GameObject ("BossBarrelEnd.obj");
@@ -138,26 +126,24 @@ void Boss::update(float pStep, bool pUpdateWorldTransform)
 
 	if (_dead)
 	{
-		if (_shadow != nullptr)
+		if (!_deathAnimationPlayed)
 		{
 			Player::singletonInstance->_noMove = true;
 			JCPPEngine::SoundManager::PlaySound(new sf::Sound(*JCPPEngine::SoundManager::GetBuffer("sounds/BossDeath.wav")));
-			_shadow->setParent(nullptr);
-			delete _shadow;
-			_shadow = nullptr;
 			_bodyAnimator->playAnimation(1, false, false, &stopFunctionEnd, this);
+			_deathAnimationPlayed = true;
 		}
+		return;
 	}
 	else if (!_pause)
 	{
 		lookAt(Player::singletonInstance->getActualWorldPosition());
-		if (_dead && _shadow != nullptr)
+		if (_dead && !_deathAnimationPlayed)
 		{
 			Player::singletonInstance->blockMovement = true;
 			JCPPEngine::SoundManager::PlaySound(new sf::Sound(*JCPPEngine::SoundManager::GetBuffer("sounds/BossDeath.wav")));
-			_shadow->setParent(nullptr);
-			delete _shadow;
-			_cutSceneAnimator->playAnimation(0, false, false, &stopFunctionEnd, this);
+			_bodyAnimator->playAnimation (1, false, false, &stopFunctionEnd, this);
+			_deathAnimationPlayed = true;
 		}
 
 		if (!_noFire)
@@ -310,7 +296,6 @@ void Boss::pause(bool active)
 
 void Boss::lookAt(glm::vec3 pos)
 {
-	cout << "hello" << endl;
 	glm::vec2  direction = glm::vec2(pos.x - getWorldPosition().x, pos.z - getWorldPosition().z);
 
 	if (_oldDirection != glm::vec2(0, 0) && direction != glm::vec2(0, 0))

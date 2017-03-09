@@ -64,7 +64,7 @@ SelectWheel::SelectWheel(std::string pSpritePath, std::string pBackModelPath, st
 
 	_selectButton = new GameObject(pSelectButton);
 	_selectButton->setParent(this);
-	_selectButton->setMaterial(new LitMaterial("Floor2.jpg"));
+	_selectButton->setMaterial(new LitMaterial("ButtonGreen.png"));
 	_selectButton->scale(0.5f);
 	_selectButton->translate(glm::vec3(-0.55f, 0, 0.1f));
 

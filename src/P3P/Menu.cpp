@@ -12,11 +12,11 @@ void NoPress()
 void ButtonPress()
 {
 	//Set up P3P hub (starts the game)
-	Menu::singletonInstance->doHide = true;
+	Menu::singletonInstance->Hide ();
 	AbstractGame::showCursor (false);
 	Menu::singletonInstance->_fader = new SceneFader (Menu::singletonInstance->renderWindow);
 	Menu::singletonInstance->_fader->setParent (World::singletonInstance);
-	Menu::singletonInstance->_game = new Level (Menu::singletonInstance->characterSkinIndex, Menu::singletonInstance->renderWindow);
+	Menu::singletonInstance->_game = new Level (Menu::singletonInstance->characterSkinIndex + 1, Menu::singletonInstance->renderWindow);
 }
 
 void ButtonOnePress()
@@ -108,6 +108,21 @@ void Menu::ProcessEvent(JCPPEngine::Event* pEvent)
 
 }
 
+void Menu::render ()
+{
+	//Don't render if hidden
+	if (isHidden)
+		return;
+
+	for (MenuButton * pMenuButton: _buttons)
+	{
+		//Render sprites
+		renderWindow->pushGLStates();
+		renderWindow->draw(*pMenuButton->sprite);
+		renderWindow->popGLStates();
+	}
+}
+
 void Menu::update(float pStep, bool pUpdateWorldTransform)
 {
 	//Deactivate update if isHidden
@@ -117,14 +132,6 @@ void Menu::update(float pStep, bool pUpdateWorldTransform)
 	//If doHide flag is set then "hide" 
 	if (doHide)
 		Hide();
-
-	for (MenuButton * pMenuButton: _buttons)
-	{
-		//Render sprites
-		renderWindow->pushGLStates();
-		renderWindow->draw(*pMenuButton->sprite);
-		renderWindow->popGLStates();
-	}
 
 	//Foreach button in the vector
 	for (MenuButton * pMenuButton : _buttons)

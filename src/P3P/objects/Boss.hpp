@@ -30,9 +30,9 @@ class Boss : public GameObject
 
 	private:
 		bool _dead = false;
+		bool _deathAnimationPlayed = false;
 		GameObject* _model = nullptr;
 		LitMaterial* _faceMaterial = nullptr;
-		GameObject* _shadow = nullptr;
 		int liveCount = 4;
 		float _timer = 0;
 		const float SHOOTING_FREQUENCY = 2.0f;

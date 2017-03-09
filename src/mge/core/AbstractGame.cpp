@@ -15,6 +15,7 @@ using namespace std;
 #include <JCPPEngine/InputManager.hpp>
 #include "mge/core/World.hpp"
 #include <P3P/Level.hpp>
+#include <P3P/Menu.hpp>
 
 AbstractGame* AbstractGame::singletonInstance = nullptr;
 static float timeSinceProgramStart;
@@ -84,6 +85,10 @@ AbstractGame::~AbstractGame()
     }
     delete _renderer;
     delete _world;
+    if (Menu::singletonInstance != nullptr)
+    {
+	delete Menu::singletonInstance;
+    }
     Mesh::ClearCache ();
     Texture::ClearCache ();
     ColorMaterial::clearShaderProgram ();
@@ -216,6 +221,11 @@ void AbstractGame::run ()
 				Level::renderBackground (_window);
 				_render ();
 				Level::render (_window);
+			}
+			else if (Menu::singletonInstance != nullptr && !Menu::singletonInstance->isHidden)
+			{
+				Menu::singletonInstance->render ();
+				_render ();
 			}
 			else
 			{

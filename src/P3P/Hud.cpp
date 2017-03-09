@@ -204,6 +204,30 @@ Hud::Hud(sf::RenderWindow* pWindow)
 	registerForEvent(JCPPEngine::Event::EventType::MouseDown);
 	registerForEvent(sf::Event::MouseMoved);
 
+	//show pause menu with no selection
+	switch (state)
+	{
+	case 4: //level
+		_levelPauseSprite->setColor(sf::Color(255, 255, 255, 255));
+		_hubPauseSprite->setColor(sf::Color(255, 255, 255, 0));
+		_statsSprite->setColor(sf::Color(255, 255, 255, 0));
+		break;
+	case 5: //hub
+		_levelPauseSprite->setColor(sf::Color(255, 255, 255, 0));
+		_hubPauseSprite->setColor(sf::Color(255, 255, 255, 255));
+		_statsSprite->setColor(sf::Color(255, 255, 255, 0));
+		break;
+	case 6: //stats
+		_levelPauseSprite->setColor(sf::Color(255, 255, 255, 0));
+		_hubPauseSprite->setColor(sf::Color(255, 255, 255, 0));
+		_statsSprite->setColor(sf::Color(255, 255, 255, 255));
+		break;
+	default:
+		_levelPauseSprite->setColor(sf::Color(255, 255, 255, 0));
+		_hubPauseSprite->setColor(sf::Color(255, 255, 255, 0));
+		_statsSprite->setColor(sf::Color(255, 255, 255, 0));
+		break;
+	}
 
 	if (Stats::singletonInstance == nullptr)
 	{

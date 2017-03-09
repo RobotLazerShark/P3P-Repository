@@ -1,21 +1,21 @@
 time = 0
-position = 0, 0.3, 0
+position = 0, 2.3, 0
 -
 time = 0:15
-position = 0, 0.24, 0
+position = 0, 2.24, 0
 -
 time = 0:30
-position = 0, 0.06, 0
+position = 0, 2.06, 0
 -
 time = 0:45
-position = 0, 0, 0
+position = 0, 2, 0
 -
 time = 0:60
-position = 0, 0.06, 0
+position = 0, 2.06, 0
 -
 time = 0:75
-position = 0, 0.24, 0
+position = 0, 2.24, 0
 -
 time = 0:90
-position = 0, 0.3, 0
+position = 0, 2.3, 0
 --
