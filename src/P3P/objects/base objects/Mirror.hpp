@@ -14,6 +14,7 @@ class Mirror : public ButtonTarget
 {
 	public:
 		Mirror(int pX, int pZ);
+		~Mirror ();
 		bool setActive(bool pActive);
 		void update(float pStep, bool pUpdateWorldTransform = false) override;
 		bool up = false;
@@ -30,6 +31,7 @@ class Mirror : public ButtonTarget
 		float _lookedAtFor = 0;
 		float _lookingDuration = 1.5f;
 		glm::vec3 _cameraPositionBeforeTransition;
+		int _position [2] = { 0, 0 };
 };
 
 #endif

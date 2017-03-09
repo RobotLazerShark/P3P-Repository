@@ -27,6 +27,7 @@ class Level : public GameObject
 		std::vector <std::string> _inventoryCopy;
 		std::vector<Quest*> _activeQuestsCopy;
 		int _questTalksCopy = 0;
+		int _completedQuestsCopy = 0;
 		bool _stop = false;
 		bool _reloading = false;
 		int _playerSkin = 1;
@@ -40,7 +41,7 @@ class Level : public GameObject
 		float _endTimer = 0;
 	public:
 		int levelKey = 0;
-		int _bossLevelNumber = 3;
+		int _bossLevelNumber = 8;
 		Background* _background = nullptr;
 		Level (int pPlayerSkin, sf::RenderWindow* pWindow);
 		~Level ();
@@ -65,6 +66,7 @@ class Level : public GameObject
 		GameObject* transparencyLayer1 = nullptr;
 		GameObject* transparencyLayer2 = nullptr;
 		GameObject* transparencyLayer3 = nullptr;
+		GameObject* transparencyLayer4 = nullptr;
 };
 
 #endif

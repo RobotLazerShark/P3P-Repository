@@ -2522,6 +2522,7 @@ int setLevelKey (lua_State* pLua)
 	if (lua_isinteger (pLua, -1))
 	{
 		Level::singletonInstance->levelKey = lua_tointeger (pLua, -1);
+		Player::singletonInstance->_progressTracker->checkWin ();
 	}
 	return 0;
 }

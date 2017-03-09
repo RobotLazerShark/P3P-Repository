@@ -28,9 +28,18 @@ Mirror::Mirror(int pX, int pZ) : ButtonTarget()
 	mirror->rotate (glm::radians (-90.0f), glm::vec3 (0, 0, 1));
 	translate(glm::vec3(pX * Level::TILESIZE, 0, pZ * Level::TILESIZE));
 
+	_position [0] = pX;
+	_position [1] = pZ;
+
 	//animator
 	_animator = new AnimationBehaviour({ "MirrorUp.txt","MirrorDown.txt" });
 	mirror->setBehaviour(_animator);
+}
+Mirror::~Mirror ()
+{
+	Level::map->objectTiles [_position[0]] [_position[1]] = (int)nullptr;
+	Level::map->baseTiles [_position[0]] [_position[1]] = (int)nullptr;
+	GameObject::~GameObject ();
 }
 
 void animationEndFunction(int pAnimIndex, GameObject* pOwner)

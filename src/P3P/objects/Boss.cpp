@@ -278,6 +278,12 @@ void Boss::superAttack()
 		proj->setParent(Level::singletonInstance);
 		projectiles.push_back(proj);
 
+		//Play shooting sound
+		sf::Sound* sound = new sf::Sound (*JCPPEngine::SoundManager::GetBuffer ("sounds/BossFire.wav"));
+		sound->setPitch (1 + (JCPPEngine::Random::Value () - 0.5f) * 0.5f);
+		sound->setVolume (40);
+		JCPPEngine::SoundManager::PlaySound (sound);
+
 		//play shooting animation
 		_barrel1Animator->playAnimation(1, false, false);
 		_barrel2Animator->playAnimation(1, false, false, &stopFunctionBoss, this);

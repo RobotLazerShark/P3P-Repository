@@ -246,25 +246,25 @@ void AbstractGame::run ()
 			if (timeSinceLastRender != 0) _fps = 1.0f / timeSinceLastRender;
 		}
 		JCPPEngine::EventHandler::ProcessEvents ();
-		if (JCPPEngine::InputManager::GetKeyDown (sf::Keyboard::Escape))
-		{
-			Stop ();
-		}
-		else if (JCPPEngine::InputManager::GetKeyDown (sf::Keyboard::Num1))
-		{
-			_luaParser->Refresh ();
-		}
-		else if (JCPPEngine::InputManager::GetKeyDown (sf::Keyboard::Num2))
-		{
-			_luaParser->SafeRefresh ();
-		}
+//		if (JCPPEngine::InputManager::GetKeyDown (sf::Keyboard::Escape))
+//		{
+//			Stop ();
+//		}
+//		else if (JCPPEngine::InputManager::GetKeyDown (sf::Keyboard::Num1))
+//		{
+//			_luaParser->Refresh ();
+//		}
+//		else if (JCPPEngine::InputManager::GetKeyDown (sf::Keyboard::Num2))
+//		{
+//			_luaParser->SafeRefresh ();
+//		}
 	}
-	while (!JCPPEngine::InputManager::GetKeyDown (sf::Keyboard::Space))//[TESTING]
-	{
-		//Wait until we close the window, so we can still read error messages.
-		JCPPEngine::InputManager::Update ();
-		JCPPEngine::EventHandler::ProcessEvents ();
-	} 
+//	while (!JCPPEngine::InputManager::GetKeyDown (sf::Keyboard::Space))//[TESTING]
+//	{
+//		//Wait until we close the window, so we can still read error messages.
+//		JCPPEngine::InputManager::Update ();
+//		JCPPEngine::EventHandler::ProcessEvents ();
+//	} 
 }
 
 void AbstractGame::_update(float pStep) {

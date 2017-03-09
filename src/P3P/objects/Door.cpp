@@ -17,6 +17,7 @@ Door::Door (int pX, int pZ, int pNextLevelNumber, int pOrientation) : GameObject
 	shadow->badScale (glm::vec3 (1, 1, 2));
 	shadow->translate (glm::vec3 (0, 0, 0.25f));
 	shadow->setParent (_model);
+	float rotation = 0;
 	switch (pOrientation)
 	{
 		case 1:
@@ -25,11 +26,13 @@ Door::Door (int pX, int pZ, int pNextLevelNumber, int pOrientation) : GameObject
 			break;
 		case 2:
 			//Door facing down
+			rotation = -90;
 			_model->rotate (glm::radians (-90.0f), glm::vec3 (0, 1, 0));
 			Level::map->objectTiles [pX-1] [pZ] = (int)this;
 			break;
 		case 3:
 			//Door facing left
+			rotation = -180;
 			_model->rotate (glm::radians (-180.0f), glm::vec3 (0, 1, 0));
 			Level::map->objectTiles [pX] [pZ-1] = (int)this;
 			break;
@@ -42,11 +45,12 @@ Door::Door (int pX, int pZ, int pNextLevelNumber, int pOrientation) : GameObject
 	GameObject* backside = new GameObject ("plane.obj");
 	_portal = new TextureMaterial ("Portal.png", 1, true);
 	backside->setMaterial (_portal);
-	backside->rotate (glm::radians (90.0f), glm::vec3 (0, 1, 0));
+	backside->translate (glm::vec3 (pX, 0, pZ));
+	backside->rotate (glm::radians (rotation + 90.0f), glm::vec3 (0, 1, 0));
 	backside->rotate (glm::radians (90.0f), glm::vec3 (1, 0, 0));
 	backside->translate (glm::vec3 (-0.5, -0.265f, -1));
 	backside->badScale (glm::vec3 (0.09f, 1, 0.09f));
-	backside->setParent (_model);
+	backside->setParent (Level::singletonInstance->transparencyLayer4);
 	GameObject* supports = new GameObject ("DoorSupport.obj");
 	supports->setMaterial (new LitMaterial ("Door.png"));
 	supports->setParent (_model);

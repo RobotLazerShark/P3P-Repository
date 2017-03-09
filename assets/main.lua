@@ -19,7 +19,7 @@ function main ()
 			then
 				getAnnoyed (Player.questTalks ())
 			else
-				explainQuest (Player.completedQuests () + 1, true)
+				explainQuest (Player.completedQuests (), true)
 			end
 		end
 	end
@@ -120,17 +120,17 @@ function explainControls ()
 	Lua.wait (pause)
 	text = text.."\nw¡tH fùrhTËr íñstRüçti0ns. Yoú'l1 nëEd tHe he|p."
 	Npc.updateDialog (text)
-	Player.giveQuest ("QuestItem1", 0.5)
-	Level.setKey (3);--unlock level 1, 2 and 3 (1A, 1B, 1C)
+	Player.giveQuest ("QuestItem1", 0.4)
+	Level.setKey (3)--unlock level 1, 2 and 3 (1A, 1B, 1C)
 	Player.waitForKey ()
 	Npc.stopDialog ()--Hide the textbox and text
-	Player.lock (false);--The player is now allowed to move again
+	Player.lock (false)--The player is now allowed to move again
 	explainedControls = true--We won't explain the controls again
 end
 
 --the player just completed a quest, give and explain the new quest.
 function explainQuest (pCurrentQuest, pGiveNewQuest)
-	if pCurrentQuest == 1--Quest 1 is explained and given when the controls are explained
+	if pCurrentQuest == 0--Quest 1 is explained and given when the controls are explained
 	then
 		Player.lock (true)
 		text = "G|¡t©hèd B0t:"
@@ -141,7 +141,7 @@ function explainQuest (pCurrentQuest, pGiveNewQuest)
 		Player.waitForKey ()
 		Npc.stopDialog ()
 		Player.lock (false)
-	elseif pCurrentQuest == 2
+	elseif pCurrentQuest == 1
 	then
 		Player.lock (true)
 		text = "Glitched Bot:"
@@ -162,18 +162,42 @@ function explainQuest (pCurrentQuest, pGiveNewQuest)
 		text = text.."\n"
 		Npc.updateDialog (text)
 		Lua.wait (pause)
-		text = text.."\nI opened the door for you, its on the left."
+		text = text.."\nI opened the door for you, its on the left this time."
 		Npc.updateDialog (text)
-		Player.waitForKey ()
 		if pGiveNewQuest
 		then
-			Player.giveQuest ("QuestItem2", 0.5)
+			Player.giveQuest ("QuestItem2", 0.3)
 			Level.setKey (6)--unlock 2A, 2B, 2C
 		end
+		Player.waitForKey ()
 		Npc.stopDialog ()
 		Player.lock (false)
-	elseif pCurrentQuest > 2
+	elseif pCurrentQuest == 2
 	then
+		Player.lock (true)
+		text = "Glitched Bot:"
+		Npc.showDialog (text)
+		Lua.wait (pause)
+		text = text.."\nAh, much better!"
+		Npc.updateDialog (text)
+		Lua.wait (pause)
+		text = text.."\nThere is only one more thing that needs fixing."
+		Npc.updateDialog (text)
+		Lua.wait (pause)
+		text = text.."\nMy... welding units. They are very important to me."
+		Npc.updateDialog (text)
+		Lua.wait (pause)
+		text = text.."\nThe door is on the right."
+		Npc.updateDialog (text)
+		if pGiveNewQuest
+		then
+			Player.giveQuest ("QuestItem3", 0.3)
+			Level.setKey (9)--unlock 3A, 3B, and bosslevel
+		end
+		Player.waitForKey ()
+		Npc.stopDialog ()
+		Player.lock (false)
+	else
 		--The last quest has been completed
 		Player.lock (true)
 		text = "Evil Bot:"

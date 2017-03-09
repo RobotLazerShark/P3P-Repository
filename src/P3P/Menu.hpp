@@ -53,7 +53,7 @@ public:
 	void ProcessEvent(JCPPEngine::Event* pEvent) override;
 	void update(float pStep, bool pUpdateWorldTransform = false) override;
 	void Hide();
-	void UnHide();
+	void UnHide(bool pDeleteLevel = false);
 	void CreateButtons(Camera * pCamera);
 };
 #endif

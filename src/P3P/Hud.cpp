@@ -27,16 +27,13 @@ void quitToHudFunction()
 	{
 		Stats::singletonInstance->setActive(statsOn);
 	}
+	AbstractGame::showCursor (false);
 	Level::singletonInstance->loadLevel(0);
 }
 
 void quitToMenuFunction()
 {
-	Menu::singletonInstance->_game->clear ();
-	delete Menu::singletonInstance->_game;
-	delete Menu::singletonInstance->_fader;
-	AbstractGame::showCursor (true);
-	Menu::singletonInstance->UnHide ();
+	Menu::singletonInstance->UnHide (true);
 }
 
 void hintFunction()

@@ -41,13 +41,13 @@ class Player : public GameObject, public JCPPEngine::AbstractListener
 		glm::vec3 _modelOrientation = glm::vec3 (0, 0, 0);
 		AnimationBehaviour* _rotationAnimator = nullptr;
 		int controlsMode = 0;
+		ProgressTracker* _progressTracker = nullptr;
 
 		glm::vec3 getActualWorldPosition();
 		
 	protected:
 
     private:
-        ProgressTracker* _progressTracker = nullptr;
 		GameObject* _model = nullptr;
 		GameObject* _shadow = nullptr;
 		AnimationBehaviour* _wheelAnimator = nullptr;

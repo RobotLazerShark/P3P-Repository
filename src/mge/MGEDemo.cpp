@@ -7,6 +7,7 @@
 #include <mge/objects/Light.hpp>
 #include <mge/core/Mesh.hpp>
 #include <P3P/Menu.hpp>
+#include <JCPPEngine/SoundManager.hpp>
 
 
 //construct the game class into _window and _renderer (other parts are initialized by build)
@@ -61,6 +62,7 @@ void MGEDemo::_initializeScene()
 	_world->setMainCamera (camera);
 
 	_window->display ();
+	JCPPEngine::SoundManager::PlayMusicLoop ("sounds/BackgroundLoop.wav");
 
 	_menu = new Menu (camera, _window, _world);
 	_menu->setParent (_world);//Menu crashes game on escape exit (is world deleted?) Menu's skinindex is not updated.

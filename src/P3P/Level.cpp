@@ -49,7 +49,7 @@ Level::Level (int pPlayerSkin, sf::RenderWindow* pWindow)
 	singletonInstance = this;
 	_hudOverlay = new sf::Sprite (*JCPPEngine::TextureManager::GetTexture ("images/Hud.png"));
 	_playerSkin = pPlayerSkin;
-	JCPPEngine::SoundManager::PlayMusicLoop ("sounds/BackgroundLoop.wav");
+//	JCPPEngine::SoundManager::PlayMusicLoop ("sounds/BackgroundLoop.wav");
 
 	_background = new Background ();
 	_endScreen = new sf::Sprite (*JCPPEngine::TextureManager::GetTexture ("images/EndScreen.png"));
@@ -70,6 +70,8 @@ Level::Level (int pPlayerSkin, sf::RenderWindow* pWindow)
 	transparencyLayer2->setParent (World::singletonInstance);
 	transparencyLayer3 = new GameObject ();
 	transparencyLayer3->setParent (World::singletonInstance);
+	transparencyLayer4 = new GameObject ();
+	transparencyLayer4->setParent (World::singletonInstance);
 
 	hud = new Hud(pWindow);
 	hud->setParent(this);
@@ -79,10 +81,24 @@ Level::Level (int pPlayerSkin, sf::RenderWindow* pWindow)
 //Destructor
 Level::~Level ()
 {
+	singletonInstance = nullptr;
+	setParent (nullptr);
+	delete transparencyLayer1;
+	transparencyLayer1 = nullptr;
+	delete transparencyLayer2;
+	transparencyLayer2 = nullptr;
+	delete transparencyLayer3;
+	transparencyLayer3 = nullptr;
+	delete transparencyLayer4;
+	transparencyLayer4 = nullptr;
 	delete map;
+	map = nullptr;
 	delete hud;
+	hud = nullptr;
 	delete _hudOverlay;
+	_hudOverlay = nullptr;
 	delete _background;
+	_background = nullptr;
 	//delete bossPuzzletracker
 	for (ProgressTracker * bossPuzzleTracker : bossPuzzlesTrackers)
 	{
@@ -107,8 +123,6 @@ Level::~Level ()
 		Npc::singletonInstance->setParent (nullptr);
 		delete Npc::singletonInstance;
 	}
-	singletonInstance = nullptr;
-	setParent (nullptr);
 	GameObject::~GameObject ();
 }
 
@@ -285,6 +299,7 @@ void Level::loadMap ()
 				case 8: // Mirror
 					temp = new Mirror(x, y);
 					temp->setParent(this);
+					map->baseTiles[x][y] = (int)temp;
 					map->baseTiles[x][y] = (int)temp;
 					break;
 				case 9:
@@ -679,6 +694,8 @@ void Level::loadMap ()
 					if (_activeQuestsCopy.size () > 0)
 					{
 						((Npc*)temp)->activeQuests = std::vector <Quest*> (_activeQuestsCopy);
+						((Npc*)temp)->questTalks = _questTalksCopy;
+						((Npc*)temp)->completedQuests = _completedQuestsCopy;
 					}
 					break;
 				case 37:
@@ -1133,6 +1150,7 @@ void Level::clear ()
 	if (Npc::singletonInstance != nullptr)
 	{
 		_questTalksCopy = Npc::singletonInstance->questTalks;
+		_completedQuestsCopy = Npc::singletonInstance->completedQuests;
 		if (Npc::singletonInstance->activeQuests.size () > 0)
 		{
 			_activeQuestsCopy.clear ();
@@ -1148,6 +1166,7 @@ void Level::clear ()
 	transparencyLayer1->removeAll ();
 	transparencyLayer2->removeAll ();
 	transparencyLayer3->removeAll ();
+	transparencyLayer4->removeAll ();
 
 	//Delete gates
 	for (Gate* gate : _gates)

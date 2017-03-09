@@ -16,8 +16,9 @@ void ButtonPress()
 	Menu::singletonInstance->renderWindow->draw(sf::Sprite (*JCPPEngine::TextureManager::GetTexture ("images/NoSignal.jpg")));
 	Menu::singletonInstance->renderWindow->draw(sf::Sprite (*JCPPEngine::TextureManager::GetTexture ("images/Hud.png")));
 	Menu::singletonInstance->renderWindow->popGLStates();
+	Menu::singletonInstance->renderWindow->display ();
 	//Set up P3P hub (starts the game)
-	Menu::singletonInstance->Hide ();
+	Menu::singletonInstance->doHide = true;
 	AbstractGame::showCursor (false);
 	Menu::singletonInstance->_fader = new SceneFader (Menu::singletonInstance->renderWindow);
 	Menu::singletonInstance->_fader->setParent (World::singletonInstance);
@@ -69,8 +70,10 @@ Menu* Menu::singletonInstance = nullptr;
 
 Menu::Menu(Camera * pCamera, sf::RenderWindow * pRend, World * pWorld) : GameObject()
 {
-	if (singletonInstance != nullptr) 
-		return;
+	if (singletonInstance != nullptr)
+	{
+		delete singletonInstance;
+	}
 	singletonInstance = this;
 
 	renderWindow = pRend;
@@ -91,6 +94,18 @@ Menu::Menu(Camera * pCamera, sf::RenderWindow * pRend, World * pWorld) : GameObj
 
 Menu::~Menu()
 {
+	if (_fader != nullptr)
+	{
+		_fader->setParent(nullptr);
+		delete _fader;
+		_fader = nullptr;
+	}
+	if (_game != nullptr)
+	{
+		_game->clear();
+		delete _game;
+		_game = nullptr;
+	}
 	unregisterForEvent(JCPPEngine::Event::EventType::MouseDown);
 	singletonInstance = nullptr;
 	setParent(nullptr);
@@ -207,10 +222,21 @@ void Menu::Hide() {
 	doHide = false;
 }
 
-void Menu::UnHide() {
+void Menu::UnHide(bool pDeleteLevel) {
 	//Create New Menu Objects
-	setParent (world);
+	setParent (World::singletonInstance);
 	isHidden = false;
+
+	if (pDeleteLevel)
+	{
+		_fader->setParent (nullptr);
+		delete _fader;
+		_fader = nullptr;
+		_game->clear ();
+		delete _game;
+		_game = nullptr;
+		AbstractGame::showCursor (true);
+	}
 }
 
 void Menu::CreateButtons(Camera * pCamera) {

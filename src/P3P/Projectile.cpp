@@ -69,20 +69,35 @@ void Projectile::update(float pStep, bool pUpdateWorldTransform)
 		}
 		else
 		{
+			glm::vec3 pos = getWorldPosition();
 			if (_normalProjectile)
 			{
 				//if distance to target bigger than step
-				if (glm::distance(getWorldPosition(), _target) >= SPEED*pStep)
+				if (glm::distance(pos, _target) >= SPEED*pStep)
 				{
 					if (!reflected)
 					{
+						int curX = (int)round (pos.x);
+						int curZ = (int)round (pos.z);
+						Mirror* mirror = dynamic_cast <Mirror*> ((GameObject*)Level::map->baseTiles[curX][curZ]);
+						if (mirror != nullptr && mirror->up && !mirror->broken)
+						{
+							mirror->broken = true;
+							mirror->setActive(false);
+							_target = _startPosition;
+							reflected = true;
+							_targetIcon->setParent(nullptr);
+							delete _targetIcon;
+							_targetIcon = nullptr;
+							JCPPEngine::SoundManager::PlaySound(new sf::Sound(*JCPPEngine::SoundManager::GetBuffer("sounds/ProjectileBounce.wav")));
+						}
 						//move to target
 						translate(glm::vec3(0, 0, SPEED*pStep));
 					}
 					else
 					{
 						//if reached boss
-						if (glm::distance(getWorldPosition(), _target) < 1)
+						if (glm::distance(pos, _target) < 1)
 						{
 							_owner->removeProjectile(this);
 							_owner->damage();
@@ -127,7 +142,7 @@ void Projectile::update(float pStep, bool pUpdateWorldTransform)
 			else //super attack projectile
 			{
 				translate(glm::vec3(0, -0.1, 0));
-				if (getWorldPosition().y <= 0.5f)
+				if (pos.y <= 0.5f)
 				{
 					if (Player::singletonInstance->_currentTile[0] == _targetTile[0] && Player::singletonInstance->_currentTile[1] == _targetTile[1])
 					{

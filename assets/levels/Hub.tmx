@@ -1,24 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" renderorder="right-down" width="30" height="17" tilewidth="64" tileheight="64" nextobjectid="38">
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="30" height="17" tilewidth="64" tileheight="64" nextobjectid="46">
  <tileset firstgid="1" name="Tileset" tilewidth="64" tileheight="64" tilecount="80">
   <image source="NewTileset.png" width="512" height="647"/>
  </tileset>
  <layer name="Tile Layer 1" width="30" height="17">
   <data encoding="csv">
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,25,10,10,10,10,10,10,10,10,10,14,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,9,2,2,1,1,1,1,1,2,2,11,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,9,2,2,1,1,1,1,1,2,2,11,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,9,2,2,2,2,2,2,2,2,2,11,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,9,2,2,2,2,2,2,2,2,2,11,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,9,1,2,2,2,2,2,2,2,2,11,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,9,2,2,2,2,2,2,2,2,2,11,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,9,2,2,2,2,2,2,2,1,2,11,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,21,1,2,2,2,2,2,2,2,2,2,1,23,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,21,2,2,2,2,2,2,2,2,2,2,2,23,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,21,10,10,10,10,10,23,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,21,1,1,1,1,1,23,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,13,10,1,1,1,1,1,10,14,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,13,10,2,2,2,1,1,1,2,2,2,10,14,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,21,1,2,2,2,2,2,2,2,2,2,2,2,1,23,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,21,1,2,1,2,2,2,2,2,2,2,2,2,1,23,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,21,1,2,2,2,2,2,2,2,2,2,2,2,1,23,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,21,1,2,2,2,2,2,2,2,2,2,2,2,1,23,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,21,1,1,2,2,2,2,2,2,2,2,2,2,1,23,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,21,1,2,2,2,2,2,2,2,2,2,2,2,1,23,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,21,1,2,2,2,2,2,2,2,2,2,2,2,1,23,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,21,1,2,2,2,2,2,2,2,2,2,2,2,1,23,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,21,1,2,2,2,2,2,2,2,2,2,2,2,1,23,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
@@ -27,16 +27,16 @@
  <layer name="Tile Layer 2" width="30" height="17">
   <data encoding="csv">
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,39,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,36,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,35,0,0,39,40,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,40,40,0,0,36,0,0,40,40,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,39,0,0,0,0,0,0,0,0,0,40,40,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,33,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,35,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,35,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,35,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
@@ -46,39 +46,39 @@
 </data>
  </layer>
  <objectgroup name="Object Layer 1">
-  <object id="15" gid="65" x="256" y="192" width="64" height="64">
+  <object id="15" gid="65" x="192" y="448" width="64" height="64">
+   <properties>
+    <property name="LevelNumber" value="4"/>
+    <property name="Orientation" value="1"/>
+   </properties>
+  </object>
+  <object id="16" gid="65" x="192" y="640" width="64" height="64">
    <properties>
     <property name="LevelNumber" value="10"/>
     <property name="Orientation" value="1"/>
    </properties>
   </object>
-  <object id="16" gid="65" x="256" y="384" width="64" height="64">
+  <object id="17" gid="65" x="192" y="832" width="64" height="64">
    <properties>
     <property name="LevelNumber" value="10"/>
     <property name="Orientation" value="1"/>
    </properties>
   </object>
-  <object id="17" gid="65" x="256" y="576" width="64" height="64">
-   <properties>
-    <property name="LevelNumber" value="3"/>
-    <property name="Orientation" value="1"/>
-   </properties>
-  </object>
-  <object id="18" gid="65" x="896" y="256" width="64" height="64">
-   <properties>
-    <property name="LevelNumber" value="10"/>
-    <property name="Orientation" value="3"/>
-   </properties>
-  </object>
-  <object id="19" gid="65" x="896" y="448" width="64" height="64">
-   <properties>
-    <property name="LevelNumber" value="10"/>
-    <property name="Orientation" value="3"/>
-   </properties>
-  </object>
-  <object id="20" gid="65" x="896" y="640" width="64" height="64">
+  <object id="18" gid="65" x="960" y="512" width="64" height="64">
    <properties>
     <property name="LevelNumber" value="1"/>
+    <property name="Orientation" value="3"/>
+   </properties>
+  </object>
+  <object id="19" gid="65" x="960" y="704" width="64" height="64">
+   <properties>
+    <property name="LevelNumber" value="7"/>
+    <property name="Orientation" value="3"/>
+   </properties>
+  </object>
+  <object id="20" gid="65" x="960" y="896" width="64" height="64">
+   <properties>
+    <property name="LevelNumber" value="10"/>
     <property name="Orientation" value="3"/>
    </properties>
   </object>
@@ -87,6 +87,36 @@
     <property name="Behaviour" value="1"/>
     <property name="Distance" value="8"/>
     <property name="Height" value="6"/>
+   </properties>
+  </object>
+  <object id="38" gid="76" x="782" y="785" width="64" height="64">
+   <properties>
+    <property name="A" value="120"/>
+    <property name="I" value="0.37"/>
+   </properties>
+  </object>
+  <object id="39" gid="76" x="395" y="783" width="64" height="64">
+   <properties>
+    <property name="A" value="120"/>
+    <property name="I" value="0.37"/>
+   </properties>
+  </object>
+  <object id="40" gid="76" x="394" y="463" width="64" height="64">
+   <properties>
+    <property name="A" value="120"/>
+    <property name="I" value="0.37"/>
+   </properties>
+  </object>
+  <object id="41" gid="76" x="779" y="466" width="64" height="64">
+   <properties>
+    <property name="A" value="120"/>
+    <property name="I" value="0.37"/>
+   </properties>
+  </object>
+  <object id="42" gid="76" x="581" y="267" width="64" height="64">
+   <properties>
+    <property name="A" value="120"/>
+    <property name="I" value="0.37"/>
    </properties>
   </object>
  </objectgroup>
