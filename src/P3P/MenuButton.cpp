@@ -73,11 +73,14 @@ MenuButton::MenuButton(std::string pSpritePath, std::string pModelPath, sf::Vect
 
 	//Set sprites texture and position
 	sprite = new sf::Sprite(*JCPPEngine::TextureManager::GetTexture(pSpritePath));
-	sprite->setPosition(pSpritePosition*1.4f);
+	//sprite->setPosition(pSpritePosition*1.35f); //Scale For 1080p
 
 	//Scale the Buttons And Boxes
-	if (indexOfType < 4)
-		sprite->setScale(2,2);
+	if (indexOfType < 5)
+		sprite->setScale(3.4f,3.4f);
+	else 
+		sprite->setScale(1.5f, 1.5f);
+
 }
 
 MenuButton::~MenuButton()

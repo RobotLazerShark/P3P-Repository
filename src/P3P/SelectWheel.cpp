@@ -29,10 +29,10 @@ SelectWheel::SelectWheel(std::string pSpritePath, std::string pBackModelPath, st
 	_pressFunction = pPressPunction;
 
 	//Create skins 
-	sf::String SkinOne = "PlayerBase1.png";
-	sf::String SkinTwo = "PlayerBase2.png";
-	sf::String SkinThree = "PlayerBase3.png";
-	sf::String SkinFour = "PlayerBase4.png";
+	sf::String SkinOne = "Caracter wheel sel 1.png";
+	sf::String SkinTwo = "Caracter wheel sel 2.png";
+	sf::String SkinThree = "Caracter wheel sel 3.png";
+	sf::String SkinFour = "Caracter wheel sel 4.png";
 
 	//Add skins to vector
 	_skins.push_back(SkinOne);
@@ -51,22 +51,18 @@ SelectWheel::SelectWheel(std::string pSpritePath, std::string pBackModelPath, st
 	backModel->setParent(this);
 	backModel->setMaterial(new LitMaterial("SelectWheelInner.png"));
 	backModel->setBehaviour(animator);
+	backModel->scale(2.3f);
 
 	frontModel = new GameObject(pFrontModelPath);
 	frontModel->setParent(this);
 	frontModel->setMaterial(new LitMaterial("SelectWheelCase.png"));
-
-	characterModel = new GameObject(pCharacterModelPath);
-	characterModel->setParent(this);
-	characterModel->setMaterial(new LitMaterial(_skins[0]));
-	characterModel->scale(0.1f);
-	characterModel->translate(glm::vec3(-1.8f, 0, 0));
+	frontModel->scale(2.3f);
 
 	_selectButton = new GameObject(pSelectButton);
 	_selectButton->setParent(this);
 	_selectButton->setMaterial(new LitMaterial("ButtonGreen.png"));
 	_selectButton->scale(0.5f);
-	_selectButton->translate(glm::vec3(-0.55f, 0, 0.1f));
+	_selectButton->translate(glm::vec3(-0.92f, 0.48f, 0.1f));
 
 	//Set transform and translate
 	this->setTransform(pModelPosition);
@@ -79,6 +75,9 @@ SelectWheel::SelectWheel(std::string pSpritePath, std::string pBackModelPath, st
 	//Set  skin index
 	_menu->characterSkin = _skins[onSkin];
 	_menu->characterSkinIndex = onSkin;
+
+	//Sets Position Of Select Light And Skin
+	DisplayCharacter(onSkin);
 }
 
 SelectWheel::~SelectWheel()
@@ -91,20 +90,36 @@ SelectWheel::~SelectWheel()
 
 void SelectWheel::NextTexture()
 {
-	//If skin is less then max and the wheel is not animating
-	if (onSkin < (_maxSkins-1) && !animating) {
-		//Play next texture animation and set onSkin int
+	if (!_selectLightHidden)
+		HideSelectLight();
+	//Check Skin "Bounds"
+	if (onSkin >= (_maxSkins - 1) && !animating) {
+		//Play next texture animation and set onSkin int to 0
+		animator->playAnimation(0, false, true, &stopFunctionNext, this);
+		animating = true;
+		onSkin = 0;
+	} else if (onSkin < (_maxSkins-1) && !animating) {
+		//Play next texture animation and set onSkin int to next
 		animator->playAnimation(0, false, true, &stopFunctionNext, this);
 		animating = true;
 		onSkin++;
-	}
+	} 
 }
 
 void SelectWheel::LastTexture()
 {
-	//If skin is greater then the minimum and the wheel is not animating
-	if (onSkin > 0 && !animating) {
-		//Play next texture animation and set onSkin int
+	if (!_selectLightHidden)
+		HideSelectLight();
+	//Check Skin "Bounds"
+	if (onSkin <= 0 && !animating) {
+		//Play next texture animation and set onSkin int to the max skin
+		animator->playAnimation(1, false, true, &stopFunctionLast, this);
+		animating = true;
+		onSkin= _maxSkins - 1;
+	}
+	else if (onSkin > 0 && !animating) 
+	{
+		//Play next texture animation and set onSkin int to last
 		animator->playAnimation(1, false, true, &stopFunctionLast, this);
 		animating = true;
 		onSkin--;
@@ -115,12 +130,14 @@ void SelectWheel::ShowSelectLight()
 {
 	//Move the select light into view
 	_selectButton->translate(glm::vec3(0, 0, +2));
+	_selectLightHidden = false;
 }
 
 void SelectWheel::HideSelectLight()
 {
 	//Move the select light out of view
 	_selectButton->translate(glm::vec3(0, 0, -2));
+	_selectLightHidden = true;
 }
 
 void SelectWheel::SelectTexture()
@@ -133,26 +150,23 @@ void SelectWheel::SelectTexture()
 	{
 		//If light is hidden show it and set flag
 		ShowSelectLight();
-		_selectLightHidden = false;
 	}
 }
 
 void SelectWheel::DisplayCharacter(int pskinNumber)
 {
 	//Set characters material euqal the skin in vector at index pskinNumber
-	characterModel->setMaterial(new LitMaterial(_skins[pskinNumber]));
+	backModel->setMaterial(new LitMaterial(_skins[pskinNumber]));
 
 	//If the skin number is equal to selected skin and the select "light" is hidden
+	if (!_selectLightHidden)
+	{
+		//Hide "light" and set flag
+		HideSelectLight();
+	}
 	if (pskinNumber == _selectedSkin && _selectLightHidden) 
 	{
 		//Show "light" and set flag
 		ShowSelectLight();
-		_selectLightHidden = false;
-	}
-	else if (!_selectLightHidden)
-	{
-		//Hide "light" and set flag
-		HideSelectLight();
-		_selectLightHidden = true;
 	}
 }

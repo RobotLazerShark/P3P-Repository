@@ -214,39 +214,39 @@ void Menu::CreateButtons(Camera * pCamera) {
 	_menuBackground->setParent(this);
 	_menuBackground->setMaterial(new LitMaterial("MenuBackground.png"));
 	_menuBackground->setTransform(pCamera->getTransform());
-	_menuBackground->translate(glm::vec3(0, 0, -1.1f));
+	_menuBackground->translate(glm::vec3(0, 0, -1.09f));
 	_menuBackground->scale(2.25f);
 
 	selectWheel = new SelectWheel("mge/textures/White.png", "Menu_Wheel_Inside.obj", "Menu_Wheel_Outside.obj", "cube_flat.obj",
-		sf::Vector2f(200, 100), pCamera->getTransform(), &NoPress, "WheelNext.txt", "WheelLast.txt", glm::vec3(0.6f, 0, -0.6f), "General_Button.obj", this);
+		sf::Vector2f(200, 100), pCamera->getTransform(), &NoPress, "WheelNext.txt", "WheelLast.txt", glm::vec3(0.85f, -0.15f, -0.985f), "General_Button.obj", this);
 
 	//Setup buttons
 	_buttonOne = new MenuButton("mge/textures/White.png", "Play_Button.obj",
-		sf::Vector2f(500, 100), pCamera->getTransform(), &ButtonPress, "ButtonPush.txt", "ButtonPull.txt", glm::vec3(-0.229f, 0.32f, -1), 1);
+		sf::Vector2f(500, 100), pCamera->getTransform(), &ButtonPress, "ButtonPush.txt", "ButtonPull.txt", glm::vec3(-0.221f, 0.297f, -0.985f), 1, "PlayButton.png");
 	_buttonTwo = new MenuButton("mge/textures/White.png", "General_Button.obj",
-		sf::Vector2f(480, 430), pCamera->getTransform(), &ButtonOnePress, "ButtonPush.txt", "ButtonPull.txt", glm::vec3(-0.229f, -0.1f, -1), 2);
+		sf::Vector2f(480, 420), pCamera->getTransform(), &ButtonOnePress, "ButtonPush.txt", "ButtonPull.txt", glm::vec3(-0.22f, -0.106f, -0.985f), 2, "GeneralButton.png");
 	_buttonThree = new MenuButton("mge/textures/White.png", "General_Button.obj",
-		sf::Vector2f(480, 630), pCamera->getTransform(), &ButtonTwoPress, "ButtonPush.txt", "ButtonPull.txt", glm::vec3(-0.229f, -0.45f, -1), 3);
+		sf::Vector2f(480, 630), pCamera->getTransform(), &ButtonTwoPress, "ButtonPush.txt", "ButtonPull.txt", glm::vec3(-0.22f, -0.43f, -0.985f), 3, "GeneralButton.png");
 	_buttonBoxOne = new MenuButton("mge/textures/Default.png", "Play_Button_Case_2.obj",
-		sf::Vector2f(500, 100), pCamera->getTransform(), &NoPress, "BoxOpen.txt", "BoxClose.txt", glm::vec3(-0.23f, 0.505f, -1), 0);
+		sf::Vector2f(500, 100), pCamera->getTransform(), &NoPress, "BoxOpen.txt", "BoxClose.txt", glm::vec3(-0.22f, 0.4685f, -0.985f), 0, "PlayButton.png");
 	_buttonBoxTwo = new MenuButton("mge/textures/Default.png", "General_Button_Case.obj",
-		sf::Vector2f(480, 430), pCamera->getTransform(), &NoPress, "BoxOpen.txt", "BoxClose.txt", glm::vec3(-0.235f, 0.00f, -1), 0);
+		sf::Vector2f(480, 420), pCamera->getTransform(), &NoPress, "BoxOpen.txt", "BoxClose.txt", glm::vec3(-0.22f, -0.005f, -0.985f), 0, "PlayButton.png");
 	_buttonBoxThree = new MenuButton("mge/textures/Default.png", "General_Button_Case.obj",
-		sf::Vector2f(480, 630), pCamera->getTransform(), &NoPress, "BoxOpen.txt", "BoxClose.txt", glm::vec3(-0.235f, -0.322f, -1), 0);
+		sf::Vector2f(480, 630), pCamera->getTransform(), &NoPress, "BoxOpen.txt", "BoxClose.txt", glm::vec3(-0.22f, -0.307f, -0.985f), 0, "PlayButton.png");
 	_buttonLastSkin = new MenuButton("mge/textures/Default.png", "General_Button.obj",
-		sf::Vector2f(860, 700), pCamera->getTransform(), &LastPress, "ButtonPush.txt", "ButtonPull.txt", glm::vec3(0.3f, -0.5f, -1), 5);
+		sf::Vector2f(1160, 90), pCamera->getTransform(), &LastPress, "ButtonPush.txt", "ButtonPull.txt", glm::vec3(0.68f, 0.4f, -0.96f), 6, "CharacterSelectButton.png");
 	_buttonNextSkin = new MenuButton("mge/textures/Default.png", "General_Button.obj",
-		sf::Vector2f(939, 700), pCamera->getTransform(), &NextPress, "ButtonPush.txt", "ButtonPull.txt", glm::vec3(0.4f, -0.5f, -1), 4);
-	_buttonSelectSkin = new MenuButton("mge/textures/Default.png", "General_Button.obj",
-		sf::Vector2f(1060, 700), pCamera->getTransform(), &SelectPress, "ButtonPush.txt", "ButtonPull.txt", glm::vec3(0.6f, -0.5f, -1), 6);
+		sf::Vector2f(1075, 120), pCamera->getTransform(), &NextPress, "ButtonPush.txt", "ButtonPull.txt", glm::vec3(0.57f, 0.35f, -0.96f), 5, "CharacterSelectButton.png");
+	_buttonSelectSkin = new MenuButton("mge/textures/Default.png", "Play_Button.obj",
+		sf::Vector2f(1250, 450), pCamera->getTransform(), &SelectPress, "ButtonPush.txt", "ButtonPull.txt", glm::vec3(0.84f, -0.15f, -0.92f), 4, "PlayButton.png");
 
 	//Scale buttons
-	_buttonBoxOne->scale(2.5f);
-	_buttonBoxTwo->scale(2.5f);
-	_buttonBoxThree->scale(2.5f);
-	_buttonOne->scale(2.5f);
-	_buttonTwo->scale(2.5f);
-	_buttonThree->scale(2.5f);
+	_buttonBoxOne->scale(2.25f);
+	_buttonBoxTwo->scale(2.25f);
+	_buttonBoxThree->scale(2.25f);
+	_buttonOne->scale(2.4f);
+	_buttonTwo->scale(2.4f);
+	_buttonThree->scale(2.4f);
 	_buttonLastSkin->scale(1.5f);
 	_buttonNextSkin->scale(1.5f);
 	_buttonSelectSkin->scale(1.5f);

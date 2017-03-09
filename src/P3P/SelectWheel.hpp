@@ -22,7 +22,6 @@ public:
 	static SelectWheel* singletonInstance;
 	void(*_pressFunction)() = nullptr;
 	AnimationBehaviour * animator = nullptr;
-	GameObject * characterModel = nullptr;
 	GameObject * frontModel = nullptr;
 	GameObject * backModel = nullptr;
 	glm::vec3 offsetVec = glm::vec3 (0,0,0);

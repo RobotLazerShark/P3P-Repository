@@ -1,6 +1,8 @@
 time = 0:00
-rotation = 0, 0, 80
+rotation = 0, 0, 0
+scale = 2.3, 2.3, 2.3
 -
 time = 0:40
-rotation = 0, 0, 0
+rotation = 0, 0, -72
+scale = 2.3, 2.3, 2.3
 --
