@@ -91,6 +91,14 @@ Level::~Level ()
 	_hudOverlay = nullptr;
 	delete _background;
 	_background = nullptr;
+	delete transparencyLayer1;
+	transparencyLayer1 = nullptr;
+	delete transparencyLayer2;
+	transparencyLayer2 = nullptr;
+	delete transparencyLayer3;
+	transparencyLayer3 = nullptr;
+	delete transparencyLayer4;
+	transparencyLayer4 = nullptr;
 	//delete bossPuzzletracker
 	for (ProgressTracker * bossPuzzleTracker : bossPuzzlesTrackers)
 	{
@@ -115,14 +123,6 @@ Level::~Level ()
 		Npc::singletonInstance->setParent (nullptr);
 		delete Npc::singletonInstance;
 	}
-	delete transparencyLayer1;
-	transparencyLayer1 = nullptr;
-	delete transparencyLayer2;
-	transparencyLayer2 = nullptr;
-	delete transparencyLayer3;
-	transparencyLayer3 = nullptr;
-	delete transparencyLayer4;
-	transparencyLayer4 = nullptr;
 	GameObject::~GameObject ();
 }
 

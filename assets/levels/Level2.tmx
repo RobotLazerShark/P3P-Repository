@@ -63,9 +63,11 @@
    </properties>
   </object>
   <object id="32" gid="67" x="576" y="192" width="64" height="64">
-  <properties>
+   <properties>
     <property name="Name" value="Chat2"/>
+
     <property name="Stay" value="1"/>
+
     <property name="Text" value="G1¡t©hèd B0t:|TheRe! ¡t sH0u1d bé S0mëwHerè ¡ñ thát pILe 0F sçräpS!"/>
    </properties>
   </object>
@@ -80,6 +82,10 @@
     <property name="I" value="0.37"/>
    </properties>
   </object>
-  <object id="36" gid="73" x="458.035" y="408.319" width="64" height="64"/>
+  <object id="36" gid="73" x="458.035" y="408.319" width="64" height="64">
+   <properties>
+    <property name="Info" value="Spikes can kill you. Duh."/>
+   </properties>
+  </object>
  </objectgroup>
 </map>

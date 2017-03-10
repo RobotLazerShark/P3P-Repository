@@ -291,12 +291,12 @@ void AbstractGame::ProcessEvent (sf::Event pEvent)
 		case sf::Event::Closed:
 			Stop ();
 			break;
-		case sf::Event::KeyPressed:
-			if (pEvent.key.code == sf::Keyboard::Escape)
-			{
-				Stop ();
-			}
-			break;
+	//	case sf::Event::KeyPressed:
+	//		if (pEvent.key.code == sf::Keyboard::Escape)
+	//		{
+	//			Stop ();
+	//		}
+	//		break;
 		case sf::Event::Resized:
 			//would be better to move this to the renderer
 			//this version implements nonconstrained match viewport scaling
