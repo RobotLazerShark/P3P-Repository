@@ -79,6 +79,7 @@ Menu::Menu(Camera * pCamera, sf::RenderWindow * pRend, World * pWorld) : GameObj
 	renderWindow = pRend;
 	camera = pCamera;
 	world = pWorld;
+	_cameraPosition = camera->getTransform ();
 
 	//Add light
 	ShaderDataUtil::SetAmbientLight (glm::vec3 (0.8f, 0.9f, 1), 0.1f);
@@ -247,9 +248,9 @@ void Menu::CreateButtons(Camera * pCamera) {
 		sf::Vector2f(480, 630), pCamera->getTransform(), &NoPress, "BoxOpen.txt", "BoxClose.txt", glm::vec3(-0.22f, -0.307f, -0.985f), 0);
 	//_buttonLastSkin = new MenuButton("mge/textures/Default.png", "General_Button.obj",
 	//	sf::Vector2f(1160, 90), pCamera->getTransform(), &LastPress, "ButtonPush.txt", "ButtonPull.txt", glm::vec3(0.68f, 0.4f, -0.96f), 6, "CharacterSelectButton.png");
-	_buttonNextSkin = new MenuButton("mge/textures/Default.png", "General_Button.obj",
+	_buttonNextSkin = new MenuButton("mge/textures/CharacterSelectButton.png", "CharacterSelectButton.obj",
 		sf::Vector2f(1075, 120), pCamera->getTransform(), &NextPress, "ButtonPush.txt", "ButtonPull.txt", glm::vec3(0.57f, 0.35f, -0.96f), 5);
-	_buttonSelectSkin = new MenuButton("mge/textures/Default.png", "Play_Button.obj",
+	_buttonSelectSkin = new MenuButton("mge/textures/ButtonRed.png", "Play_Button.obj",
 		sf::Vector2f(1250, 450), pCamera->getTransform(), &SelectPress, "WheelButtonPush.txt", "ButtonPull.txt", glm::vec3(0.84f, -0.15f, -0.92f), 4);
 
 	//Scale buttons

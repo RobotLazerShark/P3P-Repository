@@ -83,14 +83,6 @@ Level::~Level ()
 {
 	singletonInstance = nullptr;
 	setParent (nullptr);
-	delete transparencyLayer1;
-	transparencyLayer1 = nullptr;
-	delete transparencyLayer2;
-	transparencyLayer2 = nullptr;
-	delete transparencyLayer3;
-	transparencyLayer3 = nullptr;
-	delete transparencyLayer4;
-	transparencyLayer4 = nullptr;
 	delete map;
 	map = nullptr;
 	delete hud;
@@ -105,10 +97,10 @@ Level::~Level ()
 		delete bossPuzzleTracker;
 	}
 	//delete hints
-	for (Hint * hint : hints)
+	for (int i = 0, size = hints.size (); i < size; i ++)
 	{
-		hint->setParent(nullptr);
-		delete hint;
+		hints [i]->setParent(nullptr);
+		delete hints [i];
 	}
 	hints.clear ();
 	_activeQuestsCopy.clear ();
@@ -123,6 +115,14 @@ Level::~Level ()
 		Npc::singletonInstance->setParent (nullptr);
 		delete Npc::singletonInstance;
 	}
+	delete transparencyLayer1;
+	transparencyLayer1 = nullptr;
+	delete transparencyLayer2;
+	transparencyLayer2 = nullptr;
+	delete transparencyLayer3;
+	transparencyLayer3 = nullptr;
+	delete transparencyLayer4;
+	transparencyLayer4 = nullptr;
 	GameObject::~GameObject ();
 }
 

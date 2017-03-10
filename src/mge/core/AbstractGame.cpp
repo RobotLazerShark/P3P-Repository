@@ -53,7 +53,7 @@ void AbstractGame::Stop ()
 	{
 		_window->close ();
 	}
-}
+ }
 
 AbstractGame::AbstractGame():_window(NULL),_renderer(NULL),_world(NULL), _fps(0)
 {

@@ -1,14 +1,16 @@
 #include <P3P/Hint.hpp>
 #include <P3P/Level.hpp>
+#include <vector>
 
 Hint::Hint(int pX, int pZ, std::string pInfo) : GameObject()
 {
 	//Set up model
-	_model = new DoomSprite ("Hint.png");
-	GameObject* offset = new GameObject ();
-	offset->translate (glm::vec3 (pX, 2, pZ));
-	_model->setParent (offset);
-//	_model->setParent(Level::singletonInstance->transparencyLayer4);
+	_model = new GameObject ();
+	_model->setParent (Level::singletonInstance->transparencyLayer4);
+	_model->translate (glm::vec3 (pX, 0, pZ));
+	DoomSprite* sprite = new DoomSprite ("Hint.png");
+	sprite->setParent (_model);
+	sprite->translate (glm::vec3 (pX, 1, pZ));
 	translate(glm::vec3(pX * Level::TILESIZE, 2, pZ * Level::TILESIZE));
 
 	sf::Font * font = new sf::Font();
@@ -26,6 +28,7 @@ Hint::Hint(int pX, int pZ, std::string pInfo) : GameObject()
 Hint::~Hint()
 {
 	delete _text;
+	GameObject::~GameObject();
 }
 
 void Hint::setActive(bool active)

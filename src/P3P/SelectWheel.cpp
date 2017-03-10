@@ -30,10 +30,10 @@ SelectWheel::SelectWheel(std::string pSpritePath, std::string pBackModelPath, st
 	_pressFunction = pPressPunction;
 
 	//Create skins 
-	sf::String SkinOne = "Caracter wheel sel 1.png";
-	sf::String SkinTwo = "Caracter wheel sel 2.png";
-	sf::String SkinThree = "Caracter wheel sel 3.png";
-	sf::String SkinFour = "Caracter wheel sel 4.png";
+	sf::String SkinOne = "Inside_1.png";
+	sf::String SkinTwo = "Inside_2.png";
+	sf::String SkinThree = "Inside_3.png";
+	sf::String SkinFour = "Inside_4.png";
 
 	//Add skins to vector
 	_skins.push_back(SkinOne);

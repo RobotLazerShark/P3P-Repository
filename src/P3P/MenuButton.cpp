@@ -59,6 +59,9 @@ std::string temp = "mge/textures/Transparent.png";
 		case 3:
 			texture = "ButtonGreen.png";
 			break;
+		case 4:
+			texture = "ButtonRed.png";
+			break;
 		case 9:
 			texture = "mge/textures/Credits_Screen.png";
 			temp = texture;

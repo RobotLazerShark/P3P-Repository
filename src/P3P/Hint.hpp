@@ -20,7 +20,7 @@ class Hint : public GameObject
 		sf::Text * _text;
 
 	private:
-		DoomSprite* _model = nullptr;
+		GameObject* _model = nullptr;
 		AnimationBehaviour* _animator = nullptr;
 };
 
