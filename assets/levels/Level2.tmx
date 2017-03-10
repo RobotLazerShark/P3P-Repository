@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" renderorder="right-down" width="30" height="17" tilewidth="64" tileheight="64" nextobjectid="36">
- <tileset firstgid="1" name="Tileset" tilewidth="64" tileheight="64" tilecount="80" columns="8">
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="30" height="17" tilewidth="64" tileheight="64" nextobjectid="37">
+ <tileset firstgid="1" name="Tileset" tilewidth="64" tileheight="64" tilecount="80">
   <image source="NewTileset.png" width="512" height="647"/>
  </tileset>
  <layer name="Tile Layer 1" width="30" height="17">
@@ -45,7 +45,10 @@
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 </data>
  </layer>
- <objectgroup name="Object Layer 1" visible="0">
+ <objectgroup name="Object Layer 1">
+  <properties>
+   <property name="inof" value="Walking on spikes will kill you!"/>
+  </properties>
   <object id="20" gid="65" x="384" y="192" width="64" height="64">
    <properties>
     <property name="LevelNumber" value="3"/>
@@ -60,7 +63,7 @@
    </properties>
   </object>
   <object id="32" gid="67" x="576" y="192" width="64" height="64">
-   <properties>
+  <properties>
     <property name="Name" value="Chat2"/>
     <property name="Stay" value="1"/>
     <property name="Text" value="G1¡t©hèd B0t:|TheRe! ¡t sH0u1d bé S0mëwHerè ¡ñ thát pILe 0F sçräpS!"/>
@@ -77,5 +80,6 @@
     <property name="I" value="0.37"/>
    </properties>
   </object>
+  <object id="36" gid="73" x="458.035" y="408.319" width="64" height="64"/>
  </objectgroup>
 </map>

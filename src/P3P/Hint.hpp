@@ -7,6 +7,7 @@
 #include <mge/materials/LitMaterial.hpp>
 #include <mge/behaviours/AnimationBehaviour.hpp>
 #include <SFML/Graphics.hpp>
+#include <mge/objects/DoomSprite.hpp>
 
 class Hint : public GameObject
 {
@@ -19,7 +20,7 @@ class Hint : public GameObject
 		sf::Text * _text;
 
 	private:
-		GameObject* _model = nullptr;
+		DoomSprite* _model = nullptr;
 		AnimationBehaviour* _animator = nullptr;
 };
 

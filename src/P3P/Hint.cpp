@@ -4,9 +4,11 @@
 Hint::Hint(int pX, int pZ, std::string pInfo) : GameObject()
 {
 	//Set up model
-	_model = new GameObject("cube_flat.obj");
-	_model->setMaterial(new LitMaterial("Hint.jpg"));
-	_model->setParent(this);
+	_model = new DoomSprite ("Hint.png");
+	GameObject* offset = new GameObject ();
+	offset->translate (glm::vec3 (pX, 2, pZ));
+	_model->setParent (offset);
+//	_model->setParent(Level::singletonInstance->transparencyLayer4);
 	translate(glm::vec3(pX * Level::TILESIZE, 2, pZ * Level::TILESIZE));
 
 	sf::Font * font = new sf::Font();
@@ -30,10 +32,10 @@ void Hint::setActive(bool active)
 {
 	if (active)
 	{
-		translate(glm::vec3(0, -10, 0));
+		_model->setParent (Level::singletonInstance->transparencyLayer4);
 	}
 	else
 	{
-		translate(glm::vec3(0, 10, 0));
+		_model->setParent (nullptr);
 	}
 }
