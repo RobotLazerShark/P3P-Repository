@@ -2529,7 +2529,7 @@ int setLevelKey (lua_State* pLua)
 //Load the boss level
 int loadBossLevel (lua_State* pLua)
 {
-	Level::singletonInstance->loadLevel (Level::singletonInstance->_bossLevelNumber);
+	Level::singletonInstance->loadLevel (Level::singletonInstance->_bossLevelNumber, LuaParser::_window);
 	return 0;
 }
 

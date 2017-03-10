@@ -80,6 +80,8 @@ Menu::Menu(Camera * pCamera, sf::RenderWindow * pRend, World * pWorld) : GameObj
 	camera = pCamera;
 	world = pWorld;
 
+	_cameraPosition = camera->getWorldTransform ();
+
 	//Add light
 	ShaderDataUtil::SetAmbientLight (glm::vec3 (0.8f, 0.9f, 1), 0.1f);
 	Light* dirLight = new Light (glm::vec3 (1, 1, 1), 0.45f);
@@ -235,6 +237,7 @@ void Menu::UnHide(bool pDeleteLevel) {
 		_game->clear ();
 		delete _game;
 		_game = nullptr;
+		camera->setTransform (_cameraPosition);
 		AbstractGame::showCursor (true);
 	}
 }
@@ -269,7 +272,7 @@ void Menu::CreateButtons(Camera * pCamera) {
 	_buttonNextSkin = new MenuButton("mge/textures/Default.png", "General_Button.obj",
 		sf::Vector2f(1075, 120), pCamera->getTransform(), &NextPress, "ButtonPush.txt", "ButtonPull.txt", glm::vec3(0.57f, 0.35f, -0.96f), 5);
 	_buttonSelectSkin = new MenuButton("mge/textures/Default.png", "Play_Button.obj",
-		sf::Vector2f(1250, 450), pCamera->getTransform(), &SelectPress, "ButtonPush.txt", "ButtonPull.txt", glm::vec3(0.84f, -0.15f, -0.92f), 4);
+		sf::Vector2f(1250, 450), pCamera->getTransform(), &SelectPress, "WheelButtonPush.txt", "ButtonPull.txt", glm::vec3(0.84f, -0.15f, -0.92f), 4);
 
 	//Scale buttons
 	_buttonBoxOne->scale(2.25f);

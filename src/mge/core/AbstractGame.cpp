@@ -16,6 +16,7 @@ using namespace std;
 #include "mge/core/World.hpp"
 #include <P3P/Level.hpp>
 #include <P3P/Menu.hpp>
+#include <P3P/SceneFader.hpp>
 
 AbstractGame* AbstractGame::singletonInstance = nullptr;
 static float timeSinceProgramStart;
@@ -70,6 +71,14 @@ AbstractGame::AbstractGame():_window(NULL),_renderer(NULL),_world(NULL), _fps(0)
 AbstractGame::~AbstractGame()
 {
     //dtor
+    if (Level::singletonInstance != nullptr)
+    {
+	delete Level::singletonInstance;
+    }
+    if (SceneFader::singletonInstance != nullptr)
+    {
+	delete SceneFader::singletonInstance;
+    }
 	singletonInstance = nullptr;
     if (_luaParser != nullptr)
     {

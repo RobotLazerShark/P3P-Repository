@@ -51,6 +51,7 @@ class Level : public GameObject
 		void loadMap ();
 		void clear ();
 		void loadLevel (int pLevelNumber);
+		void loadLevel (int pLevelNumber, sf::RenderWindow* pWindow);
 		void reloadLevel ();
 		void startFade ();
 		static const float TILESIZE;

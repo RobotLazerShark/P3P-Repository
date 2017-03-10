@@ -5,6 +5,10 @@ SceneFader* SceneFader::singletonInstance = nullptr;
 
 SceneFader::SceneFader(sf::RenderWindow * pWindow) : GameObject()
 {
+	if (singletonInstance != nullptr)
+	{
+		delete singletonInstance;
+	}
 	singletonInstance = this;
 	sprite = new sf::Sprite(*JCPPEngine::TextureManager::GetTexture("images/NoSignal.jpg"));
 	sprite->setColor(sf::Color(255, 255, 255, _currentAlpha));
@@ -15,6 +19,7 @@ SceneFader::SceneFader(sf::RenderWindow * pWindow) : GameObject()
 SceneFader::~SceneFader()
 {
 	delete sprite;
+	singletonInstance = nullptr;
 }
 
 void SceneFader::update(float pStep, bool pUpdateWorldTransform)

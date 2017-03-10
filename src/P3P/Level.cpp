@@ -1251,6 +1251,16 @@ void Level::loadLevel (int pLevelNumber)
 {
 	_nextLevel = pLevelNumber;
 }
+//Clear everything in the level, and build a new level
+void Level::loadLevel (int pLevelNumber, sf::RenderWindow* pWindow)
+{
+	_nextLevel = pLevelNumber;
+	pWindow->pushGLStates ();
+	pWindow->draw (sf::Sprite (*JCPPEngine::TextureManager::GetTexture ("images/NoSignal.jpg")));
+	pWindow->draw (*_hudOverlay);
+	pWindow->popGLStates ();
+	pWindow->display ();
+}
 
 //Reload the current level
 void Level::reloadLevel ()

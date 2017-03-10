@@ -18,7 +18,7 @@ class Menu : public GameObject, public JCPPEngine::AbstractListener
 {
 private:
 	GameObject * _menuBackground = nullptr;
-	
+	glm::mat4 _cameraPosition;
 	MenuButton * _lastSelectedBox = nullptr;
 	MenuButton * _buttonBoxOne = nullptr;
 	MenuButton * _buttonBoxTwo = nullptr;
