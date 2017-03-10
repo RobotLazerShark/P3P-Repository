@@ -231,11 +231,11 @@ void AbstractGame::run ()
 				_render ();
 				Level::render (_window);
 			}
-			else if (Menu::singletonInstance != nullptr && !Menu::singletonInstance->isHidden)
-			{
-				Menu::singletonInstance->render ();
-				_render ();
-			}
+		//	else if (Menu::singletonInstance != nullptr && !Menu::singletonInstance->isHidden)
+		//	{
+		//		Menu::singletonInstance->render ();
+		//		_render ();
+		//	}
 			else
 			{
 				_render ();

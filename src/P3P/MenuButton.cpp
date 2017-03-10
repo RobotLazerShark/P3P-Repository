@@ -1,6 +1,6 @@
 #include "P3P/MenuButton.hpp"
-#include <JCPPEngine/TextureManager.hpp>
-#include <JCPPEngine/SoundManager.hpp>
+#include "JCPPEngine/TextureManager.hpp"
+#include "JCPPEngine/SoundManager.hpp"
 
 void stopFunctionOpen(int pAnimIndex, GameObject* pOwner)
 {
@@ -43,7 +43,7 @@ MenuButton::MenuButton(std::string pSpritePath, std::string pModelPath, sf::Vect
 
 	//Setup Animatior
 	animator = new AnimationBehaviour({ OnAnim, OffAnim });
-
+std::string temp = "mge/textures/Transparent.png";
 	//Setup Button Model
 	model = new GameObject(pModelPath);
 	std::string texture;
@@ -59,6 +59,10 @@ MenuButton::MenuButton(std::string pSpritePath, std::string pModelPath, sf::Vect
 		case 3:
 			texture = "ButtonGreen.png";
 			break;
+		case 9:
+			texture = "mge/textures/Credits_Screen.png";
+			temp = texture;
+			break;
 		default:
 			texture = "ButtonYellow.png";
 			break;
@@ -72,13 +76,14 @@ MenuButton::MenuButton(std::string pSpritePath, std::string pModelPath, sf::Vect
 	this->translate(offsetVec);
 
 	//Set sprites texture and position
-	sprite = new sf::Sprite(*JCPPEngine::TextureManager::GetTexture(pSpritePath));
+	sprite = new sf::Sprite(*JCPPEngine::TextureManager::GetTexture(temp));
 	sprite->setPosition(pSpritePosition*1.35f); //Scale For 1080p
+	//sprite->setPosition(pSpritePosition*2.3f); //Scale For 1800p
 
 	//Scale the Buttons And Boxes
 	if (indexOfType < 5)
 		sprite->setScale(3.4f,3.4f);
-	else 
+	else if (indexOfType < 9)
 		sprite->setScale(1.5f, 1.5f);
 
 }

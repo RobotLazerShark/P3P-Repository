@@ -4,7 +4,7 @@
 #include "mge/core/GameObject.hpp"
 #include "mge/materials/LitMaterial.hpp"
 #include "mge/behaviours/AnimationBehaviour.hpp"
-#include <SFML/Graphics.hpp>
+#include "SFML/Graphics.hpp"
 
 class MenuButton : public GameObject
 {

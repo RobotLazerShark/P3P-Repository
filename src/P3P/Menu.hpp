@@ -10,9 +10,9 @@
 #include "mge/behaviours/AnimationBehaviour.hpp"
 #include "mge/core/World.hpp"
 #include "SFML/Graphics.hpp"
-#include <JCPPEngine/AbstractListener.hpp>
-#include <P3P/SceneFader.hpp>
-#include <P3P/Level.hpp>
+#include "JCPPEngine/AbstractListener.hpp"
+#include "P3P/SceneFader.hpp"
+#include "P3P/Level.hpp"
 
 class Menu : public GameObject, public JCPPEngine::AbstractListener
 {
@@ -27,7 +27,7 @@ private:
 	MenuButton * _buttonThree = nullptr;
 	MenuButton * _buttonNextSkin = nullptr;
 	MenuButton * _buttonBoxThree = nullptr;
-	MenuButton * _buttonLastSkin = nullptr;
+	//MenuButton * _buttonLastSkin = nullptr;
 	MenuButton * _buttonSelectSkin = nullptr;
 	MenuButton * _lastSelectedButton = nullptr;
 	std::vector<MenuButton*> _buttons;
@@ -49,7 +49,6 @@ public:
 	Menu(Camera * pCamera, sf::RenderWindow * pRend, World * pWorld);
 	~Menu();
 
-	void render ();
 	void ProcessEvent(JCPPEngine::Event* pEvent) override;
 	void update(float pStep, bool pUpdateWorldTransform = false) override;
 	void Hide();

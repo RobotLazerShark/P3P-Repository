@@ -8,7 +8,7 @@
 #include "mge/behaviours/AnimationBehaviour.hpp"
 #include "mge/core/World.hpp"
 #include "SFML/Graphics.hpp"
-#include <JCPPEngine/AbstractListener.hpp>
+#include "JCPPEngine/AbstractListener.hpp"
 
 class Menu;
 
@@ -19,6 +19,7 @@ private:
 	MenuButton * _lastSelectedBox = nullptr;
 	MenuButton * _buttonBoxOne = nullptr;
 	MenuButton * _buttonOne = nullptr;
+	MenuButton * _background = nullptr;
 	std::vector<MenuButton*> _buttons;
 
 public:

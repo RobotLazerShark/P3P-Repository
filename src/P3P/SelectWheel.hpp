@@ -4,7 +4,7 @@
 #include "mge/core/GameObject.hpp"
 #include "mge/materials/LitMaterial.hpp"
 #include "mge/behaviours/AnimationBehaviour.hpp"
-#include <SFML/Graphics.hpp>
+#include "SFML/Graphics.hpp"
 
 class Menu;
 
@@ -15,6 +15,7 @@ private:
 	std::vector<sf::String> _skins;
 	Menu * _menu = nullptr;
 	bool _selectLightHidden = false;
+	bool _lightHidden = false;
 	int _selectedSkin = 0;
 	int _maxSkins = 0;
 	
@@ -37,6 +38,8 @@ public:
 	void LastTexture();
 	void ShowSelectLight();
 	void HideSelectLight();
+	void HideLight();
+	void ShowLight();
 	void SelectTexture();
 	void DisplayCharacter(int pskinNumber);
 };

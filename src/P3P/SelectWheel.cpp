@@ -1,12 +1,13 @@
 #include "P3P/SelectWheel.hpp"
 #include "P3P/Menu.hpp"
-#include <JCPPEngine/TextureManager.hpp>
+#include "JCPPEngine/TextureManager.hpp"
 
 void stopFunctionNext(int pAnimIndex, GameObject* pOwner)
 {
 	SelectWheel* selectWheel = (SelectWheel*)pOwner;
 	selectWheel->animating = false;
 	SelectWheel::singletonInstance->DisplayCharacter(SelectWheel::singletonInstance->onSkin);
+	SelectWheel::singletonInstance->ShowLight();
 }
 
 void stopFunctionLast(int pAnimIndex, GameObject* pOwner)
@@ -49,20 +50,20 @@ SelectWheel::SelectWheel(std::string pSpritePath, std::string pBackModelPath, st
 
 	backModel = new GameObject(pBackModelPath);
 	backModel->setParent(this);
-	backModel->setMaterial(new LitMaterial("SelectWheelInner.png"));
+	backModel->setMaterial(new LitMaterial(glm::vec3(1, 0.5, 1)));
 	backModel->setBehaviour(animator);
 	backModel->scale(2.3f);
 
 	frontModel = new GameObject(pFrontModelPath);
 	frontModel->setParent(this);
-	frontModel->setMaterial(new LitMaterial("SelectWheelCase.png"));
+	frontModel->setMaterial(new LitMaterial("WheelBase.png"));
 	frontModel->scale(2.3f);
 
 	_selectButton = new GameObject(pSelectButton);
 	_selectButton->setParent(this);
-	_selectButton->setMaterial(new LitMaterial("ButtonGreen.png"));
-	_selectButton->scale(0.5f);
-	_selectButton->translate(glm::vec3(-0.92f, 0.48f, 0.1f));
+	_selectButton->setMaterial(new LitMaterial("Floor2.jpg"));
+	_selectButton->scale(1.75f);
+	_selectButton->translate(glm::vec3(-0.261f, 0.138f, 0.018f));
 
 	//Set transform and translate
 	this->setTransform(pModelPosition);
@@ -90,6 +91,7 @@ SelectWheel::~SelectWheel()
 
 void SelectWheel::NextTexture()
 {
+	HideLight();
 	if (!_selectLightHidden)
 		HideSelectLight();
 	//Check Skin "Bounds"
@@ -128,16 +130,35 @@ void SelectWheel::LastTexture()
 
 void SelectWheel::ShowSelectLight()
 {
-	//Move the select light into view
-	_selectButton->translate(glm::vec3(0, 0, +2));
+	//Change To Green Selected Texture
+	_selectButton->setMaterial(new LitMaterial("SelectedColourButton.png"));
 	_selectLightHidden = false;
+
 }
 
 void SelectWheel::HideSelectLight()
 {
-	//Move the select light out of view
-	_selectButton->translate(glm::vec3(0, 0, -2));
+	//Change To Red De-Selected Texture
+	_selectButton->setMaterial(new LitMaterial("UnselectedColourButton.png"));
 	_selectLightHidden = true;
+}
+
+void SelectWheel::HideLight()
+{
+	//Move the select light out of view
+	if (!_lightHidden) {
+		_selectButton->translate(glm::vec3(0, 0, -2));
+		_lightHidden = true;
+	}
+}
+
+void SelectWheel::ShowLight()
+{
+	//Move the select light Into view
+	if (_lightHidden) {
+		_selectButton->translate(glm::vec3(0, 0, +2));
+		_lightHidden = false;
+	}
 }
 
 void SelectWheel::SelectTexture()
@@ -169,4 +190,6 @@ void SelectWheel::DisplayCharacter(int pskinNumber)
 		//Show "light" and set flag
 		ShowSelectLight();
 	}
+	printf("On Skin: %i\n", onSkin);
+	printf("Light Is Hidden:%i\n", _selectLightHidden);
 }

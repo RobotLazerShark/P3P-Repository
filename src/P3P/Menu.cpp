@@ -1,8 +1,8 @@
 #include "P3P/Menu.hpp"
-#include <JCPPEngine/MouseEvent.hpp>
-#include <mge/core/AbstractGame.hpp>
-#include <mge/objects/Light.hpp>
-#include <mge/util/ShaderDataUtil.hpp>
+#include "JCPPEngine/MouseEvent.hpp"
+#include "mge/core/AbstractGame.hpp"
+#include "mge/objects/Light.hpp"
+#include "mge/util/ShaderDataUtil.hpp"
 
 void NoPress()
 {
@@ -34,8 +34,8 @@ void ButtonOnePress()
 	} 
 	else if(!Menu::singletonInstance->createdCredits) 
 	{
-		Credits * credits = new Credits(Menu::singletonInstance->camera, Menu::singletonInstance->renderWindow, World::singletonInstance);
-		World::singletonInstance->add(credits);
+		Credits * credits = new Credits (Menu::singletonInstance->camera, Menu::singletonInstance->renderWindow, World::singletonInstance);
+		World::singletonInstance->add (credits);
 		Menu::singletonInstance->createdCredits = true;
 		Credits::singletonInstance->isHidden = false;
 	}
@@ -51,13 +51,13 @@ void ButtonTwoPress()
 void NextPress()
 {
 	//Next skin
-	Menu::singletonInstance->selectWheel->NextTexture();
+	Menu::singletonInstance->selectWheel->NextTexture ();
 }
 
 void LastPress()
 {
 	//Last skin
-	Menu::singletonInstance->selectWheel->LastTexture();
+	Menu::singletonInstance->selectWheel->LastTexture ();
 }
 
 void SelectPress()
@@ -80,8 +80,6 @@ Menu::Menu(Camera * pCamera, sf::RenderWindow * pRend, World * pWorld) : GameObj
 	camera = pCamera;
 	world = pWorld;
 
-	_cameraPosition = camera->getWorldTransform ();
-
 	//Add light
 	ShaderDataUtil::SetAmbientLight (glm::vec3 (0.8f, 0.9f, 1), 0.1f);
 	Light* dirLight = new Light (glm::vec3 (1, 1, 1), 0.45f);
@@ -96,18 +94,6 @@ Menu::Menu(Camera * pCamera, sf::RenderWindow * pRend, World * pWorld) : GameObj
 
 Menu::~Menu()
 {
-	if (_fader != nullptr)
-	{
-		_fader->setParent(nullptr);
-		delete _fader;
-		_fader = nullptr;
-	}
-	if (_game != nullptr)
-	{
-		_game->clear();
-		delete _game;
-		_game = nullptr;
-	}
 	unregisterForEvent(JCPPEngine::Event::EventType::MouseDown);
 	singletonInstance = nullptr;
 	setParent(nullptr);
@@ -130,21 +116,6 @@ void Menu::ProcessEvent(JCPPEngine::Event* pEvent)
 
 }
 
-void Menu::render ()
-{
-	//Don't render if hidden
-	if (isHidden)
-		return;
-
-	for (MenuButton * pMenuButton: _buttons)
-	{
-		//Render sprites
-		renderWindow->pushGLStates();
-		renderWindow->draw(*pMenuButton->sprite);
-		renderWindow->popGLStates();
-	}
-}
-
 void Menu::update(float pStep, bool pUpdateWorldTransform)
 {
 	//Deactivate update if isHidden
@@ -154,6 +125,14 @@ void Menu::update(float pStep, bool pUpdateWorldTransform)
 	//If doHide flag is set then "hide" 
 	if (doHide)
 		Hide();
+
+//	for (MenuButton * pMenuButton: _buttons)
+//	{
+//		//Render sprites
+//		renderWindow->pushGLStates();
+//		renderWindow->draw(*pMenuButton->sprite);
+//		renderWindow->popGLStates();
+//	}
 
 	//Foreach button in the vector
 	for (MenuButton * pMenuButton : _buttons)
@@ -226,7 +205,7 @@ void Menu::Hide() {
 
 void Menu::UnHide(bool pDeleteLevel) {
 	//Create New Menu Objects
-	setParent (World::singletonInstance);
+	setParent (world);
 	isHidden = false;
 
 	if (pDeleteLevel)
@@ -245,16 +224,15 @@ void Menu::UnHide(bool pDeleteLevel) {
 void Menu::CreateButtons(Camera * pCamera) {
 	//Setup background & selectwheel
 	_menuBackground = new GameObject("Menu_Background.obj");
-	_menuBackground->setParent(this);
-	_menuBackground->setMaterial(new LitMaterial("MenuBackground.png"));
+	_menuBackground->setMaterial(new LitMaterial("MenuBackGround.png"));
 	_menuBackground->setTransform(pCamera->getTransform());
 	_menuBackground->translate(glm::vec3(0, 0, -1.09f));
 	_menuBackground->scale(2.25f);
 
 	selectWheel = new SelectWheel("mge/textures/White.png", "Menu_Wheel_Inside.obj", "Menu_Wheel_Outside.obj", "cube_flat.obj",
-		sf::Vector2f(200, 100), pCamera->getTransform(), &NoPress, "WheelNext.txt", "WheelLast.txt", glm::vec3(0.85f, -0.15f, -0.985f), "General_Button.obj", this);
+		sf::Vector2f(200, 100), pCamera->getTransform(), &NoPress, "WheelNext.txt", "WheelLast.txt", glm::vec3(0.85f, -0.15f, -0.985f), "Selected Button.obj", this);
 
-	//Setup buttons
+	//Setup button
 	_buttonOne = new MenuButton("mge/textures/White.png", "Play_Button.obj",
 		sf::Vector2f(500, 100), pCamera->getTransform(), &ButtonPress, "ButtonPush.txt", "ButtonPull.txt", glm::vec3(-0.221f, 0.297f, -0.985f), 1);
 	_buttonTwo = new MenuButton("mge/textures/White.png", "General_Button.obj",
@@ -267,8 +245,8 @@ void Menu::CreateButtons(Camera * pCamera) {
 		sf::Vector2f(480, 420), pCamera->getTransform(), &NoPress, "BoxOpen.txt", "BoxClose.txt", glm::vec3(-0.22f, -0.005f, -0.985f), 0);
 	_buttonBoxThree = new MenuButton("mge/textures/Default.png", "General_Button_Case.obj",
 		sf::Vector2f(480, 630), pCamera->getTransform(), &NoPress, "BoxOpen.txt", "BoxClose.txt", glm::vec3(-0.22f, -0.307f, -0.985f), 0);
-	_buttonLastSkin = new MenuButton("mge/textures/Default.png", "General_Button.obj",
-		sf::Vector2f(1160, 90), pCamera->getTransform(), &LastPress, "ButtonPush.txt", "ButtonPull.txt", glm::vec3(0.68f, 0.4f, -0.96f), 6);
+	//_buttonLastSkin = new MenuButton("mge/textures/Default.png", "General_Button.obj",
+	//	sf::Vector2f(1160, 90), pCamera->getTransform(), &LastPress, "ButtonPush.txt", "ButtonPull.txt", glm::vec3(0.68f, 0.4f, -0.96f), 6, "CharacterSelectButton.png");
 	_buttonNextSkin = new MenuButton("mge/textures/Default.png", "General_Button.obj",
 		sf::Vector2f(1075, 120), pCamera->getTransform(), &NextPress, "ButtonPush.txt", "ButtonPull.txt", glm::vec3(0.57f, 0.35f, -0.96f), 5);
 	_buttonSelectSkin = new MenuButton("mge/textures/Default.png", "Play_Button.obj",
@@ -281,7 +259,7 @@ void Menu::CreateButtons(Camera * pCamera) {
 	_buttonOne->scale(2.4f);
 	_buttonTwo->scale(2.4f);
 	_buttonThree->scale(2.4f);
-	_buttonLastSkin->scale(1.5f);
+	//_buttonLastSkin->scale(1.5f);
 	_buttonNextSkin->scale(1.5f);
 	_buttonSelectSkin->scale(1.5f);
 
@@ -295,7 +273,7 @@ void Menu::CreateButtons(Camera * pCamera) {
 	_buttonTwo->setParent(this);
 	_buttonThree->setParent(this);
 	_buttonNextSkin->setParent(this);
-	_buttonLastSkin->setParent(this);
+	//_buttonLastSkin->setParent(this);
 	_buttonSelectSkin->setParent(this);
 
 	//Add button to vector
@@ -306,6 +284,6 @@ void Menu::CreateButtons(Camera * pCamera) {
 	_buttons.push_back(_buttonTwo);
 	_buttons.push_back(_buttonThree);
 	_buttons.push_back(_buttonNextSkin);
-	_buttons.push_back(_buttonLastSkin);
+	//_buttons.push_back(_buttonLastSkin);
 	_buttons.push_back(_buttonSelectSkin);
 }

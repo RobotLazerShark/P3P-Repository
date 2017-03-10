@@ -1,7 +1,14 @@
 #include "Credits.hpp"
-#include <JCPPEngine/MouseEvent.hpp>
+#include "JCPPEngine/MouseEvent.hpp"
 #include "P3P/Menu.hpp"
 #include "P3P/MenuButton.hpp"
+#include "JCPPEngine/TextureManager.hpp"
+#include "JCPPEngine/SoundManager.hpp"
+
+void NoFunction()
+{
+	//Empty
+}
 
 void BackPress()
 {
@@ -67,6 +74,7 @@ void Credits::update(float pStep, bool pUpdateWorldTransform)
 		renderWindow->draw(*pMenuButton->sprite);
 		renderWindow->popGLStates();
 	}
+	
 
 	//Foreach button in the vector
 	for (MenuButton * pMenuButton : _buttons)
@@ -149,19 +157,23 @@ void Credits::UnHide() {
 
 void Credits::CreateButtons(Camera * pCamera) {
 	//Load credits screen background
-	//Empty
+	_background = new MenuButton("mge/textures/Credits_Screen.png", "Play_Button_Case_1.obj",
+		sf::Vector2f(0, 0), pCamera->getTransform(), &NoFunction, "BoxOpen.txt", "BoxClose.txt", glm::vec3(-10, -10, -10), 9);
+	_background->setParent(this);
+	_buttons.push_back(_background);
+
+	//sprite->setPosition(pSpritePosition*2.3f); //Scale For 1800p
 
 	//Setup buttons
-	_buttonOne = new MenuButton("mge/textures/White.png", "Play_Button.obj",
+	_buttonOne = new MenuButton("mge/textures/ButtonCap.png", "Play_Button.obj",
 		sf::Vector2f(100, 100), pCamera->getTransform(), &BackPress, "ButtonPush.txt", "ButtonPull.txt", glm::vec3(-0.75f, 0.40f, -1), 1);
 
-	_buttonBoxOne = new MenuButton("mge/textures/Default.png", "Play_Button_Case_1.obj",
-		sf::Vector2f(100, 100), pCamera->getTransform(), &BackPress, "BoxOpen.txt", "BoxClose.txt", glm::vec3(-0.75f, 0.45f, -1), 0);
+	_buttonBoxOne = new MenuButton("mge/textures/ButtonCap.png", "Play_Button_Case_1.obj",
+		sf::Vector2f(100, 100), pCamera->getTransform(), &BackPress, "BoxOpen.txt", "BoxClose.txt", glm::vec3(-0.75f, 0.48f, -1), 0);
 
 	//Set buttons parent
 	_buttonBoxOne->setParent(this);
 	_buttonOne->setParent(this);
-
 
 	//Add button to vector
 	_buttons.push_back(_buttonBoxOne);
